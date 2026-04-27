@@ -146,7 +146,15 @@ export interface ReasoningFilePart {
   type: 'reasoning-file';
 
   /**
-   * File data. Either a tagged shape or a bare shorthand:
+   * Reasoning file data.
+   *
+   * Reasoning files originate from a model's reasoning output and are always
+   * raw bytes or a fetchable URL. Unlike `FilePart.data`, the `reference` and
+   * `text` shapes are not supported here: provider references describe files
+   * uploaded by the user (not produced as model output), and reasoning text is
+   * carried by `ReasoningPart` rather than as a file.
+   *
+   * Either a tagged shape or a bare shorthand:
    *
    * - `{ type: 'data', data }` or bare `DataContent`: raw bytes
    *   (base64 string, Uint8Array, ArrayBuffer, Buffer)

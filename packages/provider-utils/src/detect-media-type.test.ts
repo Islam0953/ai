@@ -1,22 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import {
-  audioMediaTypeSignatures,
-  detectMediaTypeBySignatures,
   detectMediaTypeForTopLevelType,
   getTopLevelMediaType,
-  imageMediaTypeSignatures,
   isFullMediaType,
 } from './detect-media-type';
 import { convertUint8ArrayToBase64 } from './uint8-utils';
 
-describe('detectMediaTypeBySignatures', () => {
+describe('detectMediaTypeForTopLevelType signature matching', () => {
   describe('GIF', () => {
     it('should detect GIF from bytes', () => {
       const gifBytes = new Uint8Array([0x47, 0x49, 0x46, 0xff, 0xff]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: gifBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/gif');
     });
@@ -24,9 +21,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect GIF from base64', () => {
       const gifBase64 = 'R0lGabc123'; // Base64 string starting with GIF signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: gifBase64,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/gif');
     });
@@ -36,9 +33,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect PNG from bytes', () => {
       const pngBytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0xff, 0xff]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: pngBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/png');
     });
@@ -46,9 +43,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect PNG from base64', () => {
       const pngBase64 = 'iVBORwabc123'; // Base64 string starting with PNG signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: pngBase64,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/png');
     });
@@ -58,9 +55,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect JPEG from bytes', () => {
       const jpegBytes = new Uint8Array([0xff, 0xd8, 0xff, 0xff]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: jpegBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/jpeg');
     });
@@ -68,9 +65,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect JPEG from base64', () => {
       const jpegBase64 = '/9j/abc123'; // Base64 string starting with JPEG signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: jpegBase64,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/jpeg');
     });
@@ -98,9 +95,9 @@ describe('detectMediaTypeBySignatures', () => {
         0x20, // VP8 chunk (additional WebP data)
       ]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: webpBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/webp');
     });
@@ -127,9 +124,9 @@ describe('detectMediaTypeBySignatures', () => {
       ]);
       const webpBase64 = convertUint8ArrayToBase64(webpBytes);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: webpBase64,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/webp');
     });
@@ -155,9 +152,9 @@ describe('detectMediaTypeBySignatures', () => {
         0x20, // fmt chunk
       ]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: wavBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBeUndefined(); // Should not detect as WebP
     });
@@ -184,9 +181,9 @@ describe('detectMediaTypeBySignatures', () => {
       ]);
       const wavBase64 = convertUint8ArrayToBase64(wavBytes);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: wavBase64,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBeUndefined(); // Should not detect as WebP
     });
@@ -196,9 +193,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect BMP from bytes', () => {
       const bmpBytes = new Uint8Array([0x42, 0x4d, 0xff, 0xff]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: bmpBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/bmp');
     });
@@ -206,9 +203,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect BMP from base64', () => {
       const bmpBytes = new Uint8Array([0x42, 0x4d, 0xff, 0xff]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: convertUint8ArrayToBase64(bmpBytes),
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/bmp');
     });
@@ -218,9 +215,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect TIFF (little endian) from bytes', () => {
       const tiffLEBytes = new Uint8Array([0x49, 0x49, 0x2a, 0x00, 0xff]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: tiffLEBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/tiff');
     });
@@ -228,9 +225,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect TIFF (little endian) from base64', () => {
       const tiffLEBase64 = 'SUkqAAabc123'; // Base64 string starting with TIFF LE signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: tiffLEBase64,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/tiff');
     });
@@ -238,9 +235,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect TIFF (big endian) from bytes', () => {
       const tiffBEBytes = new Uint8Array([0x4d, 0x4d, 0x00, 0x2a, 0xff]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: tiffBEBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/tiff');
     });
@@ -248,9 +245,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect TIFF (big endian) from base64', () => {
       const tiffBEBase64 = 'TU0AKgabc123'; // Base64 string starting with TIFF BE signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: tiffBEBase64,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/tiff');
     });
@@ -263,9 +260,9 @@ describe('detectMediaTypeBySignatures', () => {
         0xff,
       ]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: avifBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/avif');
     });
@@ -273,9 +270,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect AVIF from base64', () => {
       const avifBase64 = 'AAAAIGZ0eXBhdmlmabc123'; // Base64 string starting with AVIF signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: avifBase64,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/avif');
     });
@@ -288,9 +285,9 @@ describe('detectMediaTypeBySignatures', () => {
         0xff,
       ]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: heicBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/heic');
     });
@@ -298,9 +295,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect HEIC from base64', () => {
       const heicBase64 = 'AAAAIGZ0eXBoZWljabc123'; // Base64 string starting with HEIC signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: heicBase64,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBe('image/heic');
     });
@@ -310,9 +307,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect MP3 from bytes', () => {
       const mp3Bytes = new Uint8Array([0xff, 0xfb]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: mp3Bytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/mpeg');
     });
@@ -320,9 +317,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect MP3 from base64', () => {
       const mp3Base64 = '//s='; // Base64 string starting with MP3 signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: mp3Base64,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/mpeg');
     });
@@ -357,9 +354,9 @@ describe('detectMediaTypeBySignatures', () => {
         0x00,
       ]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: mp3WithID3Bytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/mpeg');
     });
@@ -394,9 +391,9 @@ describe('detectMediaTypeBySignatures', () => {
       ]);
       const mp3WithID3Base64 = convertUint8ArrayToBase64(mp3WithID3Bytes);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: mp3WithID3Base64,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/mpeg');
     });
@@ -444,36 +441,36 @@ describe('detectMediaTypeBySignatures', () => {
 
     it('should detect WAV from bytes', () => {
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: wavBytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/wav');
     });
 
     it('should detect WAV from base64', () => {
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: convertUint8ArrayToBase64(wavBytes),
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/wav');
     });
 
     it('should NOT detect WebP as WAV from bytes (negative webp image uint8)', () => {
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: webpBytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBeUndefined(); // Should not detect as WAV
     });
 
     it('should NOT detect WebP as WAV from base64 (negative webp image base64)', () => {
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: convertUint8ArrayToBase64(webpBytes),
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBeUndefined(); // Should not detect as WAV
     });
@@ -483,9 +480,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect OGG from bytes', () => {
       const oggBytes = new Uint8Array([0x4f, 0x67, 0x67, 0x53]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: oggBytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/ogg');
     });
@@ -493,9 +490,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect OGG from base64', () => {
       const oggBase64 = 'T2dnUw'; // Base64 string starting with OGG signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: oggBase64,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/ogg');
     });
@@ -505,9 +502,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect FLAC from bytes', () => {
       const flacBytes = new Uint8Array([0x66, 0x4c, 0x61, 0x43]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: flacBytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/flac');
     });
@@ -515,9 +512,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect FLAC from base64', () => {
       const flacBase64 = 'ZkxhQw'; // Base64 string starting with FLAC signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: flacBase64,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/flac');
     });
@@ -527,9 +524,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect AAC from bytes', () => {
       const aacBytes = new Uint8Array([0x40, 0x15, 0x00, 0x00]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: aacBytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/aac');
     });
@@ -537,9 +534,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect AAC from base64', () => {
       const aacBytes = new Uint8Array([0x40, 0x15, 0x00, 0x00]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: convertUint8ArrayToBase64(aacBytes),
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/aac');
     });
@@ -549,9 +546,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect MP4 from bytes', () => {
       const mp4Bytes = new Uint8Array([0x66, 0x74, 0x79, 0x70]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: mp4Bytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/mp4');
     });
@@ -559,9 +556,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect MP4 from base64', () => {
       const mp4Base64 = 'ZnR5cA'; // Base64 string starting with MP4 signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: mp4Base64,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/mp4');
     });
@@ -571,9 +568,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect WEBM from bytes', () => {
       const webmBytes = new Uint8Array([0x1a, 0x45, 0xdf, 0xa3]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: webmBytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/webm');
     });
@@ -581,9 +578,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should detect WEBM from base64', () => {
       const webmBase64 = 'GkXfow=='; // Base64 string starting with WEBM signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: webmBase64,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBe('audio/webm');
     });
@@ -593,9 +590,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should return undefined for unknown image formats', () => {
       const unknownBytes = new Uint8Array([0x00, 0x01, 0x02, 0x03]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: unknownBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBeUndefined();
     });
@@ -603,9 +600,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should return undefined for unknown audio formats', () => {
       const unknownBytes = new Uint8Array([0x00, 0x01, 0x02, 0x03]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: unknownBytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBeUndefined();
     });
@@ -613,9 +610,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should return undefined for empty arrays for image', () => {
       const emptyBytes = new Uint8Array([]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: emptyBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBeUndefined();
     });
@@ -623,9 +620,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should return undefined for empty arrays for audio', () => {
       const emptyBytes = new Uint8Array([]);
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: emptyBytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBeUndefined();
     });
@@ -633,9 +630,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should return undefined for arrays shorter than signature length for image', () => {
       const shortBytes = new Uint8Array([0x89, 0x50]); // Incomplete PNG signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: shortBytes,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBeUndefined();
     });
@@ -643,9 +640,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should return undefined for arrays shorter than signature length for audio', () => {
       const shortBytes = new Uint8Array([0x4f, 0x67]); // Incomplete OGG signature
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: shortBytes,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBeUndefined();
     });
@@ -653,9 +650,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should return undefined for invalid base64 strings for image', () => {
       const invalidBase64 = 'invalid123';
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: invalidBase64,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }),
       ).toBeUndefined();
     });
@@ -663,9 +660,9 @@ describe('detectMediaTypeBySignatures', () => {
     it('should return undefined for invalid base64 strings for audio', () => {
       const invalidBase64 = 'invalid123';
       expect(
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: invalidBase64,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }),
       ).toBeUndefined();
     });

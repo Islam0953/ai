@@ -4,12 +4,8 @@ import {
   ProviderV4,
 } from '@ai-sdk/provider';
 import {
-  audioMediaTypeSignatures,
   convertBase64ToUint8Array,
-  detectMediaTypeBySignatures,
-  documentMediaTypeSignatures,
-  imageMediaTypeSignatures,
-  videoMediaTypeSignatures,
+  detectMediaType,
 } from '@ai-sdk/provider-utils';
 import { ProviderMetadata } from '../types/provider-metadata';
 import { ProviderReference } from '../types/provider-reference';
@@ -62,15 +58,7 @@ export async function uploadFile({
     mediaTypeArg ??
     (data.type === 'text'
       ? 'text/plain'
-      : (detectMediaTypeBySignatures({
-          data: data.data,
-          signatures: [
-            ...imageMediaTypeSignatures,
-            ...documentMediaTypeSignatures,
-            ...audioMediaTypeSignatures,
-            ...videoMediaTypeSignatures,
-          ],
-        }) ??
+      : (detectMediaType({ data: data.data }) ??
         (isLikelyText(data.data) ? 'text/plain' : 'application/octet-stream')));
 
   const filesApi: FilesV4 =

@@ -11,14 +11,10 @@ export {
 export * from './delay';
 export { DelayedPromise } from './delayed-promise';
 export {
-  audioMediaTypeSignatures,
-  detectMediaTypeBySignatures,
+  detectMediaType,
   detectMediaTypeForTopLevelType,
-  documentMediaTypeSignatures,
   getTopLevelMediaType,
-  imageMediaTypeSignatures,
   isFullMediaType,
-  videoMediaTypeSignatures,
 } from './detect-media-type';
 export { downloadBlob } from './download-blob';
 export { DownloadError } from './download-error';

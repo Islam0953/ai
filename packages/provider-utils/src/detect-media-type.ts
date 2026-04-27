@@ -1,6 +1,6 @@
 import { convertBase64ToUint8Array } from './uint8-utils';
 
-export const imageMediaTypeSignatures = [
+const imageMediaTypeSignatures = [
   {
     mediaType: 'image/gif' as const,
     bytesPrefix: [0x47, 0x49, 0x46], // GIF
@@ -56,14 +56,14 @@ export const imageMediaTypeSignatures = [
   },
 ] as const;
 
-export const documentMediaTypeSignatures = [
+const documentMediaTypeSignatures = [
   {
     mediaType: 'application/pdf' as const,
     bytesPrefix: [0x25, 0x50, 0x44, 0x46], // %PDF
   },
 ] as const;
 
-export const audioMediaTypeSignatures = [
+const audioMediaTypeSignatures = [
   {
     mediaType: 'audio/mpeg' as const,
     bytesPrefix: [0xff, 0xfb],
@@ -127,7 +127,7 @@ export const audioMediaTypeSignatures = [
   },
 ] as const;
 
-export const videoMediaTypeSignatures = [
+const videoMediaTypeSignatures = [
   {
     mediaType: 'video/mp4' as const,
     bytesPrefix: [
@@ -196,14 +196,7 @@ type MediaTypeSignatures = ReadonlyArray<{
   readonly bytesPrefix: ReadonlyArray<number | null>;
 }>;
 
-/**
- * Detect the IANA media type of a file using a list of signatures.
- *
- * @param data - The file data.
- * @param signatures - The signatures to use for detection.
- * @returns The media type of the file.
- */
-export function detectMediaTypeBySignatures<T extends MediaTypeSignatures>({
+function detectMediaTypeBySignatures<T extends MediaTypeSignatures>({
   data,
   signatures,
 }: {
@@ -263,6 +256,27 @@ export function detectMediaTypeForTopLevelType({
   }
 
   return detectMediaTypeBySignatures({ data, signatures });
+}
+
+/**
+ * Detect the IANA media type of a file across every known top-level segment
+ * (image, audio, video, and application). Returns `undefined` when the bytes
+ * do not match any known signature.
+ */
+export function detectMediaType({
+  data,
+}: {
+  data: Uint8Array | string;
+}): string | undefined {
+  return detectMediaTypeBySignatures({
+    data,
+    signatures: [
+      ...imageMediaTypeSignatures,
+      ...documentMediaTypeSignatures,
+      ...audioMediaTypeSignatures,
+      ...videoMediaTypeSignatures,
+    ],
+  });
 }
 
 /**

@@ -1,7 +1,6 @@
 import { JSONObject } from '@ai-sdk/provider';
 import {
-  audioMediaTypeSignatures,
-  detectMediaTypeBySignatures,
+  detectMediaTypeForTopLevelType,
   ProviderOptions,
   withUserAgentSuffix,
 } from '@ai-sdk/provider-utils';
@@ -161,9 +160,9 @@ export async function generateSpeech({
     audio: new DefaultGeneratedAudioFile({
       data: result.audio,
       mediaType:
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: result.audio,
-          signatures: audioMediaTypeSignatures,
+          topLevelType: 'audio',
         }) ?? 'audio/mp3',
     }),
     warnings: result.warnings,

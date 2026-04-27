@@ -7,10 +7,8 @@ import type {
 import {
   convertBase64ToUint8Array,
   type DataContent,
-  detectMediaTypeBySignatures,
-  imageMediaTypeSignatures,
+  detectMediaTypeForTopLevelType,
   type ProviderOptions,
-  videoMediaTypeSignatures,
   withUserAgentSuffix,
 } from '@ai-sdk/provider-utils';
 import { NoVideoGeneratedError } from '../error/no-video-generated-error';
@@ -220,9 +218,9 @@ export async function experimental_generateVideo({
           const mediaType =
             (isUsableMediaType(videoData.mediaType) && videoData.mediaType) ||
             (isUsableMediaType(downloadedMediaType) && downloadedMediaType) ||
-            detectMediaTypeBySignatures({
+            detectMediaTypeForTopLevelType({
               data,
-              signatures: videoMediaTypeSignatures,
+              topLevelType: 'video',
             }) ||
             'video/mp4';
 
@@ -248,9 +246,9 @@ export async function experimental_generateVideo({
         case 'binary': {
           const mediaType =
             videoData.mediaType ||
-            detectMediaTypeBySignatures({
+            detectMediaTypeForTopLevelType({
               data: videoData.data,
-              signatures: videoMediaTypeSignatures,
+              topLevelType: 'video',
             }) ||
             'video/mp4';
 
@@ -360,9 +358,9 @@ function normalizePrompt(promptArg: GenerateVideoPrompt): {
       } else {
         const bytes = convertBase64ToUint8Array(dataContent);
         const mediaType =
-          detectMediaTypeBySignatures({
+          detectMediaTypeForTopLevelType({
             data: bytes,
-            signatures: imageMediaTypeSignatures,
+            topLevelType: 'image',
           }) ?? 'image/png';
 
         image = {
@@ -373,9 +371,9 @@ function normalizePrompt(promptArg: GenerateVideoPrompt): {
       }
     } else if (dataContent instanceof Uint8Array) {
       const mediaType =
-        detectMediaTypeBySignatures({
+        detectMediaTypeForTopLevelType({
           data: dataContent,
-          signatures: imageMediaTypeSignatures,
+          topLevelType: 'image',
         }) ?? 'image/png';
 
       image = {

@@ -388,6 +388,8 @@ export class OpenAIChatLanguageModel implements LanguageModelV4 {
         id: generateId(),
         url: annotation.url_citation.url,
         title: annotation.url_citation.title,
+        startIndex: annotation.url_citation.start_index,
+        endIndex: annotation.url_citation.end_index,
       });
     }
 
@@ -579,6 +581,8 @@ export class OpenAIChatLanguageModel implements LanguageModelV4 {
                   id: generateId(),
                   url: annotation.url_citation.url,
                   title: annotation.url_citation.title,
+                  startIndex: annotation.url_citation.start_index,
+                  endIndex: annotation.url_citation.end_index,
                 });
               }
             }

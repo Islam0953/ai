@@ -4486,8 +4486,10 @@ describe('OpenAIResponsesLanguageModel', () => {
             "type": "text",
           },
           {
+            "endIndex": 10,
             "id": "id-0",
             "sourceType": "url",
+            "startIndex": 0,
             "title": "Example URL",
             "type": "source",
             "url": "https://example.com",
@@ -8318,8 +8320,10 @@ describe('OpenAIResponsesLanguageModel', () => {
             "warnings": [],
           },
           {
+            "endIndex": 234,
             "id": "id-0",
             "sourceType": "url",
+            "startIndex": 123,
             "title": "Example URL",
             "type": "source",
             "url": "https://example.com",

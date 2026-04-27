@@ -930,6 +930,8 @@ describe('doGenerate', () => {
         title: 'Document 1',
         type: 'source',
         url: 'https://example.com/doc1.pdf',
+        startIndex: 24,
+        endIndex: 29,
       },
     ]);
   });
@@ -2415,6 +2417,8 @@ describe('doStream', () => {
           id: expect.any(String),
           url: 'https://example.com/doc1.pdf',
           title: 'Document 1',
+          startIndex: 24,
+          endIndex: 29,
         },
         { type: 'text-end', id: '0' },
         expect.objectContaining({

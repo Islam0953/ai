@@ -28,6 +28,21 @@ export type LanguageModelV3Source =
       title?: string;
 
       /**
+       * Index of the first character of the cited span in the response
+       * text (inclusive). Populated by providers that emit citations
+       * positioned within a specific span (e.g. OpenAI's
+       * `url_citation.start_index`). Optional because not all providers
+       * supply this.
+       */
+      startIndex?: number;
+
+      /**
+       * Index of the last character of the cited span (exclusive),
+       * counterpart to `startIndex`.
+       */
+      endIndex?: number;
+
+      /**
        * Additional provider metadata for the source.
        */
       providerMetadata?: SharedV3ProviderMetadata;

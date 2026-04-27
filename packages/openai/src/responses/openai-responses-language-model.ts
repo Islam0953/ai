@@ -727,6 +727,8 @@ export class OpenAIResponsesLanguageModel implements LanguageModelV4 {
                   id: this.config.generateId?.() ?? generateId(),
                   url: annotation.url,
                   title: annotation.title,
+                  startIndex: annotation.start_index,
+                  endIndex: annotation.end_index,
                 });
               } else if (annotation.type === 'file_citation') {
                 content.push({
@@ -2083,6 +2085,8 @@ export class OpenAIResponsesLanguageModel implements LanguageModelV4 {
                   id: self.config.generateId?.() ?? generateId(),
                   url: value.annotation.url,
                   title: value.annotation.title,
+                  startIndex: value.annotation.start_index,
+                  endIndex: value.annotation.end_index,
                 });
               } else if (value.annotation.type === 'file_citation') {
                 controller.enqueue({

@@ -50,7 +50,6 @@ import {
   asLanguageModelUsage,
   LanguageModelUsage,
 } from '../types/usage';
-import type { Callback } from '../util/callback';
 import { DownloadFunction } from '../util/download/download-function';
 import { mergeAbortSignals } from '../util/merge-abort-signals';
 import { mergeObjects } from '../util/merge-objects';
@@ -59,22 +58,26 @@ import { prepareRetries } from '../util/prepare-retries';
 import { VERSION } from '../version';
 import { collectToolApprovals } from './collect-tool-approvals';
 import { ContentPart } from './content-part';
-import type {
-  GenerateTextEndEvent,
-  GenerateTextStartEvent,
-  GenerateTextStepEndEvent,
-  GenerateTextStepStartEvent,
-} from './core-events';
 import { executeToolCall } from './execute-tool-call';
 import { filterActiveTools } from './filter-active-tool';
+import type {
+  GenerateTextOnFinishCallback,
+  GenerateTextOnStartCallback,
+  GenerateTextOnStepFinishCallback,
+  GenerateTextOnStepStartCallback,
+} from './generate-text-events';
 import { GenerateTextResult } from './generate-text-result';
 import { DefaultGeneratedFile } from './generated-file';
-import { resolveToolApproval } from './resolve-tool-approval';
+import type {
+  OnLanguageModelCallEndCallback,
+  OnLanguageModelCallStartCallback,
+} from './language-model-events';
 import { Output, text } from './output';
 import { InferCompleteOutput } from './output-utils';
 import { parseToolCall } from './parse-tool-call';
 import { PrepareStepFunction } from './prepare-step';
 import { convertToReasoningOutputs } from './reasoning-output';
+import { resolveToolApproval } from './resolve-tool-approval';
 import { ResponseMessage } from './response-message';
 import { DefaultStepResult, StepResult } from './step-result';
 import {
@@ -106,64 +109,6 @@ const originalGenerateCallId = createIdGenerator({
   prefix: 'call',
   size: 24,
 });
-
-/**
- * Callback that is set using the `experimental_onStart` option.
- *
- * Called when the generateText operation begins, before any LLM calls.
- * Use this callback for logging, analytics, or initializing state at the
- * start of a generation.
- *
- * @param event - The event object containing generation configuration.
- */
-export type GenerateTextOnStartCallback<
-  TOOLS extends ToolSet = ToolSet,
-  RUNTIME_CONTEXT extends Context = Context,
-  OUTPUT extends Output = Output,
-> = Callback<GenerateTextStartEvent<TOOLS, RUNTIME_CONTEXT, OUTPUT>>;
-
-/**
- * Callback that is set using the `experimental_onStepStart` option.
- *
- * Called when a step (LLM call) begins, before the provider is called.
- * Each step represents a single LLM invocation. Multiple steps occur when
- * using tool calls (the model may be called multiple times in a loop).
- *
- * @param event - The event object containing step configuration.
- */
-export type GenerateTextOnStepStartCallback<
-  TOOLS extends ToolSet = ToolSet,
-  RUNTIME_CONTEXT extends Context = Context,
-  OUTPUT extends Output = Output,
-> = Callback<GenerateTextStepStartEvent<TOOLS, RUNTIME_CONTEXT, OUTPUT>>;
-
-/**
- * Callback that is set using the `onStepFinish` option.
- *
- * Called when a step (LLM call) completes. The event includes all step result
- * properties (text, tool calls, usage, etc.) along with additional metadata.
- *
- * @param stepResult - The result of the step.
- */
-export type GenerateTextOnStepFinishCallback<
-  TOOLS extends ToolSet = ToolSet,
-  RUNTIME_CONTEXT extends Context = Context,
-> = Callback<GenerateTextStepEndEvent<TOOLS, RUNTIME_CONTEXT>>;
-
-/**
- * Callback that is set using the `onFinish` option.
- *
- * Called when the entire generation completes (all steps finished).
- * The event includes the final step's result properties along with
- * aggregated data from all steps.
- *
- * @param event - The final result along with aggregated step data.
- */
-export type GenerateTextOnFinishCallback<
-  TOOLS extends ToolSet = ToolSet,
-  RUNTIME_CONTEXT extends Context = Context,
-> = Callback<GenerateTextEndEvent<TOOLS, RUNTIME_CONTEXT>>;
-
 /**
  * Generate a text and call tools for a given prompt using a language model.
  *
@@ -253,6 +198,8 @@ export async function generateText<
   } = {},
   experimental_onStart: onStart,
   experimental_onStepStart: onStepStart,
+  experimental_onLanguageModelCallStart: onLanguageModelCallStart,
+  experimental_onLanguageModelCallEnd: onLanguageModelCallEnd,
   experimental_onToolExecutionStart: onToolExecutionStart,
   experimental_onToolExecutionEnd: onToolExecutionEnd,
   onStepFinish,
@@ -358,6 +305,19 @@ export async function generateText<
       NoInfer<TOOLS>,
       NoInfer<RUNTIME_CONTEXT>,
       NoInfer<OUTPUT>
+    >;
+
+    /**
+     * Callback that is called immediately before the provider model call begins.
+     */
+    experimental_onLanguageModelCallStart?: OnLanguageModelCallStartCallback;
+
+    /**
+     * Callback that is called after the model response has been normalized and parsed,
+     * but before any client-side tool execution begins.
+     */
+    experimental_onLanguageModelCallEnd?: OnLanguageModelCallEndCallback<
+      NoInfer<TOOLS>
     >;
 
     /**
@@ -481,7 +441,6 @@ export async function generateText<
       timeout,
       headers: headersWithUserAgent,
       providerOptions,
-      stopWhen,
       output,
       runtimeContext,
       toolsContext,
@@ -664,13 +623,14 @@ export async function generateText<
           providerOptions,
           prepareStepResult?.providerOptions,
         );
+        const stepNumber = steps.length;
 
         await notify({
           event: {
             callId,
             provider: stepModel.provider,
             modelId: stepModel.modelId,
-            stepNumber: steps.length,
+            stepNumber,
             system: stepSystem,
             messages: stepMessages,
             tools,
@@ -690,6 +650,24 @@ export async function generateText<
             telemetryDispatcher.onStepStart as
               | undefined
               | GenerateTextOnStepStartCallback<TOOLS, RUNTIME_CONTEXT, OUTPUT>,
+          ],
+        });
+
+        await notify({
+          event: {
+            callId,
+            provider: stepModel.provider,
+            modelId: stepModel.modelId,
+            system: stepSystem,
+            messages: stepMessages,
+            tools: stepTools,
+            ...callSettings,
+          },
+          callbacks: [
+            onLanguageModelCallStart,
+            telemetryDispatcher.onLanguageModelCallStart as
+              | undefined
+              | OnLanguageModelCallStartCallback,
           ],
         });
 
@@ -742,6 +720,33 @@ export async function generateText<
           ToolApprovalResponseOutput<TOOLS>
         > = {};
         const blockedToolCallIds = new Set<string>();
+
+        const modelCallContent = asContent({
+          content: currentModelResponse.content,
+          toolCalls: stepToolCalls,
+          toolOutputs: [],
+          toolApprovalRequests: [],
+          toolApprovalResponses: [],
+          tools,
+        });
+
+        await notify({
+          event: {
+            callId,
+            provider: stepModel.provider,
+            modelId: stepModel.modelId,
+            finishReason: currentModelResponse.finishReason.unified,
+            usage: asLanguageModelUsage(currentModelResponse.usage),
+            content: modelCallContent,
+            responseId: currentModelResponse.response.id,
+          },
+          callbacks: [
+            onLanguageModelCallEnd,
+            telemetryDispatcher.onLanguageModelCallEnd as
+              | undefined
+              | OnLanguageModelCallEndCallback<TOOLS>,
+          ],
+        });
 
         // notify the tools that the tool calls are available:
         for (const toolCall of stepToolCalls) {
@@ -962,8 +967,6 @@ export async function generateText<
               ? currentModelResponse.response?.body
               : undefined,
         };
-
-        const stepNumber = steps.length;
 
         const currentStepResult: StepResult<TOOLS, RUNTIME_CONTEXT> =
           new DefaultStepResult({

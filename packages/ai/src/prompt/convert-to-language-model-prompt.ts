@@ -8,9 +8,8 @@ import {
 import {
   asArray,
   CustomPart,
-  detectMediaTypeBySignatures,
+  detectMediaTypeForTopLevelType,
   FilePart,
-  imageMediaTypeSignatures,
   ImagePart,
   isFullMediaType,
   isUrlSupported,
@@ -222,7 +221,7 @@ export function convertToLanguageModelMessage({
                 message: `The "image" content part type is deprecated. Use a "file" part with mediaType: 'image' (or a more specific image/* subtype) instead.`,
               });
             }
-            return imagePartToFilePart(part);
+            return convertImagePartToFilePart(part);
           })
           .map(part => convertPartToLanguageModelPart(part, downloadedAssets))
           // remove empty text parts:
@@ -408,20 +407,18 @@ export function convertToLanguageModelMessage({
  * pre-pass, only `TextPart` and `FilePart` ever reach the provider-facing
  * conversion logic.
  */
-function imagePartToFilePart<T extends { type: string }>(
-  part: T,
-): T extends ImagePart ? FilePart : T {
+function convertImagePartToFilePart(
+  part: TextPart | ImagePart | FilePart,
+): TextPart | FilePart {
   if (part.type !== 'image') {
-    return part as T extends ImagePart ? FilePart : T;
+    return part;
   }
-  const imagePart = part as unknown as ImagePart;
-  const filePart: FilePart = {
+  return {
     type: 'file',
-    data: imagePart.image,
-    mediaType: imagePart.mediaType ?? 'image',
-    providerOptions: imagePart.providerOptions,
+    data: part.image,
+    mediaType: part.mediaType ?? 'image',
+    providerOptions: part.providerOptions,
   };
-  return filePart as T extends ImagePart ? FilePart : T;
 }
 
 /**
@@ -446,11 +443,11 @@ async function downloadAssets(
   const plannedDownloads = messages
     .filter(message => message.role === 'user')
     .map(message => message.content)
-    .filter((content): content is Array<TextPart | FilePart> =>
+    .filter((content): content is Array<TextPart | ImagePart | FilePart> =>
       Array.isArray(content),
     )
     .flat()
-    .map(part => imagePartToFilePart(part))
+    .map(part => convertImagePartToFilePart(part))
     .filter((part): part is FilePart => part.type === 'file')
     .map((part): ConvertedFile => {
       const mediaType = part.mediaType;
@@ -464,9 +461,7 @@ async function downloadAssets(
         part.mediaType != null &&
         isUrlSupported({
           url: part.data.url.toString(),
-          mediaType: isFullMediaType(part.mediaType)
-            ? part.mediaType
-            : `${part.mediaType}/*`,
+          mediaType: part.mediaType,
           supportedUrls,
         }),
     }));
@@ -534,9 +529,9 @@ function convertPartToLanguageModelPart(
     data.type === 'data' &&
     (data.data instanceof Uint8Array || typeof data.data === 'string')
   ) {
-    const imageMediaType = detectMediaTypeBySignatures({
+    const imageMediaType = detectMediaTypeForTopLevelType({
       data: data.data,
-      signatures: imageMediaTypeSignatures,
+      topLevelType: 'image',
     });
     if (imageMediaType != null) {
       mediaType = imageMediaType;

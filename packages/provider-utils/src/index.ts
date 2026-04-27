@@ -29,6 +29,7 @@ export { getRuntimeEnvironmentUserAgent } from './get-runtime-environment-user-a
 export type { HasRequiredKey } from './has-required-key';
 export { injectJsonInstructionIntoMessages } from './inject-json-instruction';
 export * from './is-abort-error';
+export { isBuffer } from './is-buffer';
 export { isNonNullable } from './is-non-nullable';
 export { isProviderReference } from './is-provider-reference';
 export { isUrlSupported } from './is-url-supported';

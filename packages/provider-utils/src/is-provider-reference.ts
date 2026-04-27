@@ -1,4 +1,5 @@
 import { SharedV4ProviderReference } from '@ai-sdk/provider';
+import { isBuffer } from './is-buffer';
 
 /**
  * Checks whether a value is a provider reference (a mapping of provider names
@@ -14,7 +15,7 @@ export function isProviderReference(
     !(data instanceof Uint8Array) &&
     !(data instanceof URL) &&
     !(data instanceof ArrayBuffer) &&
-    !(globalThis.Buffer?.isBuffer(data) ?? false) &&
+    !isBuffer(data) &&
     !('type' in data)
   );
 }

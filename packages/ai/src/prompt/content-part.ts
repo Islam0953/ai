@@ -3,6 +3,7 @@ import {
   DataContent,
   FilePart,
   ImagePart,
+  isBuffer,
   ProviderOptions,
   ReasoningFilePart,
   ReasoningPart,
@@ -20,12 +21,7 @@ const fileInlineDataSchema: z.ZodType<DataContent> = z.union([
   z.string(),
   z.instanceof(Uint8Array),
   z.instanceof(ArrayBuffer),
-  z.custom<Buffer>(
-    // Buffer might not be available in some environments such as CloudFlare:
-    (value: unknown): value is Buffer =>
-      globalThis.Buffer?.isBuffer(value) ?? false,
-    { message: 'Must be a Buffer' },
-  ),
+  z.custom<Buffer>(isBuffer, { message: 'Must be a Buffer' }),
 ]);
 
 const providerReferenceSchema = z.record(z.string(), z.string());

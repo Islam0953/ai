@@ -1,9 +1,12 @@
-import { AISDKError, LanguageModelV4FilePart } from '@ai-sdk/provider';
+import { LanguageModelV4FilePart } from '@ai-sdk/provider';
 import {
   DataContent,
   FilePart,
+  isBuffer,
+  isProviderReference,
   ProviderReference,
 } from '@ai-sdk/provider-utils';
+import { InvalidDataContentError } from './invalid-data-content-error';
 import { splitDataUrl } from './split-data-url';
 
 type TaggedFileData = Extract<FilePart['data'], { type: string }>;
@@ -21,13 +24,13 @@ type ConvertResult = {
   mediaType: string | undefined;
 };
 
-function urlToV4(url: URL): ConvertResult {
+function convertUrlToFilePartData(url: URL): ConvertResult {
   if (url.protocol === 'data:') {
     const { mediaType, base64Content } = splitDataUrl(url.toString());
 
     if (mediaType == null || base64Content == null) {
-      throw new AISDKError({
-        name: 'InvalidDataContentError',
+      throw new InvalidDataContentError({
+        content: url,
         message: `Invalid data URL format in content ${url.toString()}`,
       });
     }
@@ -38,7 +41,7 @@ function urlToV4(url: URL): ConvertResult {
   return { data: { type: 'url', url }, mediaType: undefined };
 }
 
-function inlineDataToV4(content: DataContent): ConvertResult {
+function convertInlineDataToFilePartData(content: DataContent): ConvertResult {
   if (content instanceof Uint8Array) {
     return { data: { type: 'data', data: content }, mediaType: undefined };
   }
@@ -48,12 +51,9 @@ function inlineDataToV4(content: DataContent): ConvertResult {
       mediaType: undefined,
     };
   }
-  if (globalThis.Buffer?.isBuffer(content) ?? false) {
+  if (isBuffer(content)) {
     return {
-      data: {
-        type: 'data',
-        data: new Uint8Array(content as unknown as Buffer),
-      },
+      data: { type: 'data', data: new Uint8Array(content) },
       mediaType: undefined,
     };
   }
@@ -80,15 +80,15 @@ export function convertToLanguageModelV4FilePart(
           typeof content.data === 'string' &&
           content.data.startsWith('data:')
         ) {
-          throw new AISDKError({
-            name: 'InvalidDataContentError',
+          throw new InvalidDataContentError({
+            content: content.data,
             message:
               'Data URLs are not valid inline data. Pass them as { type: "url", url } instead.',
           });
         }
-        return inlineDataToV4(content.data);
+        return convertInlineDataToFilePartData(content.data);
       case 'url':
-        return urlToV4(content.url);
+        return convertUrlToFilePartData(content.url);
       case 'reference':
         return {
           data: { type: 'reference', reference: content.reference },
@@ -103,27 +103,23 @@ export function convertToLanguageModelV4FilePart(
   }
 
   if (content instanceof URL) {
-    return urlToV4(content);
+    return convertUrlToFilePartData(content);
   }
 
   if (typeof content === 'string') {
     try {
-      return urlToV4(new URL(content));
+      return convertUrlToFilePartData(new URL(content));
     } catch {
-      return inlineDataToV4(content);
+      return convertInlineDataToFilePartData(content);
     }
   }
 
-  if (
-    content instanceof Uint8Array ||
-    content instanceof ArrayBuffer ||
-    (globalThis.Buffer?.isBuffer(content) ?? false)
-  ) {
-    return inlineDataToV4(content as DataContent);
+  if (isProviderReference(content)) {
+    return {
+      data: { type: 'reference', reference: content as ProviderReference },
+      mediaType: undefined,
+    };
   }
 
-  return {
-    data: { type: 'reference', reference: content as ProviderReference },
-    mediaType: undefined,
-  };
+  return convertInlineDataToFilePartData(content as DataContent);
 }

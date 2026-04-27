@@ -5,7 +5,7 @@ import {
 } from '@ai-sdk/provider';
 import {
   combineHeaders,
-  convertBase64ToUint8Array,
+  convertInlineFileDataToUint8Array,
   createJsonResponseHandler,
   FetchFunction,
   parseProviderOptions,
@@ -46,12 +46,7 @@ export class OpenAIFiles implements FilesV4 {
       schema: openaiFilesOptionsSchema,
     })) as OpenAIFilesOptions | undefined;
 
-    const fileBytes =
-      data.type === 'text'
-        ? new TextEncoder().encode(data.text)
-        : data.data instanceof Uint8Array
-          ? data.data
-          : convertBase64ToUint8Array(data.data);
+    const fileBytes = convertInlineFileDataToUint8Array(data);
 
     const blob = new Blob([fileBytes], {
       type: mediaType,

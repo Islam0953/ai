@@ -7,6 +7,7 @@ import {
 } from '@ai-sdk/provider';
 import {
   combineHeaders,
+  convertInlineFileDataToUint8Array,
   createJsonResponseHandler,
   delay,
   type FetchFunction,
@@ -59,13 +60,7 @@ export class GoogleFiles implements FilesV4 {
       warnings.push({ type: 'unsupported', feature: 'filename' });
     }
 
-    const data = options.data;
-    const fileBytes =
-      data.type === 'text'
-        ? new TextEncoder().encode(data.text)
-        : data.data instanceof Uint8Array
-          ? data.data
-          : Uint8Array.from(atob(data.data), c => c.charCodeAt(0));
+    const fileBytes = convertInlineFileDataToUint8Array(options.data);
 
     const mediaType = options.mediaType;
     const displayName = googleOptions?.displayName;

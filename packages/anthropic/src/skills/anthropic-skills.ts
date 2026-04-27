@@ -1,7 +1,7 @@
 import { SkillsV4, SharedV4Warning } from '@ai-sdk/provider';
 import {
   combineHeaders,
-  convertBase64ToUint8Array,
+  convertInlineFileDataToUint8Array,
   createJsonResponseHandler,
   FetchFunction,
   getFromApi,
@@ -76,13 +76,7 @@ export class AnthropicSkills implements SkillsV4 {
     }
 
     for (const file of params.files) {
-      const content =
-        file.data.type === 'text'
-          ? new TextEncoder().encode(file.data.text)
-          : file.data.data instanceof Uint8Array
-            ? file.data.data
-            : convertBase64ToUint8Array(file.data.data);
-
+      const content = convertInlineFileDataToUint8Array(file.data);
       formData.append('files[]', new Blob([content]), file.path);
     }
 

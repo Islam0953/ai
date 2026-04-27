@@ -87,6 +87,7 @@ describe('convertToDeepSeekChatMessages', () => {
           },
         ],
         responseFormat: undefined,
+        modelId: 'deepseek-chat',
       });
 
       expect(result.messages).toEqual([{ role: 'user', content: 'Hello' }]);

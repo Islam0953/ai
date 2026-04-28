@@ -2560,6 +2560,77 @@ describe('OpenAIResponsesLanguageModel', () => {
           }
         `);
       });
+
+      it('should preserve namespace on function_call output', async () => {
+        server.urls['https://api.openai.com/v1/responses'].response = {
+          type: 'json-value',
+          body: {
+            id: 'resp_ns',
+            object: 'response',
+            created_at: 1741257730,
+            status: 'completed',
+            error: null,
+            incomplete_details: null,
+            input: [],
+            instructions: null,
+            max_output_tokens: null,
+            model: 'gpt-5.4',
+            output: [
+              {
+                type: 'function_call',
+                id: 'fc_ns_1',
+                call_id: 'call_ns_1',
+                name: 'get_weather',
+                arguments: '{"location":"NYC"}',
+                status: 'completed',
+                namespace: 'weather_ns',
+              },
+            ],
+            parallel_tool_calls: true,
+            previous_response_id: null,
+            reasoning: { effort: null, summary: null },
+            store: true,
+            temperature: 1,
+            text: { format: { type: 'text' } },
+            tool_choice: 'auto',
+            tools: [],
+            top_p: 1,
+            truncation: 'disabled',
+            usage: {
+              input_tokens: 0,
+              output_tokens: 0,
+              output_tokens_details: { reasoning_tokens: 0 },
+              total_tokens: 0,
+            },
+            user: null,
+            metadata: {},
+          },
+        };
+
+        const result = await createModel('gpt-5.4').doGenerate({
+          prompt: TEST_PROMPT,
+          tools: TEST_TOOLS,
+        });
+
+        const toolCall = result.content.find(p => p.type === 'tool-call');
+        expect(toolCall?.providerMetadata?.openai).toMatchObject({
+          itemId: 'fc_ns_1',
+          namespace: 'weather_ns',
+        });
+      });
+
+      it('should not set namespace when absent from function_call output', async () => {
+        const result = await createModel('gpt-4o').doGenerate({
+          prompt: TEST_PROMPT,
+          tools: TEST_TOOLS,
+        });
+
+        const toolCall = result.content.find(p => p.type === 'tool-call');
+        expect(
+          (toolCall?.providerMetadata?.openai as Record<string, unknown>)
+            ?.namespace,
+        ).toBeUndefined();
+      });
     });
 
     describe('code interpreter tool', () => {

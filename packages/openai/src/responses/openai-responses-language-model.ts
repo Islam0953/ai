@@ -803,6 +803,7 @@ export class OpenAIResponsesLanguageModel implements LanguageModelV4 {
             providerMetadata: {
               [providerOptionsName]: {
                 itemId: part.id,
+                ...(part.namespace != null && { namespace: part.namespace }),
               },
             },
           });
@@ -1436,6 +1437,9 @@ export class OpenAIResponsesLanguageModel implements LanguageModelV4 {
                   providerMetadata: {
                     [providerOptionsName]: {
                       itemId: value.item.id,
+                      ...(value.item.namespace != null && {
+                        namespace: value.item.namespace,
+                      }),
                     },
                   },
                 });

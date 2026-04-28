@@ -1,3 +1,5 @@
+import './object-has-own';
+
 export { asArray } from './as-array';
 export type { Arrayable } from './as-array';
 export * from './combine-headers';

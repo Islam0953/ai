@@ -5,6 +5,7 @@
     "./node_modules/ultracite/config/oxlint/react/.oxlintrc.json",
     "./node_modules/ultracite/config/oxlint/next/.oxlintrc.json"
   ],
+  "jsPlugins": ["./tools/oxlint-plugins/no-in-operator.js"],
   "overrides": [
     {
       "files": ["**/__testfixtures__/**"],
@@ -20,6 +21,8 @@
     }
   ],
   "rules": {
+    "ai-sdk-local/no-in-operator": "error",
+
     "accessor-pairs": "off",
     "array-callback-return": "off",
     "arrow-body-style": "off",

@@ -2,4 +2,4 @@
 "@ai-sdk/otel": patch
 ---
 
-feat(otel): add opt-in option to emit aisdk spans with gen-ai semantics
+feat(otel): add opt-in option to emit legacy AI SDK attributes on OpenTelemetry spans

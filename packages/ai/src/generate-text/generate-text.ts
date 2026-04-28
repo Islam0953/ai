@@ -7,6 +7,7 @@ import type {
   Arrayable,
   Context,
   InferToolSetContext,
+  SensitiveContext,
   ToolSet,
 } from '@ai-sdk/provider-utils';
 import {
@@ -37,7 +38,6 @@ import {
 } from '../prompt/request-options';
 import { standardizePrompt } from '../prompt/standardize-prompt';
 import { wrapGatewayError } from '../prompt/wrap-gateway-error';
-import { createTelemetryDispatcher } from '../telemetry/create-telemetry-dispatcher';
 import type { Telemetry } from '../telemetry/telemetry';
 import { TelemetryOptions } from '../telemetry/telemetry-options';
 import {
@@ -50,35 +50,36 @@ import {
   asLanguageModelUsage,
   LanguageModelUsage,
 } from '../types/usage';
-import type { Callback } from '../util/callback';
 import { DownloadFunction } from '../util/download/download-function';
 import { mergeAbortSignals } from '../util/merge-abort-signals';
 import { mergeObjects } from '../util/merge-objects';
 import { notify } from '../util/notify';
 import { prepareRetries } from '../util/prepare-retries';
 import { VERSION } from '../version';
+import type { ActiveTools } from './active-tools';
 import { collectToolApprovals } from './collect-tool-approvals';
 import { ContentPart } from './content-part';
+import { executeToolCall } from './execute-tool-call';
+import { filterActiveTools } from './filter-active-tools';
 import type {
-  GenerateTextEndEvent,
-  GenerateTextStartEvent,
-  GenerateTextStepEndEvent,
-  GenerateTextStepStartEvent,
-} from './core-events';
+  GenerateTextOnFinishCallback,
+  GenerateTextOnStartCallback,
+  GenerateTextOnStepFinishCallback,
+  GenerateTextOnStepStartCallback,
+} from './generate-text-events';
+import { GenerateTextResult } from './generate-text-result';
+import { DefaultGeneratedFile } from './generated-file';
 import type {
   OnLanguageModelCallEndCallback,
   OnLanguageModelCallStartCallback,
 } from './language-model-events';
-import { executeToolCall } from './execute-tool-call';
-import { filterActiveTools } from './filter-active-tool';
-import { GenerateTextResult } from './generate-text-result';
-import { DefaultGeneratedFile } from './generated-file';
-import { resolveToolApproval } from './resolve-tool-approval';
 import { Output, text } from './output';
 import { InferCompleteOutput } from './output-utils';
 import { parseToolCall } from './parse-tool-call';
 import { PrepareStepFunction } from './prepare-step';
 import { convertToReasoningOutputs } from './reasoning-output';
+import { createRestrictedTelemetryDispatcher } from './restricted-telemetry-dispatcher';
+import { resolveToolApproval } from './resolve-tool-approval';
 import { ResponseMessage } from './response-message';
 import { DefaultStepResult, StepResult } from './step-result';
 import {
@@ -110,64 +111,6 @@ const originalGenerateCallId = createIdGenerator({
   prefix: 'call',
   size: 24,
 });
-
-/**
- * Callback that is set using the `experimental_onStart` option.
- *
- * Called when the generateText operation begins, before any LLM calls.
- * Use this callback for logging, analytics, or initializing state at the
- * start of a generation.
- *
- * @param event - The event object containing generation configuration.
- */
-export type GenerateTextOnStartCallback<
-  TOOLS extends ToolSet = ToolSet,
-  RUNTIME_CONTEXT extends Context = Context,
-  OUTPUT extends Output = Output,
-> = Callback<GenerateTextStartEvent<TOOLS, RUNTIME_CONTEXT, OUTPUT>>;
-
-/**
- * Callback that is set using the `experimental_onStepStart` option.
- *
- * Called when a step (LLM call) begins, before the provider is called.
- * Each step represents a single LLM invocation. Multiple steps occur when
- * using tool calls (the model may be called multiple times in a loop).
- *
- * @param event - The event object containing step configuration.
- */
-export type GenerateTextOnStepStartCallback<
-  TOOLS extends ToolSet = ToolSet,
-  RUNTIME_CONTEXT extends Context = Context,
-  OUTPUT extends Output = Output,
-> = Callback<GenerateTextStepStartEvent<TOOLS, RUNTIME_CONTEXT, OUTPUT>>;
-
-/**
- * Callback that is set using the `onStepFinish` option.
- *
- * Called when a step (LLM call) completes. The event includes all step result
- * properties (text, tool calls, usage, etc.) along with additional metadata.
- *
- * @param stepResult - The result of the step.
- */
-export type GenerateTextOnStepFinishCallback<
-  TOOLS extends ToolSet = ToolSet,
-  RUNTIME_CONTEXT extends Context = Context,
-> = Callback<GenerateTextStepEndEvent<TOOLS, RUNTIME_CONTEXT>>;
-
-/**
- * Callback that is set using the `onFinish` option.
- *
- * Called when the entire generation completes (all steps finished).
- * The event includes the final step's result properties along with
- * aggregated data from all steps.
- *
- * @param event - The final result along with aggregated step data.
- */
-export type GenerateTextOnFinishCallback<
-  TOOLS extends ToolSet = ToolSet,
-  RUNTIME_CONTEXT extends Context = Context,
-> = Callback<GenerateTextEndEvent<TOOLS, RUNTIME_CONTEXT>>;
-
 /**
  * Generate a text and call tools for a given prompt using a language model.
  *
@@ -181,6 +124,7 @@ export type GenerateTextOnFinishCallback<
  * @param system - A system message that will be part of the prompt.
  * @param prompt - A simple text prompt. You can either use `prompt` or `messages` but not both.
  * @param messages - A list of messages. You can either use `prompt` or `messages` but not both.
+ * @param allowSystemInMessages - Whether system messages are allowed in the `prompt` or `messages` fields. Default: false.
  *
  * @param maxOutputTokens - Maximum number of tokens to generate.
  * @param temperature - Temperature setting.
@@ -209,6 +153,7 @@ export type GenerateTextOnFinishCallback<
  * @param headers - Additional HTTP headers to be sent with the request. Only applicable for HTTP-based providers.
  *
  * @param runtimeContext - User-defined runtime context that flows through the entire generation lifecycle.
+ * @param sensitiveRuntimeContext - Top-level runtime context properties that contain sensitive data and should be excluded from telemetry.
  *
  * @param experimental_onStart - Callback invoked when generation begins, before any LLM calls.
  * @param experimental_onStepStart - Callback invoked when each step begins, before the provider is called.
@@ -234,6 +179,7 @@ export async function generateText<
   system,
   prompt,
   messages,
+  allowSystemInMessages,
   maxRetries: maxRetriesArg,
   abortSignal,
   timeout,
@@ -249,6 +195,7 @@ export async function generateText<
   experimental_repairToolCall: repairToolCall,
   experimental_download: download,
   runtimeContext = {} as RUNTIME_CONTEXT,
+  sensitiveRuntimeContext,
   toolsContext = {} as InferToolSetContext<TOOLS>,
   experimental_include: include,
   _internal: {
@@ -312,10 +259,16 @@ export async function generateText<
     runtimeContext?: RUNTIME_CONTEXT;
 
     /**
+     * Top-level runtime context properties that contain sensitive data and
+     * should be excluded from telemetry.
+     */
+    sensitiveRuntimeContext?: SensitiveContext<NoInfer<RUNTIME_CONTEXT>>;
+
+    /**
      * Limits the tools that are available for the model to call without
      * changing the tool call and result types in the result.
      */
-    activeTools?: Array<keyof NoInfer<TOOLS>>;
+    activeTools?: ActiveTools<NoInfer<TOOLS>>;
 
     /**
      * Optional specification for parsing structured outputs from the LLM response.
@@ -468,12 +421,19 @@ export async function generateText<
     system,
     prompt,
     messages,
+    allowSystemInMessages,
   } as Prompt);
 
   const callId = generateCallId();
 
-  const telemetryDispatcher = createTelemetryDispatcher({
+  const telemetryDispatcher = createRestrictedTelemetryDispatcher<
+    TOOLS,
+    RUNTIME_CONTEXT,
+    OUTPUT
+  >({
     telemetry,
+    tools,
+    sensitiveRuntimeContext,
   });
 
   await notify({
@@ -504,12 +464,7 @@ export async function generateText<
       runtimeContext,
       toolsContext,
     },
-    callbacks: [
-      onStart,
-      telemetryDispatcher.onStart as
-        | undefined
-        | GenerateTextOnStartCallback<TOOLS, RUNTIME_CONTEXT, OUTPUT>,
-    ],
+    callbacks: [onStart, telemetryDispatcher.onStart],
   });
 
   try {
@@ -542,9 +497,7 @@ export async function generateText<
             event,
             callbacks: [
               onToolExecutionStart,
-              telemetryDispatcher.onToolExecutionStart as
-                | undefined
-                | OnToolExecutionStartCallback<TOOLS>,
+              telemetryDispatcher.onToolExecutionStart,
             ],
           }),
         onToolExecutionEnd: event =>
@@ -552,9 +505,7 @@ export async function generateText<
             event,
             callbacks: [
               onToolExecutionEnd,
-              telemetryDispatcher.onToolExecutionEnd as
-                | undefined
-                | OnToolExecutionEndCallback<TOOLS>,
+              telemetryDispatcher.onToolExecutionEnd,
             ],
           }),
         executeToolInTelemetryContext: telemetryDispatcher.executeTool,
@@ -704,12 +655,7 @@ export async function generateText<
             stepToolChoice,
             toolsContext,
           },
-          callbacks: [
-            onStepStart,
-            telemetryDispatcher.onStepStart as
-              | undefined
-              | GenerateTextOnStepStartCallback<TOOLS, RUNTIME_CONTEXT, OUTPUT>,
-          ],
+          callbacks: [onStepStart, telemetryDispatcher.onStepStart],
         });
 
         await notify({
@@ -941,9 +887,7 @@ export async function generateText<
                   event,
                   callbacks: [
                     onToolExecutionStart,
-                    telemetryDispatcher.onToolExecutionStart as
-                      | undefined
-                      | OnToolExecutionStartCallback<TOOLS>,
+                    telemetryDispatcher.onToolExecutionStart,
                   ],
                 }),
               onToolExecutionEnd: event =>
@@ -951,9 +895,7 @@ export async function generateText<
                   event,
                   callbacks: [
                     onToolExecutionEnd,
-                    telemetryDispatcher.onToolExecutionEnd as
-                      | undefined
-                      | OnToolExecutionEndCallback<TOOLS>,
+                    telemetryDispatcher.onToolExecutionEnd,
                   ],
                 }),
               executeToolInTelemetryContext: telemetryDispatcher.executeTool,
@@ -1055,12 +997,7 @@ export async function generateText<
 
         await notify({
           event: currentStepResult,
-          callbacks: [
-            onStepFinish,
-            telemetryDispatcher.onStepFinish as
-              | undefined
-              | GenerateTextOnStepFinishCallback<TOOLS, RUNTIME_CONTEXT>,
-          ],
+          callbacks: [onStepFinish, telemetryDispatcher.onStepFinish],
         });
       } finally {
         if (stepTimeoutId != null) {
@@ -1125,12 +1062,7 @@ export async function generateText<
 
     await notify({
       event: onFinishEvent,
-      callbacks: [
-        onFinish,
-        telemetryDispatcher.onFinish as
-          | undefined
-          | GenerateTextOnFinishCallback<TOOLS, RUNTIME_CONTEXT>,
-      ],
+      callbacks: [onFinish, telemetryDispatcher.onFinish],
     });
 
     // parse output only if the last step was finished with "stop":

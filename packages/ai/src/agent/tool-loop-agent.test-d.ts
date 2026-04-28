@@ -2,8 +2,8 @@ import { Context, tool } from '@ai-sdk/provider-utils';
 import { describe, expectTypeOf, it } from 'vitest';
 import { z } from 'zod';
 import {
+  GenerateTextOnFinishCallback,
   Output,
-  StreamTextOnFinishCallback,
   ToolApprovalConfiguration,
 } from '../generate-text';
 import { MockLanguageModelV4 } from '../test/mock-language-model-v4';
@@ -11,12 +11,11 @@ import { AsyncIterableStream } from '../util/async-iterable-stream';
 import { DeepPartial } from '../util/deep-partial';
 import { AgentCallParameters, AgentStreamParameters } from './agent';
 import { ToolLoopAgent } from './tool-loop-agent';
-import type { ToolLoopAgentOnFinishCallback } from './tool-loop-agent-settings';
 
 describe('ToolLoopAgent', () => {
   describe('onFinish callback type compatibility', () => {
     it('should allow StreamTextOnFinishCallback where ToolLoopAgentOnFinishCallback is expected', () => {
-      const streamTextCallback: StreamTextOnFinishCallback<
+      const streamTextCallback: GenerateTextOnFinishCallback<
         {},
         {}
       > = async event => {
@@ -25,18 +24,18 @@ describe('ToolLoopAgent', () => {
       };
 
       expectTypeOf(streamTextCallback).toMatchTypeOf<
-        ToolLoopAgentOnFinishCallback<{}>
+        GenerateTextOnFinishCallback<{}>
       >();
     });
 
-    it('should allow ToolLoopAgentOnFinishCallback where StreamTextOnFinishCallback is expected', () => {
-      const agentCallback: ToolLoopAgentOnFinishCallback<{}> = async event => {
+    it('should allow ToolLoopAgentOnFinishCallback where GenerateTextOnFinishCallback is expected', () => {
+      const agentCallback: GenerateTextOnFinishCallback<{}> = async event => {
         const runtimeContext: unknown = event.runtimeContext;
         runtimeContext;
       };
 
       expectTypeOf(agentCallback).toMatchTypeOf<
-        StreamTextOnFinishCallback<{}, {}>
+        GenerateTextOnFinishCallback<{}, {}>
       >();
     });
   });
@@ -237,6 +236,28 @@ describe('ToolLoopAgent', () => {
       });
     });
 
+    it('should accept sensitiveRuntimeContext for runtimeContext keys', async () => {
+      new ToolLoopAgent<never, {}, { userId: string; requestId: string }>({
+        model: new MockLanguageModelV4(),
+        runtimeContext: { userId: 'user-123', requestId: 'request-123' },
+        sensitiveRuntimeContext: {
+          userId: true,
+          requestId: false,
+        },
+      });
+    });
+
+    it('should reject unknown sensitiveRuntimeContext keys', async () => {
+      new ToolLoopAgent<never, {}, { userId: string }>({
+        model: new MockLanguageModelV4(),
+        runtimeContext: { userId: 'user-123' },
+        sensitiveRuntimeContext: {
+          // @ts-expect-error sensitiveRuntimeContext only supports runtimeContext properties
+          unknown: true,
+        },
+      });
+    });
+
     describe('prepareStep', () => {
       it('should expose default runtimeContext type', async () => {
         new ToolLoopAgent({
@@ -299,6 +320,30 @@ describe('ToolLoopAgent', () => {
               telemetryId: string;
             }>();
             expectTypeOf(toolsContext).toEqualTypeOf<{}>();
+          },
+        });
+      });
+    });
+
+    describe('prepareCall', () => {
+      it('should expose sensitiveRuntimeContext type', async () => {
+        new ToolLoopAgent<never, {}, { userId: string; requestId: string }>({
+          model: new MockLanguageModelV4(),
+          runtimeContext: { userId: 'user-123', requestId: 'request-123' },
+          sensitiveRuntimeContext: { userId: true },
+          prepareCall: options => {
+            expectTypeOf(options.sensitiveRuntimeContext).toEqualTypeOf<
+              | {
+                  userId?: boolean | undefined;
+                  requestId?: boolean | undefined;
+                }
+              | undefined
+            >();
+
+            return {
+              ...options,
+              prompt: 'Hello, world!',
+            };
           },
         });
       });

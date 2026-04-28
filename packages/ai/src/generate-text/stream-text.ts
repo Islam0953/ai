@@ -8,6 +8,7 @@ import type {
   Arrayable,
   Context,
   InferToolSetContext,
+  SensitiveContext,
   ToolApprovalResponse,
   ToolSet,
 } from '@ai-sdk/provider-utils';
@@ -40,7 +41,6 @@ import {
 } from '../prompt/request-options';
 import { standardizePrompt } from '../prompt/standardize-prompt';
 import { wrapGatewayError } from '../prompt/wrap-gateway-error';
-import { createTelemetryDispatcher } from '../telemetry/create-telemetry-dispatcher';
 import { TelemetryOptions } from '../telemetry/telemetry-options';
 import { createTextStreamResponse } from '../text-stream/create-text-stream-response';
 import { pipeTextStreamToResponse } from '../text-stream/pipe-text-stream-to-response';
@@ -81,21 +81,16 @@ import { mergeObjects } from '../util/merge-objects';
 import { notify } from '../util/notify';
 import { now as originalNow } from '../util/now';
 import { prepareRetries } from '../util/prepare-retries';
+import type { ActiveTools } from './active-tools';
 import { collectToolApprovals } from './collect-tool-approvals';
 import { ContentPart } from './content-part';
-import type {
-  GenerateTextEndEvent,
-  GenerateTextStartEvent,
-  GenerateTextStepEndEvent,
-  GenerateTextStepStartEvent,
-} from './core-events';
 import type {
   OnLanguageModelCallEndCallback,
   OnLanguageModelCallStartCallback,
 } from './language-model-events';
 import { createExecuteToolsTransformation } from './create-execute-tools-transformation';
 import { executeToolCall } from './execute-tool-call';
-import { filterActiveTools } from './filter-active-tool';
+import { filterActiveTools } from './filter-active-tools';
 import { invokeToolCallbacksFromStream } from './invoke-tool-callbacks-from-stream';
 import { Output, text } from './output';
 import {
@@ -105,6 +100,7 @@ import {
 } from './output-utils';
 import { PrepareStepFunction } from './prepare-step';
 import { convertToReasoningOutputs } from './reasoning-output';
+import { createRestrictedTelemetryDispatcher } from './restricted-telemetry-dispatcher';
 import { ResponseMessage } from './response-message';
 import { DefaultStepResult, StepResult } from './step-result';
 import {
@@ -133,6 +129,12 @@ import {
 import { ToolOutput } from './tool-output';
 import { StaticToolOutputDenied } from './tool-output-denied';
 import { ToolsContextParameter } from './tools-context-parameter';
+import {
+  GenerateTextOnFinishCallback,
+  GenerateTextOnStartCallback,
+  GenerateTextOnStepFinishCallback,
+  GenerateTextOnStepStartCallback,
+} from './generate-text-events';
 
 const originalGenerateId = createIdGenerator({
   prefix: 'aitxt',
@@ -165,16 +167,6 @@ export type StreamTextOnErrorCallback = Callback<{
 }>;
 
 /**
- * Callback that is set using the `onStepFinish` option.
- *
- * @param stepResult - The result of the step.
- */
-export type StreamTextOnStepFinishCallback<
-  TOOLS extends ToolSet,
-  RUNTIME_CONTEXT extends Context,
-> = Callback<GenerateTextStepEndEvent<TOOLS, RUNTIME_CONTEXT>>;
-
-/**
  * Callback that is set using the `onChunk` option.
  *
  * @param event - The event that is passed to the callback.
@@ -198,16 +190,6 @@ export type StreamTextOnChunkCallback<TOOLS extends ToolSet> = (event: {
 }) => PromiseLike<void> | void;
 
 /**
- * Callback that is set using the `onFinish` option.
- *
- * @param event - The event that is passed to the callback.
- */
-export type StreamTextOnFinishCallback<
-  TOOLS extends ToolSet,
-  RUNTIME_CONTEXT extends Context,
-> = Callback<GenerateTextEndEvent<TOOLS, RUNTIME_CONTEXT>>;
-
-/**
  * Callback that is set using the `onAbort` option.
  *
  * @param event - The event that is passed to the callback.
@@ -223,36 +205,6 @@ export type StreamTextOnAbortCallback<
 }>;
 
 /**
- * Callback that is set using the `experimental_onStart` option.
- *
- * Called when the streamText operation begins, before any LLM calls.
- * Use this callback for logging, analytics, or initializing state at the
- * start of a generation.
- *
- * @param event - The event object containing generation configuration.
- */
-export type StreamTextOnStartCallback<
-  TOOLS extends ToolSet = ToolSet,
-  RUNTIME_CONTEXT extends Context = Context,
-  OUTPUT extends Output = Output,
-> = Callback<GenerateTextStartEvent<TOOLS, RUNTIME_CONTEXT, OUTPUT>>;
-
-/**
- * Callback that is set using the `experimental_onStepStart` option.
- *
- * Called when a step (LLM call) begins, before the provider is called.
- * Each step represents a single LLM invocation. Multiple steps occur when
- * using tool calls (the model may be called multiple times in a loop).
- *
- * @param event - The event object containing step configuration.
- */
-export type StreamTextOnStepStartCallback<
-  TOOLS extends ToolSet = ToolSet,
-  RUNTIME_CONTEXT extends Context = Context,
-  OUTPUT extends Output = Output,
-> = Callback<GenerateTextStepStartEvent<TOOLS, RUNTIME_CONTEXT, OUTPUT>>;
-
-/**
  * Generate a text and call tools for a given prompt using a language model.
  *
  * This function streams the output. If you do not want to stream the output, use `generateText` instead.
@@ -263,6 +215,7 @@ export type StreamTextOnStepStartCallback<
  * @param system - A system message that will be part of the prompt.
  * @param prompt - A simple text prompt. You can either use `prompt` or `messages` but not both.
  * @param messages - A list of messages. You can either use `prompt` or `messages` but not both.
+ * @param allowSystemInMessages - Whether system messages are allowed in the `prompt` or `messages` fields. Default: false.
  *
  * @param maxOutputTokens - Maximum number of tokens to generate.
  * @param temperature - Temperature setting.
@@ -291,6 +244,7 @@ export type StreamTextOnStepStartCallback<
  * @param headers - Additional HTTP headers to be sent with the request. Only applicable for HTTP-based providers.
  *
  * @param runtimeContext - User-defined runtime context that flows through the entire generation lifecycle.
+ * @param sensitiveRuntimeContext - Top-level runtime context properties that contain sensitive data and should be excluded from telemetry.
  *
  * @param onChunk - Callback that is called for each chunk of the stream. The stream processing will pause until the callback promise is resolved.
  * @param onError - Callback that is called when an error occurs during streaming. You can use it to log errors.
@@ -311,6 +265,7 @@ export function streamText<
   system,
   prompt,
   messages,
+  allowSystemInMessages,
   maxRetries,
   abortSignal,
   timeout,
@@ -341,6 +296,7 @@ export function streamText<
   experimental_onToolExecutionStart: onToolExecutionStart,
   experimental_onToolExecutionEnd: onToolExecutionEnd,
   runtimeContext = {} as RUNTIME_CONTEXT,
+  sensitiveRuntimeContext,
   toolsContext = {} as InferToolSetContext<TOOLS>,
   experimental_include: include,
   _internal: {
@@ -397,10 +353,16 @@ export function streamText<
     runtimeContext?: RUNTIME_CONTEXT;
 
     /**
+     * Top-level runtime context properties that contain sensitive data and
+     * should be excluded from telemetry.
+     */
+    sensitiveRuntimeContext?: SensitiveContext<NoInfer<RUNTIME_CONTEXT>>;
+
+    /**
      * Limits the tools that are available for the model to call without
      * changing the tool call and result types in the result.
      */
-    activeTools?: Array<keyof NoInfer<TOOLS>>;
+    activeTools?: ActiveTools<NoInfer<TOOLS>>;
 
     /**
      * Optional specification for parsing structured outputs from the LLM response.
@@ -473,7 +435,7 @@ export function streamText<
      *
      * The usage is the combined usage of all steps.
      */
-    onFinish?: StreamTextOnFinishCallback<
+    onFinish?: GenerateTextOnFinishCallback<
       NoInfer<TOOLS>,
       NoInfer<RUNTIME_CONTEXT>
     >;
@@ -486,7 +448,7 @@ export function streamText<
     /**
      * Callback that is called when each step (LLM call) is finished, including intermediate steps.
      */
-    onStepFinish?: StreamTextOnStepFinishCallback<
+    onStepFinish?: GenerateTextOnStepFinishCallback<
       NoInfer<TOOLS>,
       NoInfer<RUNTIME_CONTEXT>
     >;
@@ -495,7 +457,7 @@ export function streamText<
      * Callback that is called when the streamText operation begins,
      * before any LLM calls are made.
      */
-    experimental_onStart?: StreamTextOnStartCallback<
+    experimental_onStart?: GenerateTextOnStartCallback<
       NoInfer<TOOLS>,
       NoInfer<RUNTIME_CONTEXT>,
       NoInfer<OUTPUT>
@@ -505,7 +467,7 @@ export function streamText<
      * Callback that is called when a step (LLM call) begins,
      * before the provider is called.
      */
-    experimental_onStepStart?: StreamTextOnStepStartCallback<
+    experimental_onStepStart?: GenerateTextOnStepStartCallback<
       NoInfer<TOOLS>,
       NoInfer<RUNTIME_CONTEXT>,
       NoInfer<OUTPUT>
@@ -589,9 +551,11 @@ export function streamText<
     system,
     prompt,
     messages,
+    allowSystemInMessages,
     tools,
     toolsContext,
     runtimeContext,
+    sensitiveRuntimeContext,
     toolChoice,
     transforms: asArray(transform),
     activeTools,
@@ -776,6 +740,7 @@ class DefaultStreamTextResult<
     system,
     prompt,
     messages,
+    allowSystemInMessages,
     tools,
     toolChoice,
     transforms,
@@ -803,6 +768,7 @@ class DefaultStreamTextResult<
     onToolExecutionStart,
     onToolExecutionEnd,
     runtimeContext,
+    sensitiveRuntimeContext,
     toolsContext,
     download,
     include,
@@ -819,13 +785,15 @@ class DefaultStreamTextResult<
     chunkAbortController: AbortController | undefined;
     toolsContext: InferToolSetContext<TOOLS>;
     runtimeContext: RUNTIME_CONTEXT;
+    sensitiveRuntimeContext: SensitiveContext<RUNTIME_CONTEXT>;
     system: Prompt['system'];
     prompt: Prompt['prompt'];
     messages: Prompt['messages'];
+    allowSystemInMessages: Prompt['allowSystemInMessages'];
     tools: TOOLS | undefined;
     toolChoice: ToolChoice<TOOLS> | undefined;
     transforms: Array<StreamTextTransform<TOOLS>>;
-    activeTools: Array<keyof TOOLS> | undefined;
+    activeTools: ActiveTools<TOOLS>;
     repairToolCall: ToolCallRepairFunction<TOOLS> | undefined;
     stopConditions: Array<
       StopCondition<NoInfer<TOOLS>, NoInfer<RUNTIME_CONTEXT>>
@@ -849,26 +817,26 @@ class DefaultStreamTextResult<
     onError: StreamTextOnErrorCallback;
     onFinish:
       | undefined
-      | StreamTextOnFinishCallback<NoInfer<TOOLS>, NoInfer<RUNTIME_CONTEXT>>;
+      | GenerateTextOnFinishCallback<NoInfer<TOOLS>, NoInfer<RUNTIME_CONTEXT>>;
     onAbort:
       | undefined
       | StreamTextOnAbortCallback<NoInfer<TOOLS>, NoInfer<RUNTIME_CONTEXT>>;
     onStepFinish:
       | undefined
-      | StreamTextOnStepFinishCallback<
+      | GenerateTextOnStepFinishCallback<
           NoInfer<TOOLS>,
           NoInfer<RUNTIME_CONTEXT>
         >;
     onStart:
       | undefined
-      | StreamTextOnStartCallback<
+      | GenerateTextOnStartCallback<
           NoInfer<TOOLS>,
           NoInfer<RUNTIME_CONTEXT>,
           NoInfer<OUTPUT>
         >;
     onStepStart:
       | undefined
-      | StreamTextOnStepStartCallback<
+      | GenerateTextOnStepStartCallback<
           NoInfer<TOOLS>,
           NoInfer<RUNTIME_CONTEXT>,
           NoInfer<OUTPUT>
@@ -884,8 +852,14 @@ class DefaultStreamTextResult<
     this.includeRawChunks = includeRawChunks;
     this.tools = tools;
 
-    const telemetryDispatcher = createTelemetryDispatcher({
+    const telemetryDispatcher = createRestrictedTelemetryDispatcher<
+      TOOLS,
+      RUNTIME_CONTEXT,
+      OUTPUT
+    >({
       telemetry,
+      tools,
+      sensitiveRuntimeContext,
     });
 
     // promise to ensure that the step has been fully processed by the event processor
@@ -1202,15 +1176,7 @@ class DefaultStreamTextResult<
               providerMetadata: finalStep.providerMetadata,
               steps: recordedSteps,
             },
-            callbacks: [
-              onFinish,
-              telemetryDispatcher.onFinish as
-                | undefined
-                | StreamTextOnFinishCallback<
-                    NoInfer<TOOLS>,
-                    NoInfer<RUNTIME_CONTEXT>
-                  >,
-            ],
+            callbacks: [onFinish, telemetryDispatcher.onFinish],
           });
         } catch (error) {
           controller.error(error);
@@ -1322,6 +1288,7 @@ class DefaultStreamTextResult<
         system,
         prompt,
         messages,
+        allowSystemInMessages,
       } as Prompt);
 
       await notify({
@@ -1352,12 +1319,7 @@ class DefaultStreamTextResult<
           runtimeContext,
           toolsContext,
         },
-        callbacks: [
-          onStart,
-          telemetryDispatcher.onStart as
-            | undefined
-            | StreamTextOnStartCallback<TOOLS, RUNTIME_CONTEXT, OUTPUT>,
-        ],
+        callbacks: [onStart, telemetryDispatcher.onStart],
       });
 
       const initialMessages = initialPrompt.messages;
@@ -1418,15 +1380,11 @@ class DefaultStreamTextResult<
                 toolsContext,
                 onToolExecutionStart: filterNullable(
                   onToolExecutionStart,
-                  telemetryDispatcher.onToolExecutionStart as
-                    | OnToolExecutionStartCallback<TOOLS>
-                    | undefined,
+                  telemetryDispatcher.onToolExecutionStart,
                 ),
                 onToolExecutionEnd: filterNullable(
                   onToolExecutionEnd,
-                  telemetryDispatcher.onToolExecutionEnd as
-                    | OnToolExecutionEndCallback<TOOLS>
-                    | undefined,
+                  telemetryDispatcher.onToolExecutionEnd,
                 ),
                 executeToolInTelemetryContext: telemetryDispatcher.executeTool,
                 onPreliminaryToolResult: result => {
@@ -1633,16 +1591,7 @@ class DefaultStreamTextResult<
                     stepTools,
                     stepToolChoice,
                   },
-                  callbacks: [
-                    onStepStart,
-                    telemetryDispatcher.onStepStart as
-                      | undefined
-                      | StreamTextOnStepStartCallback<
-                          TOOLS,
-                          RUNTIME_CONTEXT,
-                          OUTPUT
-                        >,
-                  ],
+                  callbacks: [onStepStart, telemetryDispatcher.onStepStart],
                 });
               },
               ...callSettings,
@@ -1670,15 +1619,11 @@ class DefaultStreamTextResult<
               generateId,
               onToolExecutionStart: filterNullable(
                 onToolExecutionStart,
-                telemetryDispatcher.onToolExecutionStart as
-                  | OnToolExecutionStartCallback<TOOLS>
-                  | undefined,
+                telemetryDispatcher.onToolExecutionStart,
               ),
               onToolExecutionEnd: filterNullable(
                 onToolExecutionEnd,
-                telemetryDispatcher.onToolExecutionEnd as
-                  | OnToolExecutionEndCallback<TOOLS>
-                  | undefined,
+                telemetryDispatcher.onToolExecutionEnd,
               ),
               executeToolInTelemetryContext: telemetryDispatcher.executeTool,
             }),

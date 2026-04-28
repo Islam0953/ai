@@ -123,6 +123,7 @@ export type StreamObjectOnFinishCallback<RESULT> = (event: {
  * @param system - A system message that will be part of the prompt.
  * @param prompt - A simple text prompt. You can either use `prompt` or `messages` but not both.
  * @param messages - A list of messages. You can either use `prompt` or `messages` but not both.
+ * @param allowSystemInMessages - Whether system messages are allowed in the `prompt` or `messages` fields. Default: false.
  *
  * @param maxOutputTokens - Maximum number of tokens to generate.
  * @param temperature - Temperature setting.
@@ -313,6 +314,7 @@ export function streamObject<
     system,
     prompt,
     messages,
+    allowSystemInMessages,
     maxRetries,
     abortSignal,
     headers,
@@ -379,6 +381,7 @@ export function streamObject<
     system,
     prompt,
     messages,
+    allowSystemInMessages,
     schemaName,
     schemaDescription,
     providerOptions,
@@ -431,6 +434,7 @@ class DefaultStreamObjectResult<
     system,
     prompt,
     messages,
+    allowSystemInMessages,
     schemaName,
     schemaDescription,
     providerOptions,
@@ -455,6 +459,7 @@ class DefaultStreamObjectResult<
     system: Prompt['system'];
     prompt: Prompt['prompt'];
     messages: Prompt['messages'];
+    allowSystemInMessages: Prompt['allowSystemInMessages'];
     schemaName: string | undefined;
     schemaDescription: string | undefined;
     providerOptions: ProviderOptions | undefined;
@@ -542,6 +547,7 @@ class DefaultStreamObjectResult<
         system,
         prompt,
         messages,
+        allowSystemInMessages,
       } as Prompt);
 
       const callOptions = {

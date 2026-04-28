@@ -649,7 +649,7 @@ export class LegacyOpenTelemetry implements Telemetry {
           output: () =>
             event.reasoning.length > 0
               ? event.reasoning
-                  .filter(part => 'text' in part)
+                  .filter(part => Object.hasOwn(part, 'text'))
                   .map(part => part.text)
                   .join('\n')
               : undefined,
@@ -764,7 +764,7 @@ export class LegacyOpenTelemetry implements Telemetry {
           output: () =>
             event.reasoning.length > 0
               ? event.reasoning
-                  .filter(part => 'text' in part)
+                  .filter(part => Object.hasOwn(part, 'text'))
                   .map(part => part.text)
                   .join('\n')
               : undefined,

@@ -1427,6 +1427,13 @@ export class OpenAIResponsesLanguageModel implements LanguageModelV4 {
                 controller.enqueue({
                   type: 'tool-input-end',
                   id: value.item.call_id,
+                  ...(value.item.namespace != null && {
+                    providerMetadata: {
+                      [providerOptionsName]: {
+                        namespace: value.item.namespace,
+                      },
+                    },
+                  }),
                 });
 
                 controller.enqueue({

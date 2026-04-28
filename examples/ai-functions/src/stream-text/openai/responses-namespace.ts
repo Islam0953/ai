@@ -4,10 +4,11 @@ import { z } from 'zod';
 import { run } from '../../lib/run';
 
 /**
- * Streaming counterpart to generate-text/openai/responses-namespace.ts.
- * Emits `namespace` on `tool-input-end` providerMetadata as the
- * dispatched tool is finalized, then again on the consolidated
- * `tool-call` part.
+ * Demonstrates `namespace` propagation on dispatched function calls.
+ * Server-executed tool_search lets OpenAI search across deferred tools
+ * and dispatch one - the resulting function_call carries `namespace`
+ * identifying which deferred tool the model picked. Surfaces via
+ * `providerMetadata.openai.namespace` on the tool-call content part.
  *
  * https://developers.openai.com/api/docs/guides/function-calling#defining-namespaces
  */

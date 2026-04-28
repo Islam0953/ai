@@ -15,7 +15,7 @@ const sdk = new NodeSDK({
 });
 
 sdk.start();
-registerTelemetry(new OpenTelemetry());
+registerTelemetry(new OpenTelemetry({ legacyAttributes: true }));
 
 run(async () => {
   await generateText({

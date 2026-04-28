@@ -7,7 +7,7 @@ import { NodeSDK } from '@opentelemetry/sdk-node';
 import { run } from '../../lib/run';
 import { z } from 'zod';
 
-registerTelemetry(new LegacyOpenTelemetry(), DevToolsTelemetry());
+registerTelemetry(new OpenTelemetry({ legacyAttributes: true }));
 
 const sdk = new NodeSDK({
   spanProcessors: [new LangfuseSpanProcessor()],

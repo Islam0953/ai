@@ -74,7 +74,7 @@ describe('user messages', () => {
           { type: 'text', text: 'Hello' },
           {
             type: 'image_url',
-            image_url: { url: 'data:image/png;base64,AAECAw==' },
+            image_url: { url: 'AAECAw==' },
           },
         ],
       },
@@ -112,7 +112,7 @@ describe('user messages', () => {
           {
             type: 'image_url',
             image_url: {
-              url: 'data:image/png;base64,AAECAw==',
+              url: 'AAECAw==',
               detail: 'low',
             },
           },
@@ -515,7 +515,7 @@ describe('user messages', () => {
         expect((result.messages[0]!.content as unknown[])[0]).toEqual({
           type: 'image_url',
           image_url: {
-            url: `data:image/png;base64,${pngBase64}`,
+            url: pngBase64,
             detail: undefined,
           },
         });
@@ -539,7 +539,7 @@ describe('user messages', () => {
         expect((result.messages[0]!.content as unknown[])[0]).toEqual({
           type: 'image_url',
           image_url: {
-            url: `data:image/png;base64,${pngBase64}`,
+            url: pngBase64,
             detail: undefined,
           },
         });
@@ -612,7 +612,7 @@ describe('user messages', () => {
         expect((result.messages[0]!.content as unknown[])[0]).toEqual({
           type: 'image_url',
           image_url: {
-            url: `data:image/png;base64,${pngBase64}`,
+            url: pngBase64,
             detail: undefined,
           },
         });

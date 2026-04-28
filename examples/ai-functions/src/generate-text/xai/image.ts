@@ -1,10 +1,11 @@
-import { anthropic } from '@ai-sdk/anthropic';
+import { xai } from '@ai-sdk/xai';
 import { generateText } from 'ai';
+import fs from 'node:fs';
 import { run } from '../../lib/run';
 
 run(async () => {
   const result = await generateText({
-    model: anthropic('claude-sonnet-4-6'),
+    model: xai.chat('grok-4-1-fast-non-reasoning'),
     messages: [
       {
         role: 'user',
@@ -13,7 +14,7 @@ run(async () => {
           {
             type: 'file',
             mediaType: 'image',
-            data: 'https://github.com/vercel/ai/blob/main/examples/ai-functions/data/comic-cat.png?raw=true',
+            data: fs.readFileSync('./data/comic-cat.png'),
           },
         ],
       },
@@ -21,4 +22,7 @@ run(async () => {
   });
 
   console.log(result.text);
+  console.log();
+  console.log('Finish reason:', result.finishReason);
+  console.log('Usage:', result.usage);
 });

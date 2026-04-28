@@ -15,7 +15,7 @@ Welcome to the team! Here are the most important points to remember:
 `;
 
   const result = await generateText({
-    model: anthropic('claude-3-5-sonnet-20241022'),
+    model: anthropic('claude-sonnet-4-6'),
     messages: [
       {
         role: 'user',

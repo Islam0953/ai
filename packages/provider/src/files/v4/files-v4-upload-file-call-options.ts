@@ -1,4 +1,7 @@
-import { LanguageModelV4FilePart } from '../../language-model/v4/language-model-v4-prompt';
+import {
+  SharedV4FileDataData,
+  SharedV4FileDataText,
+} from '../../shared/v4/shared-v4-file-data';
 import { SharedV4ProviderOptions } from '../../shared/v4/shared-v4-provider-options';
 
 /**
@@ -11,10 +14,7 @@ export type FilesV4UploadFileCallOptions = {
    * - `{ type: 'data', data }`: raw bytes (`Uint8Array`) or a base64-encoded string.
    * - `{ type: 'text', text }`: inline text (UTF-8).
    */
-  data: Extract<
-    LanguageModelV4FilePart['data'],
-    { type: 'data' } | { type: 'text' }
-  >;
+  data: SharedV4FileDataData | SharedV4FileDataText;
 
   /**
    * The IANA media type of the file (e.g. `'application/pdf'`).

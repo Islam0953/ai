@@ -1,4 +1,9 @@
 import { JSONValue } from '../../json-value/json-value';
+import {
+  SharedV4FileData,
+  SharedV4FileDataData,
+  SharedV4FileDataUrl,
+} from '../../shared/v4/shared-v4-file-data';
 import { SharedV4ProviderOptions } from '../../shared/v4/shared-v4-provider-options';
 import { SharedV4ProviderReference } from '../../shared/v4/shared-v4-provider-reference';
 
@@ -104,7 +109,7 @@ export interface LanguageModelV4ReasoningFilePart {
    * - `{ type: 'data', data }`: raw bytes (Uint8Array) or base64-encoded string.
    * - `{ type: 'url', url }`: a URL that points to the file.
    */
-  data: { type: 'data'; data: Uint8Array | string } | { type: 'url'; url: URL };
+  data: SharedV4FileDataData | SharedV4FileDataUrl;
 
   /**
    * IANA media type of the file.
@@ -160,11 +165,7 @@ export interface LanguageModelV4FilePart {
    * - `{ type: 'reference', reference }`: a provider reference (`{ [provider]: id }`).
    * - `{ type: 'text', text }`: inline text content (e.g. an inline text document).
    */
-  data:
-    | { type: 'data'; data: Uint8Array | string }
-    | { type: 'url'; url: URL }
-    | { type: 'reference'; reference: SharedV4ProviderReference }
-    | { type: 'text'; text: string };
+  data: SharedV4FileData;
 
   /**
    * Either a full IANA media type (`type/subtype`, e.g. `image/png`) or just

@@ -1,5 +1,6 @@
 import { JSONValue } from '@ai-sdk/provider';
 import { DataContent } from './data-content';
+import { FileData, FileDataData, FileDataUrl } from './file-data';
 import { ProviderOptions } from './provider-options';
 import { ProviderReference } from './provider-reference';
 
@@ -71,14 +72,7 @@ export interface FilePart {
    *   a provider reference from `uploadFile`
    * - `{ type: 'text', text }`: inline text content (tagged only)
    */
-  data:
-    | { type: 'data'; data: DataContent }
-    | { type: 'url'; url: URL }
-    | { type: 'reference'; reference: ProviderReference }
-    | { type: 'text'; text: string }
-    | DataContent
-    | URL
-    | ProviderReference;
+  data: FileData | DataContent | URL | ProviderReference;
 
   /**
    * Optional filename of the file.
@@ -167,11 +161,7 @@ export interface ReasoningFilePart {
    *   (base64 string, Uint8Array, ArrayBuffer, Buffer)
    * - `{ type: 'url', url }` or bare `URL`: a URL that points to the file
    */
-  data:
-    | { type: 'data'; data: DataContent }
-    | { type: 'url'; url: URL }
-    | DataContent
-    | URL;
+  data: FileDataData | FileDataUrl | DataContent | URL;
 
   /**
    * IANA media type of the file.

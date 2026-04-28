@@ -200,7 +200,7 @@ export class HttpMCPTransport implements MCPTransport {
 
         // Notifications (messages without 'id') don't expect a JSON-RPC response
         // Some servers return 200 with acknowledgment JSON instead of 202
-        const isNotification = !('id' in message);
+        const isNotification = !Object.hasOwn(message, 'id');
         if (isNotification) {
           return;
         }

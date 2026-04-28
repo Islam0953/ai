@@ -380,7 +380,10 @@ export class XaiResponsesLanguageModel implements LanguageModelV4 {
 
             if (contentPart.annotations) {
               for (const annotation of contentPart.annotations) {
-                if (annotation.type === 'url_citation' && 'url' in annotation) {
+                if (
+                  annotation.type === 'url_citation' &&
+                  Object.hasOwn(annotation, 'url')
+                ) {
                   content.push({
                     type: 'source',
                     sourceType: 'url',
@@ -660,7 +663,7 @@ export class XaiResponsesLanguageModel implements LanguageModelV4 {
                 for (const annotation of event.annotations) {
                   if (
                     annotation.type === 'url_citation' &&
-                    'url' in annotation
+                    Object.hasOwn(annotation, 'url')
                   ) {
                     controller.enqueue({
                       type: 'source',
@@ -678,7 +681,10 @@ export class XaiResponsesLanguageModel implements LanguageModelV4 {
 
             if (event.type === 'response.output_text.annotation.added') {
               const annotation = event.annotation;
-              if (annotation.type === 'url_citation' && 'url' in annotation) {
+              if (
+                annotation.type === 'url_citation' &&
+                Object.hasOwn(annotation, 'url')
+              ) {
                 controller.enqueue({
                   type: 'source',
                   sourceType: 'url',
@@ -704,17 +710,16 @@ export class XaiResponsesLanguageModel implements LanguageModelV4 {
               }
 
               if (event.type === 'response.incomplete') {
-                const reason =
-                  'incomplete_details' in response
-                    ? response.incomplete_details?.reason
-                    : undefined;
+                const reason = Object.hasOwn(response, 'incomplete_details')
+                  ? response.incomplete_details?.reason
+                  : undefined;
                 finishReason = {
                   unified: reason
                     ? mapXaiResponsesFinishReason(reason)
                     : 'other',
                   raw: reason ?? 'incomplete',
                 };
-              } else if ('status' in response && response.status) {
+              } else if (Object.hasOwn(response, 'status') && response.status) {
                 finishReason = {
                   unified: hasFunctionCall
                     ? 'tool-calls'
@@ -782,7 +787,7 @@ export class XaiResponsesLanguageModel implements LanguageModelV4 {
 
                   // Emit reasoning-start if not already emitted (e.g., for encrypted reasoning
                   // where reasoning_summary_part.added events may not be sent)
-                  if (!(part.id in activeReasoning)) {
+                  if (activeReasoning[part.id] == null) {
                     activeReasoning[part.id] = {};
                     controller.enqueue({
                       type: 'reasoning-start',
@@ -977,7 +982,7 @@ export class XaiResponsesLanguageModel implements LanguageModelV4 {
                     for (const annotation of contentPart.annotations) {
                       if (
                         annotation.type === 'url_citation' &&
-                        'url' in annotation
+                        Object.hasOwn(annotation, 'url')
                       ) {
                         controller.enqueue({
                           type: 'source',

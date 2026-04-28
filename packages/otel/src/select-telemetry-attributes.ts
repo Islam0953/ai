@@ -34,7 +34,7 @@ export async function selectTelemetryAttributes({
     // input value, check if it should be recorded:
     if (
       typeof value === 'object' &&
-      'input' in value &&
+      Object.hasOwn(value, 'input') &&
       typeof value.input === 'function'
     ) {
       // default to true:
@@ -54,7 +54,7 @@ export async function selectTelemetryAttributes({
     // output value, check if it should be recorded:
     if (
       typeof value === 'object' &&
-      'output' in value &&
+      Object.hasOwn(value, 'output') &&
       typeof value.output === 'function'
     ) {
       // default to true:

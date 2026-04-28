@@ -61,8 +61,8 @@ export async function convertToLanguageModelPrompt({
       for (const part of message.content) {
         if (
           part.type === 'tool-approval-request' &&
-          'approvalId' in part &&
-          'toolCallId' in part
+          Object.hasOwn(part, 'approvalId') &&
+          Object.hasOwn(part, 'toolCallId')
         ) {
           approvalIdToToolCallId.set(
             part.approvalId as string,

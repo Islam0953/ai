@@ -318,7 +318,7 @@ export class CohereChatLanguageModel implements LanguageModelV4 {
               }
 
               case 'content-delta': {
-                if ('thinking' in value.delta.message.content) {
+                if (Object.hasOwn(value.delta.message.content, 'thinking')) {
                   controller.enqueue({
                     type: 'reasoning-delta',
                     id: String(value.index),

@@ -170,7 +170,7 @@ describe('GatewaySpendReport', () => {
         credentialType: 'byok',
         totalCost: 5.0,
       });
-      expect('credential_type' in result.results[0]).toBe(false);
+      expect(Object.hasOwn(result.results[0], 'credential_type')).toBe(false);
     });
 
     it('should handle groupBy model response', async () => {
@@ -244,8 +244,8 @@ describe('GatewaySpendReport', () => {
         day: '2026-03-01',
         totalCost: 1.5,
       });
-      expect('marketCost' in result.results[0]).toBe(false);
-      expect('inputTokens' in result.results[0]).toBe(false);
+      expect(Object.hasOwn(result.results[0], 'marketCost')).toBe(false);
+      expect(Object.hasOwn(result.results[0], 'inputTokens')).toBe(false);
     });
 
     it('should pass headers correctly', async () => {

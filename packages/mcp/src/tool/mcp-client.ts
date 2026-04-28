@@ -71,16 +71,20 @@ function mcpToModelOutput({
 }): ToolResultOutput {
   const result = output as CallToolResult;
 
-  if (!('content' in result) || !Array.isArray(result.content)) {
+  if (!Object.hasOwn(result, 'content') || !Array.isArray(result.content)) {
     return { type: 'json', value: result as JSONValue };
   }
 
   const convertedContent = result.content.map(
     (part: { type: string; [key: string]: unknown }) => {
-      if (part.type === 'text' && 'text' in part) {
+      if (part.type === 'text' && Object.hasOwn(part, 'text')) {
         return { type: 'text' as const, text: part.text as string };
       }
-      if (part.type === 'image' && 'data' in part && 'mimeType' in part) {
+      if (
+        part.type === 'image' &&
+        Object.hasOwn(part, 'data') &&
+        Object.hasOwn(part, 'mimeType')
+      ) {
         return {
           type: 'file-data' as const,
           data: part.data as string,
@@ -244,9 +248,9 @@ class DefaultMCPClient implements MCPClient {
     this.transport.onclose = () => this.onClose();
     this.transport.onerror = (error: Error) => this.onError(error);
     this.transport.onmessage = message => {
-      if ('method' in message) {
-        if ('id' in message) {
-          this.onRequestMessage(message);
+      if (Object.hasOwn(message, 'method')) {
+        if (Object.hasOwn(message, 'id')) {
+          this.onRequestMessage(message as JSONRPCRequest);
         } else {
           this.onError(
             new MCPClientError({
@@ -257,7 +261,7 @@ class DefaultMCPClient implements MCPClient {
         return;
       }
 
-      this.onResponse(message);
+      this.onResponse(message as JSONRPCResponse | JSONRPCError);
     };
 
     this.clientInfo = {
@@ -598,7 +602,7 @@ class DefaultMCPClient implements MCPClient {
       _meta,
     } of definitions.tools) {
       const resolvedTitle = title ?? annotations?.title;
-      if (schemas !== 'automatic' && !(name in schemas)) {
+      if (schemas !== 'automatic' && !Object.hasOwn(schemas, name)) {
         continue;
       }
 
@@ -660,7 +664,10 @@ class DefaultMCPClient implements MCPClient {
     outputSchema: FlexibleSchema<unknown>,
     toolName: string,
   ): Promise<unknown> {
-    if ('structuredContent' in result && result.structuredContent != null) {
+    if (
+      Object.hasOwn(result, 'structuredContent') &&
+      result.structuredContent != null
+    ) {
       const validationResult = await safeValidateTypes({
         value: result.structuredContent,
         schema: asSchema(outputSchema),
@@ -677,9 +684,9 @@ class DefaultMCPClient implements MCPClient {
     }
 
     // Fallback
-    if ('content' in result && Array.isArray(result.content)) {
+    if (Object.hasOwn(result, 'content') && Array.isArray(result.content)) {
       const textContent = result.content.find(c => c.type === 'text');
-      if (textContent && 'text' in textContent) {
+      if (textContent && Object.hasOwn(textContent, 'text')) {
         const parseResult = await safeParseJSON({
           text: textContent.text,
           schema: outputSchema,
@@ -875,13 +882,13 @@ class DefaultMCPClient implements MCPClient {
     this.responseHandlers.delete(messageId);
 
     handler(
-      'result' in response
-        ? response
+      Object.hasOwn(response, 'result')
+        ? (response as JSONRPCResponse)
         : new MCPClientError({
-            message: response.error.message,
-            code: response.error.code,
-            data: response.error.data,
-            cause: response.error,
+            message: (response as JSONRPCError).error.message,
+            code: (response as JSONRPCError).error.code,
+            data: (response as JSONRPCError).error.data,
+            cause: (response as JSONRPCError).error,
           }),
     );
   }

@@ -62,7 +62,7 @@ export function readStreamableValue<T = unknown>(
           }
 
           // if there is a value or a patch, use it:
-          if ('curr' in row || row.diff) {
+          if (Object.hasOwn(row, 'curr') || (row as StreamableValue<T>).diff) {
             if (row.diff) {
               // streamable patch (text only):
               if (row.diff[0] === 0) {

@@ -25,7 +25,8 @@ export async function POST(req: Request) {
           : (userContent ?? []);
 
       const textPart = userParts.find(p => p.type === 'text');
-      const promptText = textPart && 'text' in textPart ? textPart.text : '';
+      const promptText =
+        textPart && Object.hasOwn(textPart, 'text') ? textPart.text : '';
 
       const lastAssistantImage = findLastAssistantImage(modelMessages);
 

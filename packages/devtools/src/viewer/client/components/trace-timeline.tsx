@@ -421,13 +421,13 @@ function SpanDetailPanel({
     const toolCall = contentParts.find(
       (p): p is ToolCallContentPart =>
         p.type === 'tool-call' &&
-        'toolCallId' in p &&
+        Object.hasOwn(p, 'toolCallId') &&
         p.toolCallId === span.toolCallId,
     );
     const toolResult = contentParts.find(
       (p): p is ToolResultContentPart =>
         p.type === 'tool-result' &&
-        'toolCallId' in p &&
+        Object.hasOwn(p, 'toolCallId') &&
         p.toolCallId === span.toolCallId,
     );
 

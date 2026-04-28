@@ -281,18 +281,23 @@ export function createBedrockAnthropic(
         const transformedTools = tools?.map((tool: Record<string, unknown>) => {
           const toolType = tool.type as string | undefined;
 
-          if (toolType && toolType in BEDROCK_TOOL_VERSION_MAP) {
+          if (toolType && Object.hasOwn(BEDROCK_TOOL_VERSION_MAP, toolType)) {
             const newType =
               BEDROCK_TOOL_VERSION_MAP[
                 toolType as keyof typeof BEDROCK_TOOL_VERSION_MAP
               ];
-            if (newType in BEDROCK_TOOL_BETA_MAP) {
-              requiredBetas.add(BEDROCK_TOOL_BETA_MAP[newType]);
+            if (Object.hasOwn(BEDROCK_TOOL_BETA_MAP, newType)) {
+              requiredBetas.add(
+                BEDROCK_TOOL_BETA_MAP[
+                  newType as keyof typeof BEDROCK_TOOL_BETA_MAP
+                ],
+              );
             }
-            const newName =
-              newType in BEDROCK_TOOL_NAME_MAP
-                ? BEDROCK_TOOL_NAME_MAP[newType]
-                : tool.name;
+            const newName = Object.hasOwn(BEDROCK_TOOL_NAME_MAP, newType)
+              ? BEDROCK_TOOL_NAME_MAP[
+                  newType as keyof typeof BEDROCK_TOOL_NAME_MAP
+                ]
+              : tool.name;
             return {
               ...tool,
               type: newType,
@@ -300,11 +305,11 @@ export function createBedrockAnthropic(
             };
           }
 
-          if (toolType && toolType in BEDROCK_TOOL_BETA_MAP) {
+          if (toolType && Object.hasOwn(BEDROCK_TOOL_BETA_MAP, toolType)) {
             requiredBetas.add(BEDROCK_TOOL_BETA_MAP[toolType]);
           }
 
-          if (toolType && toolType in BEDROCK_TOOL_NAME_MAP) {
+          if (toolType && Object.hasOwn(BEDROCK_TOOL_NAME_MAP, toolType)) {
             return {
               ...tool,
               name: BEDROCK_TOOL_NAME_MAP[toolType],

@@ -54,9 +54,9 @@ export class AISDKError extends Error {
     return (
       error != null &&
       typeof error === 'object' &&
-      markerSymbol in error &&
-      typeof error[markerSymbol] === 'boolean' &&
-      error[markerSymbol] === true
+      Object.hasOwn(error, markerSymbol) &&
+      typeof (error as Record<symbol, unknown>)[markerSymbol] === 'boolean' &&
+      (error as Record<symbol, unknown>)[markerSymbol] === true
     );
   }
 }

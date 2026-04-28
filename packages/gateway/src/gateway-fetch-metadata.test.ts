@@ -122,8 +122,8 @@ describe('GatewayFetchMetadata', () => {
       const pricing = result.models[0].pricing;
       expect(pricing).toBeDefined();
       if (pricing) {
-        expect('input_cache_read' in pricing).toBe(false);
-        expect('input_cache_write' in pricing).toBe(false);
+        expect(Object.hasOwn(pricing, 'input_cache_read')).toBe(false);
+        expect(Object.hasOwn(pricing, 'input_cache_write')).toBe(false);
       }
     });
 

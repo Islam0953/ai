@@ -12,8 +12,8 @@ export type JsonSchema7AllOfType = {
 const isJsonSchema7AllOfType = (
   type: JsonSchema7Type | JsonSchema7StringType,
 ): type is JsonSchema7AllOfType => {
-  if ('type' in type && type.type === 'string') return false;
-  return 'allOf' in type;
+  if (Object.hasOwn(type, 'type') && type.type === 'string') return false;
+  return Object.hasOwn(type, 'allOf');
 };
 
 export function parseIntersectionDef(
@@ -39,11 +39,12 @@ export function parseIntersectionDef(
     } else {
       let nestedSchema: JsonSchema7Type = schema;
       if (
-        'additionalProperties' in schema &&
+        Object.hasOwn(schema, 'additionalProperties') &&
         schema.additionalProperties === false
       ) {
-        const { additionalProperties: _additionalProperties, ...rest } = schema;
-        nestedSchema = rest;
+        const { additionalProperties: _additionalProperties, ...rest } =
+          schema as Record<string, any>;
+        nestedSchema = rest as JsonSchema7Type;
       }
       mergedAllOf.push(nestedSchema);
     }

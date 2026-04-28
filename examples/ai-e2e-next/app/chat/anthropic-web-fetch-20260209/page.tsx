@@ -50,8 +50,8 @@ export default function TestAnthropicWebFetch20260209() {
                             code:
                               typeof part.input === 'object' &&
                               part.input !== null &&
-                              'code' in part.input
-                                ? String(part.input.code)
+                              Object.hasOwn(part.input, 'code')
+                                ? String((part.input as { code: unknown }).code)
                                 : '',
                           },
                         } as any

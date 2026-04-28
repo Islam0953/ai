@@ -106,7 +106,7 @@ export function getStepInputSummary(
       for (const part of content) {
         if (
           part.type === 'tool-result' &&
-          'toolName' in part &&
+          Object.hasOwn(part, 'toolName') &&
           part.toolName
         ) {
           toolCounts[part.toolName] = (toolCounts[part.toolName] || 0) + 1;
@@ -218,7 +218,9 @@ export function getInputTokenBreakdown(
   if (typeof tokens === 'number') return { total: tokens };
   if (typeof tokens === 'object') {
     const total =
-      'total' in tokens && typeof tokens.total === 'number' ? tokens.total : 0;
+      Object.hasOwn(tokens, 'total') && typeof tokens.total === 'number'
+        ? tokens.total
+        : 0;
     return {
       total,
       ...(typeof tokens.noCache === 'number' && { noCache: tokens.noCache }),
@@ -240,7 +242,9 @@ export function getOutputTokenBreakdown(
   if (typeof tokens === 'number') return { total: tokens };
   if (typeof tokens === 'object') {
     const total =
-      'total' in tokens && typeof tokens.total === 'number' ? tokens.total : 0;
+      Object.hasOwn(tokens, 'total') && typeof tokens.total === 'number'
+        ? tokens.total
+        : 0;
     return {
       total,
       ...(typeof tokens.text === 'number' && { text: tokens.text }),
@@ -507,7 +511,7 @@ export function buildTraceSpans(
           const tcResult = contentParts.find(
             p =>
               p.type === 'tool-result' &&
-              'toolCallId' in p &&
+              Object.hasOwn(p, 'toolCallId') &&
               p.toolCallId === tcId,
           );
 

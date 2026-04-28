@@ -58,7 +58,7 @@ export default createTransformer((fileInfo, api, options, context) => {
       const callee = path.node.callee;
       return (
         callee.type === 'MemberExpression' &&
-        'property' in callee &&
+        Object.hasOwn(callee, 'property') &&
         callee.property.type === 'Identifier' &&
         Object.keys(ERROR_METHOD_MAPPINGS).includes(callee.property.name)
       );

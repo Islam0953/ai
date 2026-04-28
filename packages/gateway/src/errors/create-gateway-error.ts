@@ -39,7 +39,7 @@ export async function createGatewayErrorFromResponse({
     const rawGenerationId =
       typeof response === 'object' &&
       response !== null &&
-      'generationId' in response
+      Object.hasOwn(response, 'generationId')
         ? (response as { generationId?: string }).generationId
         : undefined;
 

@@ -11,18 +11,18 @@ export function asProviderV4(
   provider: ProviderV2 | ProviderV3 | ProviderV4,
 ): ProviderV4 {
   if (
-    'specificationVersion' in provider &&
+    Object.hasOwn(provider, 'specificationVersion') &&
     provider.specificationVersion === 'v4'
   ) {
-    return provider;
+    return provider as ProviderV4;
   }
 
   // first ensure we have at least a v3 provider:
   const v3Provider: ProviderV3 =
-    !('specificationVersion' in provider) ||
+    !Object.hasOwn(provider, 'specificationVersion') ||
     provider.specificationVersion !== 'v3'
       ? asProviderV3(provider as ProviderV2)
-      : provider;
+      : (provider as ProviderV3);
 
   return {
     specificationVersion: 'v4',

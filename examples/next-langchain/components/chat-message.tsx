@@ -66,12 +66,15 @@ export function ChatMessage({ message }: ChatMessageProps) {
 
             // Handle tool parts
             if (isToolUIPart(part)) {
+              const toolPart = part as Record<string, unknown> & {
+                type: string;
+              };
               const toolName =
-                'toolName' in part
-                  ? part.toolName
-                  : part.type.replace('tool-', '');
-              const input = 'input' in part ? part.input : undefined;
-              const output = 'output' in part ? part.output : undefined;
+                typeof toolPart.toolName === 'string'
+                  ? toolPart.toolName
+                  : toolPart.type.replace('tool-', '');
+              const input = toolPart.input;
+              const output = toolPart.output;
 
               return (
                 <ToolInvocation

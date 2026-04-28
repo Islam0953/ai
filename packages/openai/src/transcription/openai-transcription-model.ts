@@ -217,8 +217,8 @@ export class OpenAITranscriptionModel implements TranscriptionModelV4 {
     });
 
     const language =
-      response.language != null && response.language in languageMap
-        ? languageMap[response.language as keyof typeof languageMap]
+      response.language != null && Object.hasOwn(languageMap, response.language)
+        ? (languageMap as Record<string, string>)[response.language]
         : undefined;
 
     return {

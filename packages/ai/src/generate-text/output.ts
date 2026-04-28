@@ -262,7 +262,7 @@ export const array = <ELEMENT>({
       if (
         outerValue == null ||
         typeof outerValue !== 'object' ||
-        !('elements' in outerValue) ||
+        !Object.hasOwn(outerValue, 'elements') ||
         !Array.isArray(outerValue.elements)
       ) {
         throw new NoObjectGeneratedError({
@@ -316,7 +316,7 @@ export const array = <ELEMENT>({
           if (
             outerValue == null ||
             typeof outerValue !== 'object' ||
-            !('elements' in outerValue) ||
+            !Object.hasOwn(outerValue, 'elements') ||
             !Array.isArray(outerValue.elements)
           ) {
             return undefined;
@@ -440,7 +440,7 @@ export const choice = <CHOICE extends string>({
       if (
         outerValue == null ||
         typeof outerValue !== 'object' ||
-        !('result' in outerValue) ||
+        !Object.hasOwn(outerValue, 'result') ||
         typeof outerValue.result !== 'string' ||
         !choiceOptions.includes(outerValue.result as any)
       ) {
@@ -476,7 +476,7 @@ export const choice = <CHOICE extends string>({
           if (
             outerValue == null ||
             typeof outerValue !== 'object' ||
-            !('result' in outerValue) ||
+            !Object.hasOwn(outerValue, 'result') ||
             typeof outerValue.result !== 'string'
           ) {
             return undefined;
@@ -490,7 +490,9 @@ export const choice = <CHOICE extends string>({
           if (result.state === 'successful-parse') {
             // successful parse: exact choice value
             return potentialMatches.includes(outerValue.result as any)
-              ? { partial: outerValue.result as CHOICE }
+              ? {
+                  partial: outerValue.result as CHOICE,
+                }
               : undefined;
           } else {
             // repaired parse: only return if not ambiguous

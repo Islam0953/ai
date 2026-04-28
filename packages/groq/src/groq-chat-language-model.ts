@@ -345,12 +345,15 @@ export class GroqChatLanguageModel implements LanguageModelV4 {
             const value = chunk.value;
 
             // handle error chunks:
-            if ('error' in value) {
+            if (Object.hasOwn(value, 'error')) {
               finishReason = {
                 unified: 'error',
                 raw: undefined,
               };
-              controller.enqueue({ type: 'error', error: value.error });
+              controller.enqueue({
+                type: 'error',
+                error: value.error,
+              });
               return;
             }
 
@@ -359,7 +362,13 @@ export class GroqChatLanguageModel implements LanguageModelV4 {
 
               controller.enqueue({
                 type: 'response-metadata',
-                ...getResponseMetadata(value),
+                ...getResponseMetadata(
+                  value as {
+                    id?: string | null;
+                    created?: number | null;
+                    model?: string | null;
+                  },
+                ),
               });
             }
 

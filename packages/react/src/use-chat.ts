@@ -62,7 +62,7 @@ export function useChat<UI_MESSAGE extends UIMessage = UIMessage>({
 }: UseChatOptions<UI_MESSAGE> = {}): UseChatHelpers<UI_MESSAGE> {
   // Create a single ref for all callbacks to avoid stale closures
   const callbacksRef = useRef(
-    !('chat' in options)
+    !Object.hasOwn(options, 'chat')
       ? {
           onToolCall: options.onToolCall,
           onData: options.onData,
@@ -74,7 +74,7 @@ export function useChat<UI_MESSAGE extends UIMessage = UIMessage>({
   );
 
   // Update callbacks ref on each render to keep them current
-  if (!('chat' in options)) {
+  if (!Object.hasOwn(options, 'chat')) {
     callbacksRef.current = {
       onToolCall: options.onToolCall,
       onData: options.onData,
@@ -96,16 +96,19 @@ export function useChat<UI_MESSAGE extends UIMessage = UIMessage>({
   };
 
   const chatRef = useRef<Chat<UI_MESSAGE>>(
-    'chat' in options ? options.chat : new Chat(optionsWithCallbacks),
+    Object.hasOwn(options, 'chat')
+      ? options.chat
+      : new Chat(optionsWithCallbacks),
   );
 
   const shouldRecreateChat =
-    ('chat' in options && options.chat !== chatRef.current) ||
-    ('id' in options && chatRef.current.id !== options.id);
+    (Object.hasOwn(options, 'chat') && options.chat !== chatRef.current) ||
+    (Object.hasOwn(options, 'id') && chatRef.current.id !== options.id);
 
   if (shouldRecreateChat) {
-    chatRef.current =
-      'chat' in options ? options.chat : new Chat(optionsWithCallbacks);
+    chatRef.current = Object.hasOwn(options, 'chat')
+      ? options.chat
+      : new Chat(optionsWithCallbacks);
   }
 
   const subscribeToMessages = useCallback(

@@ -47,7 +47,7 @@ export function parseUnionDef(
   if (
     options.every(
       x =>
-        x._def.typeName in primitiveMappings &&
+        Object.hasOwn(primitiveMappings, x._def.typeName) &&
         (!x._def.checks || !x._def.checks.length),
     )
   ) {

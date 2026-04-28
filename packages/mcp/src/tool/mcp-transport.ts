@@ -93,12 +93,10 @@ export function createMcpTransport(config: MCPTransportConfig): MCPTransport {
 export function isCustomMcpTransport(
   transport: MCPTransportConfig | MCPTransport,
 ): transport is MCPTransport {
+  const t = transport as Partial<MCPTransport>;
   return (
-    'start' in transport &&
-    typeof transport.start === 'function' &&
-    'send' in transport &&
-    typeof transport.send === 'function' &&
-    'close' in transport &&
-    typeof transport.close === 'function'
+    typeof t.start === 'function' &&
+    typeof t.send === 'function' &&
+    typeof t.close === 'function'
   );
 }

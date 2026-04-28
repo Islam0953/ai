@@ -253,12 +253,23 @@ export async function generateObject<
 
   const model = resolveLanguageModel(modelArg);
 
-  const enumValues = 'enum' in options ? options.enum : undefined;
-  const {
-    schema: inputSchema,
-    schemaDescription,
-    schemaName,
-  } = 'schema' in options ? options : {};
+  // `options` is a deeply generic union, so TS leaves the property types as
+  // `unknown` after the `Object.hasOwn` narrow — cast back to the declared
+  // shapes from the function signature.
+  const enumValues = (
+    Object.hasOwn(options, 'enum') ? options.enum : undefined
+  ) as Array<RESULT> | undefined;
+  const inputSchema = (
+    Object.hasOwn(options, 'schema') ? options.schema : undefined
+  ) as FlexibleSchema<unknown> | undefined;
+  const schemaName = (
+    Object.hasOwn(options, 'schemaName') ? options.schemaName : undefined
+  ) as string | undefined;
+  const schemaDescription = (
+    Object.hasOwn(options, 'schemaDescription')
+      ? options.schemaDescription
+      : undefined
+  ) as string | undefined;
 
   validateObjectGenerationInput({
     output,

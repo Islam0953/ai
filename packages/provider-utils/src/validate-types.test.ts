@@ -10,9 +10,9 @@ const customSchema: StandardSchema<{ name: string; age: number }> = {
     validate: async (value: any) => {
       return typeof value === 'object' &&
         value !== null &&
-        'name' in value &&
+        Object.hasOwn(value, 'name') &&
         typeof value.name === 'string' &&
-        'age' in value &&
+        Object.hasOwn(value, 'age') &&
         typeof value.age === 'number'
         ? { value }
         : { issues: [new Error('Invalid input')] };

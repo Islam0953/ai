@@ -27,7 +27,7 @@ export default function OpenAIMCPView({
       if (
         output &&
         typeof output === 'object' &&
-        'type' in output &&
+        Object.hasOwn(output, 'type') &&
         output.type === 'call'
       ) {
         return (

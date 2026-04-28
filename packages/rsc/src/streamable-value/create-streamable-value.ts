@@ -15,14 +15,15 @@ const STREAMABLE_VALUE_INTERNAL_LOCK = Symbol('streamable.value.lock');
 function createStreamableValue<T = any, E = any>(
   initialValue?: T | ReadableStream<T>,
 ) {
+  const maybeStream = initialValue as ReadableStream<T> | undefined;
   const isReadableStream =
     initialValue instanceof ReadableStream ||
     (typeof initialValue === 'object' &&
       initialValue !== null &&
-      'getReader' in initialValue &&
-      typeof initialValue.getReader === 'function' &&
-      'locked' in initialValue &&
-      typeof initialValue.locked === 'boolean');
+      Object.hasOwn(initialValue, 'getReader') &&
+      typeof maybeStream?.getReader === 'function' &&
+      Object.hasOwn(initialValue, 'locked') &&
+      typeof maybeStream.locked === 'boolean');
 
   if (!isReadableStream) {
     return createStreamableValueImpl<T, E>(initialValue);
@@ -39,7 +40,7 @@ function createStreamableValue<T = any, E = any>(
   (async () => {
     try {
       // Consume the readable stream and update the value.
-      const reader = initialValue.getReader();
+      const reader = (initialValue as ReadableStream<T>).getReader();
 
       while (true) {
         const { value, done } = await reader.read();
@@ -50,7 +51,7 @@ function createStreamableValue<T = any, E = any>(
         // Unlock the value to allow updates.
         streamableValue[STREAMABLE_VALUE_INTERNAL_LOCK] = false;
         if (typeof value === 'string') {
-          streamableValue.append(value);
+          streamableValue.append(value as T);
         } else {
           streamableValue.update(value);
         }

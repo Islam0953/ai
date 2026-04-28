@@ -28,6 +28,6 @@ export class GatewayRateLimitError extends GatewayError {
   }
 
   static isInstance(error: unknown): error is GatewayRateLimitError {
-    return GatewayError.hasMarker(error) && symbol in error;
+    return GatewayError.hasMarker(error) && Object.hasOwn(error, symbol);
   }
 }

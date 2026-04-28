@@ -164,10 +164,11 @@ async function callModel(state: typeof MessagesAnnotation.State) {
  * Determine if we should continue to tools or end
  */
 function shouldContinue(state: typeof MessagesAnnotation.State) {
-  const lastMessage = state.messages[state.messages.length - 1];
+  const lastMessage = state.messages[state.messages.length - 1] as
+    | { tool_calls?: unknown }
+    | undefined;
   if (
     lastMessage &&
-    'tool_calls' in lastMessage &&
     Array.isArray(lastMessage.tool_calls) &&
     lastMessage.tool_calls.length > 0
   ) {

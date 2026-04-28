@@ -370,7 +370,7 @@ export function isToolResultPart(item: unknown): item is ToolResultPart {
   return (
     item != null &&
     typeof item === 'object' &&
-    'type' in item &&
+    Object.hasOwn(item, 'type') &&
     (item as { type: string }).type === 'tool-result'
   );
 }
@@ -474,7 +474,7 @@ export function processModelChunk(
               (c): c is { type: 'text'; text: string } =>
                 typeof c === 'object' &&
                 c !== null &&
-                'type' in c &&
+                Object.hasOwn(c, 'type') &&
                 c.type === 'text',
             )
             .map(c => c.text)
@@ -583,7 +583,7 @@ export function isAIMessageChunk(
     /**
      * Direct type === 'ai' (RemoteGraph format)
      */
-    if ('type' in obj && obj.type === 'ai') return true;
+    if (Object.hasOwn(obj, 'type') && obj.type === 'ai') return true;
     /**
      * Serialized LangChain message format: { lc: 1, type: "constructor", id: ["...", "AIMessageChunk"], kwargs: {...} }
      */
@@ -616,7 +616,7 @@ export function isToolMessageType(
     /**
      * Direct type === 'tool' (RemoteGraph format)
      */
-    if ('type' in obj && obj.type === 'tool') return true;
+    if (Object.hasOwn(obj, 'type') && obj.type === 'tool') return true;
     /**
      * Serialized LangChain message format
      */
@@ -654,7 +654,7 @@ export function getMessageText(msg: unknown): string {
       ? (msgObj.kwargs as Record<string, unknown>)
       : msgObj;
 
-  if ('content' in dataSource) {
+  if (Object.hasOwn(dataSource, 'content')) {
     const content = dataSource.content;
     /**
      * Handle string content
@@ -694,9 +694,9 @@ export function isReasoningContentBlock(
   return (
     obj != null &&
     typeof obj === 'object' &&
-    'type' in obj &&
+    Object.hasOwn(obj, 'type') &&
     (obj as { type: string }).type === 'reasoning' &&
-    'reasoning' in obj &&
+    Object.hasOwn(obj, 'reasoning') &&
     typeof (obj as { reasoning: unknown }).reasoning === 'string'
   );
 }
@@ -713,9 +713,9 @@ export function isThinkingContentBlock(
   return (
     obj != null &&
     typeof obj === 'object' &&
-    'type' in obj &&
+    Object.hasOwn(obj, 'type') &&
     (obj as { type: string }).type === 'thinking' &&
-    'thinking' in obj &&
+    Object.hasOwn(obj, 'thinking') &&
     typeof (obj as { thinking: unknown }).thinking === 'string'
   );
 }
@@ -727,9 +727,9 @@ function isGPT5ReasoningOutput(obj: unknown): obj is GPT5ReasoningOutput {
   return (
     obj != null &&
     typeof obj === 'object' &&
-    'type' in obj &&
+    Object.hasOwn(obj, 'type') &&
     (obj as { type: string }).type === 'reasoning' &&
-    'summary' in obj &&
+    Object.hasOwn(obj, 'summary') &&
     Array.isArray((obj as { summary: unknown }).summary)
   );
 }
@@ -832,7 +832,7 @@ export function extractReasoningFromContentBlocks(
       if (
         typeof summaryItem === 'object' &&
         summaryItem !== null &&
-        'text' in summaryItem &&
+        Object.hasOwn(summaryItem, 'text') &&
         typeof (summaryItem as { text: unknown }).text === 'string'
       ) {
         reasoningParts.push((summaryItem as { text: string }).text);
@@ -902,7 +902,7 @@ export function extractReasoningFromValuesMessage(
       if (
         typeof summaryItem === 'object' &&
         summaryItem !== null &&
-        'text' in summaryItem &&
+        Object.hasOwn(summaryItem, 'text') &&
         typeof (summaryItem as { text: unknown }).text === 'string'
       ) {
         reasoningParts.push((summaryItem as { text: string }).text);
@@ -928,7 +928,7 @@ export function isImageGenerationOutput(
   return (
     obj != null &&
     typeof obj === 'object' &&
-    'type' in obj &&
+    Object.hasOwn(obj, 'type') &&
     (obj as { type: string }).type === 'image_generation_call'
   );
 }
@@ -1328,7 +1328,11 @@ export function processLangGraphEvent(
        * Also check for tool calls in the final state that weren't streamed
        * This handles cases where tool calls appear directly in values without being in messages events
        */
-      if (data != null && typeof data === 'object' && 'messages' in data) {
+      if (
+        data != null &&
+        typeof data === 'object' &&
+        Object.hasOwn(data, 'messages')
+      ) {
         const messages = (data as { messages?: unknown[] }).messages;
         if (Array.isArray(messages)) {
           /**

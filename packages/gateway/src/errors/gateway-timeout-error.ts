@@ -28,7 +28,7 @@ export class GatewayTimeoutError extends GatewayError {
   }
 
   static isInstance(error: unknown): error is GatewayTimeoutError {
-    return GatewayError.hasMarker(error) && symbol in error;
+    return GatewayError.hasMarker(error) && Object.hasOwn(error, symbol);
   }
 
   /**

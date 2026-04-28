@@ -49,7 +49,7 @@ async function getInputFromUser(
       typeof schema === 'object' &&
       !Array.isArray(schema) &&
       (schema as { type?: string }).type === 'object' &&
-      'properties' in schema &&
+      Object.hasOwn(schema, 'properties') &&
       typeof (schema as { properties?: unknown }).properties === 'object' &&
       (schema as { properties?: unknown }).properties !== null
     ) {

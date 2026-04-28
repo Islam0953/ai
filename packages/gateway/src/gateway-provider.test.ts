@@ -174,7 +174,7 @@ describe('GatewayProvider', () => {
     mockGetAvailableModels.mockReturnValue({ models: [] });
     mockGetCredits.mockReturnValue({ balance: '100.00', total_used: '50.00' });
     mockGetSpendReport.mockReturnValue({ results: [] });
-    if ('AI_GATEWAY_API_KEY' in process.env) {
+    if (Object.hasOwn(process.env, 'AI_GATEWAY_API_KEY')) {
       Reflect.deleteProperty(process.env, 'AI_GATEWAY_API_KEY');
     }
   });

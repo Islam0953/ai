@@ -28,6 +28,6 @@ export class GatewayInternalServerError extends GatewayError {
   }
 
   static isInstance(error: unknown): error is GatewayInternalServerError {
-    return GatewayError.hasMarker(error) && symbol in error;
+    return GatewayError.hasMarker(error) && Object.hasOwn(error, symbol);
   }
 }

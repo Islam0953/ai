@@ -1278,7 +1278,9 @@ export class WorkflowAgent<TBaseTools extends ToolSet = ToolSet> {
             input: approvedToolApprovals.find(
               a => a.toolCallId === r.toolCallId,
             )?.input,
-            output: 'value' in r.output ? r.output.value : undefined,
+            output: Object.hasOwn(r.output, 'value')
+              ? r.output.value
+              : undefined,
           }));
         const deniedResults = toolResultContent
           .filter(r => r.output.type === 'execution-denied')
@@ -1442,7 +1444,7 @@ export class WorkflowAgent<TBaseTools extends ToolSet = ToolSet> {
       if (mergedOnToolExecutionEnd) {
         const isError =
           result.output &&
-          'type' in result.output &&
+          Object.hasOwn(result.output, 'type') &&
           (result.output.type === 'error-text' ||
             result.output.type === 'error-json');
         if (isError) {
@@ -1451,7 +1453,9 @@ export class WorkflowAgent<TBaseTools extends ToolSet = ToolSet> {
             stepNumber: currentStepNumber,
             durationMs,
             success: false,
-            error: 'value' in result.output ? result.output.value : undefined,
+            error: Object.hasOwn(result.output, 'value')
+              ? result.output.value
+              : undefined,
           });
         } else {
           await mergedOnToolExecutionEnd({
@@ -1460,7 +1464,7 @@ export class WorkflowAgent<TBaseTools extends ToolSet = ToolSet> {
             durationMs,
             success: true,
             output:
-              result.output && 'value' in result.output
+              result.output && Object.hasOwn(result.output, 'value')
                 ? result.output.value
                 : undefined,
           });
@@ -1639,7 +1643,9 @@ export class WorkflowAgent<TBaseTools extends ToolSet = ToolSet> {
               toolName: r.toolName,
               input: toolCalls.find(tc => tc.toolCallId === r.toolCallId)
                 ?.input,
-              output: 'value' in r.output ? r.output.value : undefined,
+              output: Object.hasOwn(r.output, 'value')
+                ? r.output.value
+                : undefined,
             }));
 
             if (resolvedResults.length > 0) {
@@ -1759,7 +1765,9 @@ export class WorkflowAgent<TBaseTools extends ToolSet = ToolSet> {
                 toolName: r.toolName,
                 input: toolCalls.find(tc => tc.toolCallId === r.toolCallId)
                   ?.input,
-                output: 'value' in r.output ? r.output.value : undefined,
+                output: Object.hasOwn(r.output, 'value')
+                  ? r.output.value
+                  : undefined,
               })),
             );
           }
@@ -1776,7 +1784,9 @@ export class WorkflowAgent<TBaseTools extends ToolSet = ToolSet> {
             toolCallId: r.toolCallId,
             toolName: r.toolName,
             input: toolCalls.find(tc => tc.toolCallId === r.toolCallId)?.input,
-            output: 'value' in r.output ? r.output.value : undefined,
+            output: Object.hasOwn(r.output, 'value')
+              ? r.output.value
+              : undefined,
           }));
 
           result = await iterator.next(continuationToolResults);

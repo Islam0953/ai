@@ -102,7 +102,7 @@ export const experimental_useObject = function useObject<
   const key = `${api}|${completionId}`;
   const { data, mutate: originalMutate } = useSWRV<
     DeepPartial<RESULT> | undefined
-  >(key, () => (key in store ? store[key] : initialValue));
+  >(key, () => (Object.hasOwn(store, key) ? store[key] : initialValue));
 
   const { data: isLoading, mutate: mutateLoading } = useSWRV<boolean>(
     `${completionId}-loading`,

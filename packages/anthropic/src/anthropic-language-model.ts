@@ -984,7 +984,9 @@ export class AnthropicLanguageModel implements LanguageModelV4 {
             const callerInfo = caller
               ? {
                   type: caller.type,
-                  toolId: 'tool_id' in caller ? caller.tool_id : undefined,
+                  toolId: Object.hasOwn(caller, 'tool_id')
+                    ? caller.tool_id
+                    : undefined,
                 }
               : undefined;
 
@@ -1028,9 +1030,12 @@ export class AnthropicLanguageModel implements LanguageModelV4 {
               part.name === 'code_execution' &&
               part.input != null &&
               typeof part.input === 'object' &&
-              'code' in part.input &&
-              !('type' in part.input)
-                ? { type: 'programmatic-tool-call', ...part.input }
+              Object.hasOwn(part.input, 'code') &&
+              !Object.hasOwn(part.input, 'type')
+                ? {
+                    type: 'programmatic-tool-call',
+                    ...(part.input as Record<string, unknown>),
+                  }
                 : part.input;
 
             content.push({
@@ -1544,8 +1549,9 @@ export class AnthropicLanguageModel implements LanguageModelV4 {
                     const callerInfo = caller
                       ? {
                           type: caller.type,
-                          toolId:
-                            'tool_id' in caller ? caller.tool_id : undefined,
+                          toolId: Object.hasOwn(caller, 'tool_id')
+                            ? caller.tool_id
+                            : undefined,
                         }
                       : undefined;
 
@@ -1949,12 +1955,12 @@ export class AnthropicLanguageModel implements LanguageModelV4 {
                           if (
                             parsed != null &&
                             typeof parsed === 'object' &&
-                            'code' in parsed &&
-                            !('type' in parsed)
+                            Object.hasOwn(parsed, 'code') &&
+                            !Object.hasOwn(parsed, 'type')
                           ) {
                             finalInput = JSON.stringify({
                               type: 'programmatic-tool-call',
-                              ...parsed,
+                              ...(parsed as Record<string, unknown>),
                             });
                           }
                         } catch {
@@ -2175,8 +2181,9 @@ export class AnthropicLanguageModel implements LanguageModelV4 {
                     const callerInfo = caller
                       ? {
                           type: caller.type,
-                          toolId:
-                            'tool_id' in caller ? caller.tool_id : undefined,
+                          toolId: Object.hasOwn(caller, 'tool_id')
+                            ? caller.tool_id
+                            : undefined,
                         }
                       : undefined;
 
@@ -2474,7 +2481,7 @@ function hasWebTool20260209WithoutCodeExecution(
   let hasCodeExecutionTool = false;
   for (const tool of tools) {
     if (
-      'type' in tool &&
+      Object.hasOwn(tool, 'type') &&
       (tool.type === 'web_fetch_20260209' ||
         tool.type === 'web_search_20260209')
     ) {

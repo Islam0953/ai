@@ -104,9 +104,10 @@ function isStreamEventsEvent(
   if (value == null || typeof value !== 'object') return false;
   const obj = value as Record<string, unknown>;
   // Check for event property being a string
-  if (!('event' in obj) || typeof obj.event !== 'string') return false;
+  if (!Object.hasOwn(obj, 'event') || typeof obj.event !== 'string')
+    return false;
   // Check for data property being an object (but allow null/undefined)
-  if (!('data' in obj)) return false;
+  if (!Object.hasOwn(obj, 'data')) return false;
   // data can be null in some events, treat as empty object
   return obj.data === null || typeof obj.data === 'object';
 }
@@ -209,7 +210,7 @@ function processStreamEventsEvent(
                     (c): c is { type: 'text'; text: string } =>
                       typeof c === 'object' &&
                       c !== null &&
-                      'type' in c &&
+                      Object.hasOwn(c, 'type') &&
                       c.type === 'text',
                   )
                   .map(c => c.text)
@@ -410,7 +411,10 @@ export function toUIMessageStream<TState = unknown>(
    * Get async iterator from the stream (works for both AsyncIterable and ReadableStream)
    */
   const getAsyncIterator = (): AsyncIterator<unknown> => {
-    if (Symbol.asyncIterator in stream) {
+    if (
+      typeof (stream as AsyncIterable<unknown>)[Symbol.asyncIterator] ===
+      'function'
+    ) {
       return (stream as AsyncIterable<unknown>)[Symbol.asyncIterator]();
     }
     /**

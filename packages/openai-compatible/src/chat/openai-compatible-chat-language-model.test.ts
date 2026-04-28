@@ -3634,7 +3634,7 @@ describe('metadata extraction', () => {
       if (
         typeof parsedBody !== 'object' ||
         !parsedBody ||
-        !('test_field' in parsedBody)
+        !Object.hasOwn(parsedBody, 'test_field')
       ) {
         return undefined;
       }
@@ -3652,10 +3652,10 @@ describe('metadata extraction', () => {
           if (
             typeof chunk === 'object' &&
             chunk &&
-            'choices' in chunk &&
+            Object.hasOwn(chunk, 'choices') &&
             Array.isArray(chunk.choices) &&
             chunk.choices[0]?.finish_reason === 'stop' &&
-            'test_field' in chunk
+            Object.hasOwn(chunk, 'test_field')
           ) {
             accumulatedValue = chunk.test_field as string;
           }

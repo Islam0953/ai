@@ -89,7 +89,7 @@ function selectAttributes(
 
     if (
       typeof value === 'object' &&
-      'input' in value &&
+      Object.hasOwn(value, 'input') &&
       typeof value.input === 'function'
     ) {
       if (telemetry?.recordInputs === false) continue;
@@ -100,7 +100,7 @@ function selectAttributes(
 
     if (
       typeof value === 'object' &&
-      'output' in value &&
+      Object.hasOwn(value, 'output') &&
       typeof value.output === 'function'
     ) {
       if (telemetry?.recordOutputs === false) continue;

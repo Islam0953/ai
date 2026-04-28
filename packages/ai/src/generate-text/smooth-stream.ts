@@ -48,8 +48,7 @@ export function smoothStream<TOOLS extends ToolSet>({
   if (
     chunking != null &&
     typeof chunking === 'object' &&
-    'segment' in chunking &&
-    typeof chunking.segment === 'function'
+    typeof (chunking as Intl.Segmenter).segment === 'function'
   ) {
     const segmenter = chunking as Intl.Segmenter;
     detectChunk = (buffer: string) => {

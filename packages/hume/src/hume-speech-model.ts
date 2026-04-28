@@ -175,13 +175,15 @@ export class HumeSpeechModel implements SpeechModelV4 {
       > = {};
 
       if (humeOptions.context) {
-        if ('generationId' in humeOptions.context) {
+        if (Object.hasOwn(humeOptions.context, 'generationId')) {
           speechModelOptions.context = {
             generation_id: humeOptions.context.generationId,
           };
         } else {
           speechModelOptions.context = {
-            utterances: humeOptions.context.utterances.map(utterance => ({
+            utterances: (
+              humeOptions.context as Record<string, any>
+            ).utterances.map((utterance: any) => ({
               text: utterance.text,
               description: utterance.description,
               speed: utterance.speed,

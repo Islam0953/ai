@@ -601,7 +601,7 @@ export async function convertToAnthropicPrompt({
                     providerToolName === 'code_execution' &&
                     part.input != null &&
                     typeof part.input === 'object' &&
-                    'type' in part.input &&
+                    Object.hasOwn(part.input, 'type') &&
                     typeof part.input.type === 'string' &&
                     (part.input.type === 'bash_code_execution' ||
                       part.input.type === 'text_editor_code_execution')
@@ -619,7 +619,7 @@ export async function convertToAnthropicPrompt({
                     providerToolName === 'code_execution' &&
                     part.input != null &&
                     typeof part.input === 'object' &&
-                    'type' in part.input &&
+                    Object.hasOwn(part.input, 'type') &&
                     part.input.type === 'programmatic-tool-call'
                   ) {
                     const { type: _, ...inputWithoutType } = part.input as {
@@ -781,7 +781,7 @@ export async function convertToAnthropicPrompt({
                   if (
                     output.value == null ||
                     typeof output.value !== 'object' ||
-                    !('type' in output.value) ||
+                    !Object.hasOwn(output.value, 'type') ||
                     typeof output.value.type !== 'string'
                   ) {
                     warnings.push({

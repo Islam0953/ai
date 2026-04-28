@@ -143,7 +143,7 @@ export class BedrockEmbeddingModel implements EmbeddingModelV4 {
 
     // Extract embedding based on response format
     let embedding: number[];
-    if ('embedding' in response) {
+    if (Object.hasOwn(response, 'embedding')) {
       // Titan response
       embedding = response.embedding;
     } else if (Array.isArray(response.embeddings)) {
@@ -151,7 +151,7 @@ export class BedrockEmbeddingModel implements EmbeddingModelV4 {
       if (
         typeof firstEmbedding === 'object' &&
         firstEmbedding !== null &&
-        'embeddingType' in firstEmbedding
+        Object.hasOwn(firstEmbedding, 'embeddingType')
       ) {
         // Nova response
         embedding = firstEmbedding.embedding;
@@ -165,12 +165,11 @@ export class BedrockEmbeddingModel implements EmbeddingModelV4 {
     }
 
     // Extract token count based on response format
-    const tokens =
-      'inputTextTokenCount' in response
-        ? response.inputTextTokenCount // Titan response
-        : 'inputTokenCount' in response
-          ? (response.inputTokenCount ?? 0) // Nova response
-          : NaN; // Cohere doesn't return token count
+    const tokens = Object.hasOwn(response, 'inputTextTokenCount')
+      ? response.inputTextTokenCount // Titan response
+      : Object.hasOwn(response, 'inputTokenCount')
+        ? (response.inputTokenCount ?? 0) // Nova response
+        : NaN; // Cohere doesn't return token count
 
     return {
       embeddings: [embedding],

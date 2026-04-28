@@ -40,7 +40,7 @@ export abstract class GatewayError extends Error {
     return (
       typeof error === 'object' &&
       error !== null &&
-      symbol in error &&
+      Object.hasOwn(error, symbol) &&
       (error as any)[symbol] === true
     );
   }

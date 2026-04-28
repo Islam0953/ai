@@ -100,7 +100,11 @@ describe('zod3-to-json-schema', () => {
         }
 
         // Make all numbers nullable:
-        if ('type' in jsonSchema! && jsonSchema.type === 'number') {
+        if (
+          jsonSchema != null &&
+          Object.hasOwn(jsonSchema, 'type') &&
+          jsonSchema.type === 'number'
+        ) {
           jsonSchema.type = ['number', 'null'];
         }
 

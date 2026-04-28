@@ -1,5 +1,5 @@
 import { LanguageModelV4Prompt } from '@ai-sdk/provider';
-import type { Context as AISDKContext } from '@ai-sdk/provider-utils';
+import { type Context as AISDKContext } from '@ai-sdk/provider-utils';
 import {
   Attributes,
   AttributeValue,
@@ -83,7 +83,7 @@ function selectAttributes(
 
     if (
       typeof value === 'object' &&
-      'input' in value &&
+      Object.hasOwn(value, 'input') &&
       typeof value.input === 'function'
     ) {
       if (telemetry?.recordInputs === false) continue;
@@ -94,7 +94,7 @@ function selectAttributes(
 
     if (
       typeof value === 'object' &&
-      'output' in value &&
+      Object.hasOwn(value, 'output') &&
       typeof value.output === 'function'
     ) {
       if (telemetry?.recordOutputs === false) continue;
@@ -649,7 +649,7 @@ export class OpenTelemetry implements Telemetry {
           output: () =>
             event.reasoning.length > 0
               ? event.reasoning
-                  .filter(part => 'text' in part)
+                  .filter(part => Object.hasOwn(part, 'text'))
                   .map(part => part.text)
                   .join('\n')
               : undefined,
@@ -764,7 +764,7 @@ export class OpenTelemetry implements Telemetry {
           output: () =>
             event.reasoning.length > 0
               ? event.reasoning
-                  .filter(part => 'text' in part)
+                  .filter(part => Object.hasOwn(part, 'text'))
                   .map(part => part.text)
                   .join('\n')
               : undefined,

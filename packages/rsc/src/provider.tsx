@@ -111,7 +111,7 @@ export function createAI<
     : undefined;
 
   const AI: AIProvider<AIState, UIState, Actions> = async props => {
-    if ('useState' in React) {
+    if (Object.hasOwn(React, 'useState')) {
       // This file must be running on the React Server layer.
       // Ideally we should be using `import "server-only"` here but we can have a
       // more customized error message with this implementation.

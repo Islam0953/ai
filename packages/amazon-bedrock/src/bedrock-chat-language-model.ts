@@ -365,7 +365,7 @@ export class BedrockChatLanguageModel implements LanguageModelV4 {
     if (!hasAnyTools) {
       const hasToolContent = prompt.some(
         message =>
-          'content' in message &&
+          Object.hasOwn(message, 'content') &&
           Array.isArray(message.content) &&
           message.content.some(
             part => part.type === 'tool-call' || part.type === 'tool-result',
@@ -496,7 +496,7 @@ export class BedrockChatLanguageModel implements LanguageModelV4 {
 
       // reasoning
       if (part.reasoningContent) {
-        if ('reasoningText' in part.reasoningContent) {
+        if (Object.hasOwn(part.reasoningContent, 'reasoningText')) {
           const reasoning: LanguageModelV4Reasoning = {
             type: 'reasoning',
             text: part.reasoningContent.reasoningText.text,
@@ -511,7 +511,7 @@ export class BedrockChatLanguageModel implements LanguageModelV4 {
           }
 
           content.push(reasoning);
-        } else if ('redactedReasoning' in part.reasoningContent) {
+        } else if (Object.hasOwn(part.reasoningContent, 'redactedReasoning')) {
           content.push({
             type: 'reasoning',
             text: '',
@@ -793,7 +793,7 @@ export class BedrockChatLanguageModel implements LanguageModelV4 {
 
             if (
               value.contentBlockDelta?.delta &&
-              'text' in value.contentBlockDelta.delta &&
+              Object.hasOwn(value.contentBlockDelta.delta, 'text') &&
               value.contentBlockDelta.delta.text
             ) {
               const blockIndex = value.contentBlockDelta.contentBlockIndex || 0;
@@ -869,14 +869,21 @@ export class BedrockChatLanguageModel implements LanguageModelV4 {
 
             if (
               value.contentBlockDelta?.delta &&
-              'reasoningContent' in value.contentBlockDelta.delta &&
+              Object.hasOwn(
+                value.contentBlockDelta.delta,
+                'reasoningContent',
+              ) &&
               value.contentBlockDelta.delta.reasoningContent
             ) {
               const blockIndex = value.contentBlockDelta.contentBlockIndex || 0;
-              const reasoningContent =
-                value.contentBlockDelta.delta.reasoningContent;
+              const reasoningContent = (
+                value.contentBlockDelta.delta as Record<string, any>
+              ).reasoningContent;
 
-              if ('text' in reasoningContent && reasoningContent.text) {
+              if (
+                Object.hasOwn(reasoningContent, 'text') &&
+                reasoningContent.text
+              ) {
                 if (contentBlocks[blockIndex] == null) {
                   contentBlocks[blockIndex] = { type: 'reasoning' };
                   controller.enqueue({
@@ -891,7 +898,7 @@ export class BedrockChatLanguageModel implements LanguageModelV4 {
                   delta: reasoningContent.text,
                 });
               } else if (
-                'signature' in reasoningContent &&
+                Object.hasOwn(reasoningContent, 'signature') &&
                 reasoningContent.signature
               ) {
                 if (contentBlocks[blockIndex] == null) {
@@ -911,7 +918,10 @@ export class BedrockChatLanguageModel implements LanguageModelV4 {
                     } satisfies BedrockReasoningMetadata,
                   },
                 });
-              } else if ('data' in reasoningContent && reasoningContent.data) {
+              } else if (
+                Object.hasOwn(reasoningContent, 'data') &&
+                reasoningContent.data
+              ) {
                 if (contentBlocks[blockIndex] == null) {
                   contentBlocks[blockIndex] = { type: 'reasoning' };
                   controller.enqueue({
@@ -964,7 +974,7 @@ export class BedrockChatLanguageModel implements LanguageModelV4 {
             const contentBlockDelta = value.contentBlockDelta;
             if (
               contentBlockDelta?.delta &&
-              'toolUse' in contentBlockDelta.delta &&
+              Object.hasOwn(contentBlockDelta.delta, 'toolUse') &&
               contentBlockDelta.delta.toolUse
             ) {
               const blockIndex = contentBlockDelta.contentBlockIndex!;

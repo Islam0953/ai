@@ -365,7 +365,7 @@ export abstract class AbstractChat<UI_MESSAGE extends UIMessage> {
 
     let uiMessage: CreateUIMessage<UI_MESSAGE>;
 
-    if ('text' in message || 'files' in message) {
+    if (Object.hasOwn(message, 'text') || Object.hasOwn(message, 'files')) {
       const fileParts = Array.isArray(message.files)
         ? message.files
         : await convertFileListToFileUIParts(message.files);
@@ -373,13 +373,18 @@ export abstract class AbstractChat<UI_MESSAGE extends UIMessage> {
       uiMessage = {
         parts: [
           ...fileParts,
-          ...('text' in message && message.text != null
-            ? [{ type: 'text' as const, text: message.text }]
+          ...(Object.hasOwn(message, 'text') && message.text != null
+            ? [
+                {
+                  type: 'text' as const,
+                  text: message.text,
+                },
+              ]
             : []),
         ],
       } as UI_MESSAGE;
     } else {
-      uiMessage = message;
+      uiMessage = message as CreateUIMessage<UI_MESSAGE>;
     }
 
     if (message.messageId != null) {
@@ -599,8 +604,11 @@ export abstract class AbstractChat<UI_MESSAGE extends UIMessage> {
       messages: this.state.messages,
     });
 
-    // Check if result is a promise
-    if (result && typeof result === 'object' && 'then' in result) {
+    if (
+      result != null &&
+      typeof result === 'object' &&
+      typeof (result as PromiseLike<boolean>).then === 'function'
+    ) {
       return await result;
     }
 

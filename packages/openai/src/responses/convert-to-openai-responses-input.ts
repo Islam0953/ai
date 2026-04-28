@@ -382,7 +382,7 @@ export async function convertToOpenAIResponsesInput({
                 (part.output.type === 'json' &&
                   typeof part.output.value === 'object' &&
                   part.output.value != null &&
-                  'type' in part.output.value &&
+                  Object.hasOwn(part.output.value, 'type') &&
                   part.output.value.type === 'execution-denied')
               ) {
                 break;
@@ -882,7 +882,7 @@ export async function convertToOpenAIResponsesInput({
     !store &&
     input.some(
       item =>
-        'type' in item &&
+        Object.hasOwn(item, 'type') &&
         item.type === 'reasoning' &&
         item.encrypted_content == null,
     )
@@ -894,7 +894,7 @@ export async function convertToOpenAIResponsesInput({
     });
     input = input.filter(
       item =>
-        !('type' in item) ||
+        !Object.hasOwn(item, 'type') ||
         item.type !== 'reasoning' ||
         item.encrypted_content != null,
     );

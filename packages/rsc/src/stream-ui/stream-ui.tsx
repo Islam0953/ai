@@ -179,19 +179,19 @@ export async function streamUI<
       '`model` cannot be a string in `streamUI`. Use the actual model instance instead.',
     );
   }
-  if ('functions' in settings) {
+  if (Object.hasOwn(settings, 'functions')) {
     throw new Error(
       '`functions` is not supported in `streamUI`, use `tools` instead.',
     );
   }
-  if ('provider' in settings) {
+  if (Object.hasOwn(settings, 'provider')) {
     throw new Error(
       '`provider` is no longer needed in `streamUI`. Use `model` instead.',
     );
   }
   if (tools) {
     for (const [name, tool] of Object.entries(tools)) {
-      if ('render' in tool) {
+      if (Object.hasOwn(tool, 'render')) {
         throw new Error(
           'Tool definition in `streamUI` should not have `render` property. Use `generate` instead. Found in tool: ' +
             name,

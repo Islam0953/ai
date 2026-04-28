@@ -320,7 +320,7 @@ export class GoogleLanguageModel implements LanguageModelV4 {
 
     // Build content array from all parts
     for (const part of parts) {
-      if ('executableCode' in part && part.executableCode?.code) {
+      if (Object.hasOwn(part, 'executableCode') && part.executableCode?.code) {
         const toolCallId = this.config.generateId();
         lastCodeExecutionToolCallId = toolCallId;
 
@@ -331,7 +331,10 @@ export class GoogleLanguageModel implements LanguageModelV4 {
           input: JSON.stringify(part.executableCode),
           providerExecuted: true,
         });
-      } else if ('codeExecutionResult' in part && part.codeExecutionResult) {
+      } else if (
+        Object.hasOwn(part, 'codeExecutionResult') &&
+        part.codeExecutionResult
+      ) {
         content.push({
           type: 'tool-result',
           // Assumes a result directly follows its corresponding call part.
@@ -344,7 +347,7 @@ export class GoogleLanguageModel implements LanguageModelV4 {
         });
         // Clear the ID after use to avoid accidental reuse.
         lastCodeExecutionToolCallId = undefined;
-      } else if ('text' in part && part.text != null) {
+      } else if (Object.hasOwn(part, 'text') && part.text != null) {
         const thoughtSignatureMetadata = part.thoughtSignature
           ? {
               [providerOptionsName]: {
@@ -366,7 +369,7 @@ export class GoogleLanguageModel implements LanguageModelV4 {
           });
         }
       } else if (
-        'functionCall' in part &&
+        Object.hasOwn(part, 'functionCall') &&
         part.functionCall.name != null &&
         part.functionCall.args != null
       ) {
@@ -383,7 +386,7 @@ export class GoogleLanguageModel implements LanguageModelV4 {
               }
             : undefined,
         });
-      } else if ('inlineData' in part) {
+      } else if (Object.hasOwn(part, 'inlineData')) {
         const hasThought = part.thought === true;
         const hasThoughtSignature = !!part.thoughtSignature;
         content.push({
@@ -398,7 +401,7 @@ export class GoogleLanguageModel implements LanguageModelV4 {
               }
             : undefined,
         });
-      } else if ('toolCall' in part && part.toolCall) {
+      } else if (Object.hasOwn(part, 'toolCall') && part.toolCall) {
         const toolCallId = part.toolCall.id ?? this.config.generateId();
         lastServerToolCallId = toolCallId;
         content.push({
@@ -423,7 +426,7 @@ export class GoogleLanguageModel implements LanguageModelV4 {
                 },
               },
         });
-      } else if ('toolResponse' in part && part.toolResponse) {
+      } else if (Object.hasOwn(part, 'toolResponse') && part.toolResponse) {
         const responseToolCallId =
           lastServerToolCallId ??
           part.toolResponse.id ??
@@ -621,7 +624,10 @@ export class GoogleLanguageModel implements LanguageModelV4 {
               // Process all parts in a single loop to preserve original order
               const parts = content.parts ?? [];
               for (const part of parts) {
-                if ('executableCode' in part && part.executableCode?.code) {
+                if (
+                  Object.hasOwn(part, 'executableCode') &&
+                  part.executableCode?.code
+                ) {
                   const toolCallId = generateId();
                   lastCodeExecutionToolCallId = toolCallId;
 
@@ -633,7 +639,7 @@ export class GoogleLanguageModel implements LanguageModelV4 {
                     providerExecuted: true,
                   });
                 } else if (
-                  'codeExecutionResult' in part &&
+                  Object.hasOwn(part, 'codeExecutionResult') &&
                   part.codeExecutionResult
                 ) {
                   // Assumes a result directly follows its corresponding call part.
@@ -652,7 +658,7 @@ export class GoogleLanguageModel implements LanguageModelV4 {
                     // Clear the ID after use.
                     lastCodeExecutionToolCallId = undefined;
                   }
-                } else if ('text' in part && part.text != null) {
+                } else if (Object.hasOwn(part, 'text') && part.text != null) {
                   const thoughtSignatureMetadata = part.thoughtSignature
                     ? {
                         [providerOptionsName]: {
@@ -724,7 +730,7 @@ export class GoogleLanguageModel implements LanguageModelV4 {
                       providerMetadata: thoughtSignatureMetadata,
                     });
                   }
-                } else if ('inlineData' in part) {
+                } else if (Object.hasOwn(part, 'inlineData')) {
                   // End any active text or reasoning block before starting file output.
                   // Relevant for multimodal output models.
                   if (currentTextBlockId !== null) {
@@ -757,7 +763,7 @@ export class GoogleLanguageModel implements LanguageModelV4 {
                     data: part.inlineData.data,
                     providerMetadata: fileMeta,
                   });
-                } else if ('toolCall' in part && part.toolCall) {
+                } else if (Object.hasOwn(part, 'toolCall') && part.toolCall) {
                   const toolCallId = part.toolCall.id ?? generateId();
                   lastServerToolCallId = toolCallId;
                   const serverMeta = {
@@ -779,7 +785,10 @@ export class GoogleLanguageModel implements LanguageModelV4 {
                     dynamic: true,
                     providerMetadata: serverMeta,
                   });
-                } else if ('toolResponse' in part && part.toolResponse) {
+                } else if (
+                  Object.hasOwn(part, 'toolResponse') &&
+                  part.toolResponse
+                ) {
                   const responseToolCallId =
                     lastServerToolCallId ??
                     part.toolResponse.id ??
@@ -807,7 +816,7 @@ export class GoogleLanguageModel implements LanguageModelV4 {
 
               // Handle streaming and complete function calls
               for (const part of parts) {
-                if (!('functionCall' in part)) continue;
+                if (!Object.hasOwn(part, 'functionCall')) continue;
 
                 const providerMeta = part.thoughtSignature
                   ? {

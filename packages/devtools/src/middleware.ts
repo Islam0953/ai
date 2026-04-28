@@ -45,7 +45,7 @@ const registerSignalHandlers = () => {
           raw_request:
             data.request &&
             typeof data.request === 'object' &&
-            'body' in data.request
+            Object.hasOwn(data.request, 'body')
               ? JSON.stringify((data.request as { body: unknown }).body)
               : null,
           raw_response: JSON.stringify(data.fullStreamChunks),

@@ -17,9 +17,9 @@ run(async () => {
   const z3StandardSchema = z3Schema['~standard'];
 
   console.log(JSON.stringify(z4Schema, null, 2));
-  console.log('_zod' in z4Schema);
+  console.log(Object.hasOwn(z4Schema, '_zod'));
   console.log(JSON.stringify(z3Schema, null, 2));
-  console.log('_zod' in z3Schema);
+  console.log(Object.hasOwn(z3Schema, '_zod'));
 
   console.log(z4StandardSchema.vendor);
   console.log(z3StandardSchema.vendor);

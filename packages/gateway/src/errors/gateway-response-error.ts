@@ -37,6 +37,6 @@ export class GatewayResponseError extends GatewayError {
   }
 
   static isInstance(error: unknown): error is GatewayResponseError {
-    return GatewayError.hasMarker(error) && symbol in error;
+    return GatewayError.hasMarker(error) && Object.hasOwn(error, symbol);
   }
 }

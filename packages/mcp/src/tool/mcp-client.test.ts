@@ -1087,7 +1087,8 @@ describe('MCPClient', () => {
 
       const elicitationResponse = sendSpy.mock.calls.find(
         ([message]) =>
-          'result' in message && message.id === elicitationRequest.id,
+          Object.hasOwn(message, 'result') &&
+          message.id === elicitationRequest.id,
       );
 
       expect(elicitationResponse?.[0]).toMatchObject({

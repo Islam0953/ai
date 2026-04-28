@@ -331,6 +331,6 @@ function resolvePartialArgValue(arg: {
 }): { value: unknown; json: string } | undefined {
   const value = arg.stringValue ?? arg.numberValue ?? arg.boolValue;
   if (value != null) return { value, json: JSON.stringify(value) };
-  if ('nullValue' in arg) return { value: null, json: 'null' };
+  if (Object.hasOwn(arg, 'nullValue')) return { value: null, json: 'null' };
   return undefined;
 }

@@ -338,7 +338,10 @@ export function DevToolsTelemetry(): Telemetry {
         return;
       }
 
-      if ('callId' in chunk && 'stepNumber' in chunk) {
+      if (
+        Object.hasOwn(chunk, 'callId') &&
+        Object.hasOwn(chunk, 'stepNumber')
+      ) {
         const typed = chunk as { callId: string; stepNumber: number };
         const state = callStates.get(typed.callId);
         if (!state) return;

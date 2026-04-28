@@ -42,6 +42,6 @@ export class GatewayModelNotFoundError extends GatewayError {
   }
 
   static isInstance(error: unknown): error is GatewayModelNotFoundError {
-    return GatewayError.hasMarker(error) && symbol in error;
+    return GatewayError.hasMarker(error) && Object.hasOwn(error, symbol);
   }
 }

@@ -27,7 +27,7 @@ export function InternalAIProvider({
   wrappedActions,
   wrappedSyncUIState,
 }: InternalAIProviderProps) {
-  if (!('use' in React)) {
+  if (!Object.hasOwn(React, 'use')) {
     throw new Error('Unsupported React version.');
   }
 

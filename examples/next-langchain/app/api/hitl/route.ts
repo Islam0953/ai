@@ -150,7 +150,7 @@ function extractApprovalResponses(messages: UIMessage[]): Array<{
       if (
         part.type === 'dynamic-tool' &&
         part.state === 'approval-responded' &&
-        'approval' in part &&
+        Object.hasOwn(part, 'approval') &&
         part.approval
       ) {
         responses.push({

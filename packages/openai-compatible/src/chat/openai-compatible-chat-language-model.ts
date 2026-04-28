@@ -557,7 +557,7 @@ export class OpenAICompatibleChatLanguageModel implements LanguageModelV4 {
             metadataExtractor?.processChunk(chunk.rawValue);
 
             // handle error chunks:
-            if ('error' in chunk.value) {
+            if (Object.hasOwn(chunk.value, 'error')) {
               finishReason = { unified: 'error', raw: undefined };
               controller.enqueue({
                 type: 'error',

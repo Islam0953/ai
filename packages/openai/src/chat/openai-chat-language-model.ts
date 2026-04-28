@@ -493,9 +493,12 @@ export class OpenAIChatLanguageModel implements LanguageModelV4 {
             const value = chunk.value;
 
             // handle error chunks:
-            if ('error' in value) {
+            if (Object.hasOwn(value, 'error')) {
               finishReason = { unified: 'error', raw: undefined };
-              controller.enqueue({ type: 'error', error: value.error });
+              controller.enqueue({
+                type: 'error',
+                error: value.error,
+              });
               return;
             }
 
@@ -503,12 +506,17 @@ export class OpenAIChatLanguageModel implements LanguageModelV4 {
             // Azure may prepend a chunk with a `"prompt_filter_results"` key which does not contain other metadata,
             // https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/content-filter-annotations?tabs=powershell
             if (!metadataExtracted) {
-              const metadata = getResponseMetadata(value);
+              const valueAsMetadata = value as {
+                id?: string | null;
+                created?: number | null;
+                model?: string | null;
+              };
+              const metadata = getResponseMetadata(valueAsMetadata);
               if (Object.values(metadata).some(Boolean)) {
                 metadataExtracted = true;
                 controller.enqueue({
                   type: 'response-metadata',
-                  ...getResponseMetadata(value),
+                  ...getResponseMetadata(valueAsMetadata),
                 });
               }
             }
@@ -520,15 +528,17 @@ export class OpenAIChatLanguageModel implements LanguageModelV4 {
                 value.usage.completion_tokens_details
                   ?.accepted_prediction_tokens != null
               ) {
-                providerMetadata.openai.acceptedPredictionTokens =
-                  value.usage.completion_tokens_details?.accepted_prediction_tokens;
+                providerMetadata.openai.acceptedPredictionTokens = (
+                  value as Record<string, any>
+                ).usage.completion_tokens_details?.accepted_prediction_tokens;
               }
               if (
                 value.usage.completion_tokens_details
                   ?.rejected_prediction_tokens != null
               ) {
-                providerMetadata.openai.rejectedPredictionTokens =
-                  value.usage.completion_tokens_details?.rejected_prediction_tokens;
+                providerMetadata.openai.rejectedPredictionTokens = (
+                  value as Record<string, any>
+                ).usage.completion_tokens_details?.rejected_prediction_tokens;
               }
             }
 

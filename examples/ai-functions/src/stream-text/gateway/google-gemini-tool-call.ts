@@ -121,8 +121,13 @@ async function main() {
       return {
         ...msg,
         content: msg.content.map(part => {
-          if ('providerOptions' in part && part.providerOptions?.google) {
-            const { google: googleOpts, ...rest } = part.providerOptions;
+          if (
+            Object.hasOwn(part, 'providerOptions') &&
+            part.providerOptions?.google
+          ) {
+            const { google: googleOpts, ...rest } = (
+              part as Record<string, any>
+            ).providerOptions;
             return {
               ...part,
               providerOptions: { ...rest, vertex: googleOpts },

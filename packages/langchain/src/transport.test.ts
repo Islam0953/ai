@@ -8,8 +8,8 @@ describe('LangSmithDeploymentTransport', () => {
       apiKey: 'test-key',
     });
 
-    expect('sendMessages' in transport).toBe(true);
-    expect('reconnectToStream' in transport).toBe(true);
+    expect(typeof transport.sendMessages).toBe('function');
+    expect(typeof transport.reconnectToStream).toBe('function');
   });
 
   it('should create transport with only url', () => {
@@ -17,7 +17,7 @@ describe('LangSmithDeploymentTransport', () => {
       url: 'https://test.langsmith.app',
     });
 
-    expect('sendMessages' in transport).toBe(true);
+    expect(typeof transport.sendMessages).toBe('function');
   });
 
   it('should create transport with custom graphId', () => {
@@ -26,7 +26,7 @@ describe('LangSmithDeploymentTransport', () => {
       graphId: 'custom-agent',
     });
 
-    expect('sendMessages' in transport).toBe(true);
+    expect(typeof transport.sendMessages).toBe('function');
   });
 
   it('should throw error for reconnectToStream', async () => {

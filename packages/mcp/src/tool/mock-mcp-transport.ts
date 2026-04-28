@@ -151,7 +151,7 @@ export class MockMCPTransport implements MCPTransport {
 
   async send(message: JSONRPCMessage): Promise<void> {
     // Mock server response implementation - extend as necessary:
-    if ('method' in message && 'id' in message) {
+    if (Object.hasOwn(message, 'method') && Object.hasOwn(message, 'id')) {
       if (message.method === 'initialize') {
         await delay(10);
         this.onmessage?.({

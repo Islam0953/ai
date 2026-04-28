@@ -22,7 +22,7 @@ export function OutputDisplay({
     return toolResults.find(
       (r): r is ToolResultContentPart =>
         r.type === 'tool-result' &&
-        'toolCallId' in r &&
+        Object.hasOwn(r, 'toolCallId') &&
         r.toolCallId === toolCallId,
     );
   };

@@ -1606,7 +1606,8 @@ describe('toUIMessageStream', () => {
 
     // Verify historical tool call was NOT emitted
     const historicalEvents = result.filter(
-      e => 'toolCallId' in e && e.toolCallId === historicalToolCallId,
+      e =>
+        Object.hasOwn(e, 'toolCallId') && e.toolCallId === historicalToolCallId,
     );
     expect(historicalEvents).toHaveLength(0);
   });

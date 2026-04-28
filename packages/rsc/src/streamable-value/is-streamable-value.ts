@@ -4,7 +4,7 @@ export function isStreamableValue(value: unknown): value is StreamableValue {
   return (
     value != null &&
     typeof value === 'object' &&
-    'type' in value &&
+    Object.hasOwn(value, 'type') &&
     value.type === STREAMABLE_VALUE_TYPE
   );
 }

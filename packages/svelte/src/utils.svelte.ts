@@ -13,7 +13,7 @@ export function createContext<T>(name: string) {
         if (
           typeof e === 'object' &&
           e !== null &&
-          'message' in e &&
+          Object.hasOwn(e, 'message') &&
           typeof e.message === 'string' &&
           e.message?.includes('lifecycle_outside_component')
         ) {

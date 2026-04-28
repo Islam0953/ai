@@ -122,25 +122,29 @@ function isSchema(value: unknown): value is Schema {
   return (
     typeof value === 'object' &&
     value !== null &&
-    schemaSymbol in value &&
-    value[schemaSymbol] === true &&
-    'jsonSchema' in value &&
-    'validate' in value
+    Object.hasOwn(value, schemaSymbol) &&
+    (value as Record<symbol, unknown>)[schemaSymbol] === true &&
+    Object.hasOwn(value, 'jsonSchema') &&
+    Object.hasOwn(value, 'validate')
   );
 }
 
 export function asSchema<OBJECT>(
   schema: FlexibleSchema<OBJECT> | undefined,
 ): Schema<OBJECT> {
-  return schema == null
-    ? jsonSchema({ properties: {}, additionalProperties: false })
-    : isSchema(schema)
-      ? schema
-      : '~standard' in schema
-        ? schema['~standard'].vendor === 'zod'
-          ? zodSchema(schema as ZodSchema<OBJECT>)
-          : standardSchema(schema as StandardSchema<OBJECT>)
-        : schema();
+  if (schema == null) {
+    return jsonSchema({ properties: {}, additionalProperties: false });
+  }
+  if (isSchema(schema)) {
+    return schema;
+  }
+  if (Object.hasOwn(schema, '~standard')) {
+    const std = (schema as StandardSchema<OBJECT>)['~standard'];
+    return std.vendor === 'zod'
+      ? zodSchema(schema as ZodSchema<OBJECT>)
+      : standardSchema(schema as StandardSchema<OBJECT>);
+  }
+  return (schema as LazySchema<OBJECT>)();
 }
 
 function standardSchema<OBJECT>(
@@ -156,7 +160,7 @@ function standardSchema<OBJECT>(
     {
       validate: async value => {
         const result = await standardSchema['~standard'].validate(value);
-        return 'value' in result
+        return Object.hasOwn(result, 'value')
           ? { success: true, value: result.value }
           : {
               success: false,
@@ -242,7 +246,7 @@ export function isZod4Schema(
   zodSchema: z4.core.$ZodType<any, any> | z3.Schema<any, z3.ZodTypeDef, any>,
 ): zodSchema is z4.core.$ZodType<any, any> {
   // https://zod.dev/library-authors?id=how-to-support-zod-3-and-zod-4-simultaneously
-  return '_zod' in zodSchema;
+  return Object.hasOwn(zodSchema, '_zod');
 }
 
 export function zodSchema<OBJECT>(

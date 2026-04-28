@@ -399,7 +399,7 @@ function sanitizeProviderMetadataForToolCall(
   const meta = metadata as Record<string, unknown>;
 
   // Check if OpenAI metadata exists and needs sanitization
-  if ('openai' in meta && meta.openai != null) {
+  if (Object.hasOwn(meta, 'openai') && meta.openai != null) {
     const { openai, ...restProviders } = meta;
     const openaiMeta = openai as Record<string, unknown>;
 

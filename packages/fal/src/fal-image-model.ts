@@ -121,10 +121,9 @@ export class FalImageModel implements ImageModelV4 {
     }
 
     if (falOptions) {
-      const deprecatedKeys =
-        '__deprecatedKeys' in falOptions
-          ? (falOptions.__deprecatedKeys as string[])
-          : undefined;
+      const deprecatedKeys = Object.hasOwn(falOptions, '__deprecatedKeys')
+        ? (falOptions.__deprecatedKeys as string[])
+        : undefined;
 
       if (deprecatedKeys && deprecatedKeys.length > 0) {
         warnings.push({
@@ -364,7 +363,11 @@ const falImageResponseSchema = z
     base.extend({ images: z.array(falImageSchema) }),
     base.extend({ image: falImageSchema }),
   ])
-  .transform(v => ('images' in v ? v : { ...v, images: [v.image] }))
+  .transform(v => {
+    if (Object.hasOwn(v, 'images')) return v;
+    const single = v as { image: unknown } & Record<string, unknown>;
+    return { ...single, images: [single.image] };
+  })
   .pipe(base.extend({ images: z.array(falImageSchema) }));
 
 function isValidationError(error: unknown): error is ValidationError {

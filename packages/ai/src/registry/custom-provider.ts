@@ -117,7 +117,7 @@ export function customProvider<
   return {
     specificationVersion: 'v4',
     languageModel(modelId: ExtractModelId<LANGUAGE_MODELS>): LanguageModelV4 {
-      if (languageModels != null && modelId in languageModels) {
+      if (languageModels != null && Object.hasOwn(languageModels, modelId)) {
         return asLanguageModelV4(languageModels[modelId]);
       }
 
@@ -131,7 +131,7 @@ export function customProvider<
     embeddingModel(
       modelId: ExtractModelId<EMBEDDING_MODELS>,
     ): EmbeddingModelV4 {
-      if (embeddingModels != null && modelId in embeddingModels) {
+      if (embeddingModels != null && Object.hasOwn(embeddingModels, modelId)) {
         return asEmbeddingModelV4(embeddingModels[modelId]);
       }
 
@@ -143,7 +143,7 @@ export function customProvider<
     },
 
     imageModel(modelId: ExtractModelId<IMAGE_MODELS>): ImageModelV4 {
-      if (imageModels != null && modelId in imageModels) {
+      if (imageModels != null && Object.hasOwn(imageModels, modelId)) {
         return asImageModelV4(imageModels[modelId]);
       }
 
@@ -157,7 +157,10 @@ export function customProvider<
     transcriptionModel(
       modelId: ExtractModelId<TRANSCRIPTION_MODELS>,
     ): TranscriptionModelV4 {
-      if (transcriptionModels != null && modelId in transcriptionModels) {
+      if (
+        transcriptionModels != null &&
+        Object.hasOwn(transcriptionModels, modelId)
+      ) {
         return asTranscriptionModelV4(transcriptionModels[modelId]);
       }
 
@@ -169,7 +172,7 @@ export function customProvider<
     },
 
     speechModel(modelId: ExtractModelId<SPEECH_MODELS>): SpeechModelV4 {
-      if (speechModels != null && modelId in speechModels) {
+      if (speechModels != null && Object.hasOwn(speechModels, modelId)) {
         return asSpeechModelV4(speechModels[modelId]);
       }
 
@@ -182,7 +185,7 @@ export function customProvider<
     rerankingModel(
       modelId: ExtractModelId<RERANKING_MODELS>,
     ): RerankingModelV4 {
-      if (rerankingModels != null && modelId in rerankingModels) {
+      if (rerankingModels != null && Object.hasOwn(rerankingModels, modelId)) {
         return asRerankingModelV4(rerankingModels[modelId]);
       }
 
@@ -195,7 +198,7 @@ export function customProvider<
     videoModel(
       modelId: ExtractModelId<VIDEO_MODELS>,
     ): Experimental_VideoModelV4 {
-      if (videoModels != null && modelId in videoModels) {
+      if (videoModels != null && Object.hasOwn(videoModels, modelId)) {
         return asVideoModelV4(videoModels[modelId]);
       }
 

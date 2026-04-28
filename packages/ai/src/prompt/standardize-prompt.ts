@@ -46,7 +46,7 @@ export async function standardizePrompt(
       message =>
         typeof message === 'object' &&
         message !== null &&
-        'role' in message &&
+        Object.hasOwn(message, 'role') &&
         message.role === 'system',
     )
   ) {

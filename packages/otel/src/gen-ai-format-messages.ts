@@ -499,7 +499,7 @@ export function formatOutputMessages({
 
   if (reasoning) {
     for (const r of reasoning) {
-      if ('text' in r && r.text) {
+      if (Object.hasOwn(r, 'text') && r.text) {
         parts.push({ type: 'reasoning', content: r.text });
       }
     }

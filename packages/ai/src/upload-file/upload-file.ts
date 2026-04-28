@@ -83,16 +83,15 @@ export async function uploadFile({
     }) ??
     (isLikelyText(data) ? 'text/plain' : 'application/octet-stream');
 
-  const filesApi: FilesV4 =
-    'uploadFile' in api
-      ? api
-      : typeof api.files === 'function'
-        ? api.files()
-        : (() => {
-            throw new Error(
-              'The provider does not support file uploads. Make sure it exposes a files() method.',
-            );
-          })();
+  const filesApi: FilesV4 = Object.hasOwn(api, 'uploadFile')
+    ? api
+    : typeof api.files === 'function'
+      ? api.files()
+      : (() => {
+          throw new Error(
+            'The provider does not support file uploads. Make sure it exposes a files() method.',
+          );
+        })();
 
   const result = await filesApi.uploadFile({
     data,

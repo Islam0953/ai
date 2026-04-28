@@ -105,7 +105,7 @@ export default function OpenAIMCPApprovalView({
       if (
         output &&
         typeof output === 'object' &&
-        'type' in output &&
+        Object.hasOwn(output, 'type') &&
         output.type === 'call'
       ) {
         return (

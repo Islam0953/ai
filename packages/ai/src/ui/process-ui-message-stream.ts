@@ -842,8 +842,8 @@ export function processUIMessageStream<UI_MESSAGE extends UIMessage>({
                 if (dataPartSchemas?.[chunk.type] != null) {
                   const partIdx = state.message.parts.findIndex(
                     p =>
-                      'id' in p &&
-                      'data' in p &&
+                      Object.hasOwn(p, 'id') &&
+                      Object.hasOwn(p, 'data') &&
                       p.id === chunk.id &&
                       p.type === chunk.type,
                   );

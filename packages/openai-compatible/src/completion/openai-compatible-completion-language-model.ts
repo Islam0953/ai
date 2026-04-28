@@ -319,18 +319,23 @@ export class OpenAICompatibleCompletionLanguageModel implements LanguageModelV4 
             const value = chunk.value;
 
             // handle error chunks:
-            if ('error' in value) {
+            if (Object.hasOwn(value, 'error')) {
               finishReason = { unified: 'error', raw: undefined };
               controller.enqueue({ type: 'error', error: value.error });
               return;
             }
+
+            const success = chunk.value as Exclude<
+              typeof chunk.value,
+              { error: unknown }
+            >;
 
             if (isFirstChunk) {
               isFirstChunk = false;
 
               controller.enqueue({
                 type: 'response-metadata',
-                ...getResponseMetadata(value),
+                ...getResponseMetadata(success),
               });
 
               controller.enqueue({
@@ -339,11 +344,11 @@ export class OpenAICompatibleCompletionLanguageModel implements LanguageModelV4 
               });
             }
 
-            if (value.usage != null) {
-              usage = value.usage;
+            if (success.usage != null) {
+              usage = success.usage;
             }
 
-            const choice = value.choices[0];
+            const choice = success.choices[0];
 
             if (choice?.finish_reason != null) {
               finishReason = {

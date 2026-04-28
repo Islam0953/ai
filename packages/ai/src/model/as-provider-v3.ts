@@ -7,10 +7,10 @@ import { asSpeechModelV3 } from './as-speech-model-v3';
 
 export function asProviderV3(provider: ProviderV2 | ProviderV3): ProviderV3 {
   if (
-    'specificationVersion' in provider &&
+    Object.hasOwn(provider, 'specificationVersion') &&
     provider.specificationVersion === 'v3'
   ) {
-    return provider;
+    return provider as ProviderV3;
   }
 
   // v3 providers have already been returned

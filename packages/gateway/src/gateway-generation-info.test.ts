@@ -106,7 +106,7 @@ describe('GatewayGenerationInfoFetcher', () => {
       });
 
       // Result should be the data object directly, not { data: ... }
-      expect('data' in result).toBe(false);
+      expect(Object.hasOwn(result, 'data')).toBe(false);
       expect(result.id).toBe('gen_01ARZ3NDEKTSV4RRFFQ69G5FAV');
     });
 
@@ -117,12 +117,12 @@ describe('GatewayGenerationInfoFetcher', () => {
         id: 'gen_01ARZ3NDEKTSV4RRFFQ69G5FAV',
       });
 
-      expect('total_cost' in result).toBe(false);
-      expect('is_byok' in result).toBe(false);
-      expect('provider_name' in result).toBe(false);
-      expect('created_at' in result).toBe(false);
-      expect('generation_time' in result).toBe(false);
-      expect('finish_reason' in result).toBe(false);
+      expect(Object.hasOwn(result, 'total_cost')).toBe(false);
+      expect(Object.hasOwn(result, 'is_byok')).toBe(false);
+      expect(Object.hasOwn(result, 'provider_name')).toBe(false);
+      expect(Object.hasOwn(result, 'created_at')).toBe(false);
+      expect(Object.hasOwn(result, 'generation_time')).toBe(false);
+      expect(Object.hasOwn(result, 'finish_reason')).toBe(false);
     });
 
     it('should pass headers correctly', async () => {

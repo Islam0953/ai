@@ -17,5 +17,5 @@ export function createChildProcess(
 }
 
 function isElectron() {
-  return 'type' in globalThis.process;
+  return Object.hasOwn(globalThis.process, 'type');
 }

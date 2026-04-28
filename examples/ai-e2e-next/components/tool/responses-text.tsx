@@ -12,22 +12,23 @@ type ResponsesOutputTextProviderMetadata =
 function extractProviderAndAnnotations(
   providerMetadata: ResponsesOutputTextProviderMetadata,
 ) {
-  if ('openai' in providerMetadata) {
+  if (Object.hasOwn(providerMetadata, 'openai')) {
+    const md = providerMetadata as OpenaiResponsesTextProviderMetadata;
     return {
       provider: 'openai',
-      itemId: providerMetadata.openai.itemId,
-      annotations: providerMetadata.openai.annotations,
+      itemId: md.openai.itemId,
+      annotations: md.openai.annotations,
     } as const;
   }
-  if ('azure' in providerMetadata) {
+  if (Object.hasOwn(providerMetadata, 'azure')) {
+    const md = providerMetadata as AzureResponsesTextProviderMetadata;
     return {
       provider: 'azure',
-      itemId: providerMetadata.azure.itemId,
-      annotations: providerMetadata.azure.annotations,
+      itemId: md.azure.itemId,
+      annotations: md.azure.annotations,
     } as const;
   }
-  // never
-  const _exhaustive: never = providerMetadata;
+  const _exhaustive: never = providerMetadata as never;
   return _exhaustive;
 }
 
@@ -53,8 +54,14 @@ export function ResponsesText({ part }: { part: TextUIPart }) {
   // Sort annotations by start_index in descending order to process from end to start.
   // This ensures that string modifications don't invalidate indices of earlier annotations.
   const sortedAnnotations = [...annotations].sort((a, b) => {
-    const aStart = 'start_index' in a ? a.start_index : -1;
-    const bStart = 'start_index' in b ? b.start_index : -1;
+    const aStart =
+      typeof (a as { start_index?: number }).start_index === 'number'
+        ? (a as { start_index: number }).start_index
+        : -1;
+    const bStart =
+      typeof (b as { start_index?: number }).start_index === 'number'
+        ? (b as { start_index: number }).start_index
+        : -1;
     return bStart - aStart;
   });
 

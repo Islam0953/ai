@@ -17,7 +17,7 @@ export default createTransformer((fileInfo, api, options, context) => {
         if (
           specifier.type === 'ImportSpecifier' &&
           specifier.imported.type === 'Identifier' &&
-          specifier.imported.name in EXPERIMENTAL_MAPPINGS
+          Object.hasOwn(EXPERIMENTAL_MAPPINGS, specifier.imported.name)
         ) {
           context.hasChanges = true;
           const newName =
@@ -37,7 +37,7 @@ export default createTransformer((fileInfo, api, options, context) => {
   root.find(j.CallExpression).forEach(path => {
     if (
       path.node.callee.type === 'Identifier' &&
-      path.node.callee.name in EXPERIMENTAL_MAPPINGS
+      Object.hasOwn(EXPERIMENTAL_MAPPINGS, path.node.callee.name)
     ) {
       context.hasChanges = true;
       path.node.callee.name =

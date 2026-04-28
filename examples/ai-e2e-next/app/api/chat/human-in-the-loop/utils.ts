@@ -19,7 +19,7 @@ function isValidToolName<K extends PropertyKey, T extends object>(
   key: K,
   obj: T,
 ): key is K & keyof T {
-  return key in obj;
+  return Object.hasOwn(obj, key);
 }
 
 /**
@@ -67,7 +67,10 @@ export async function processToolCalls<
       const toolName = getStaticToolName(part);
 
       // Only continue if we have an execute function for the tool (meaning it requires confirmation) and it's in a 'result' state
-      if (!(toolName in executeFunctions) || part.state !== 'output-available')
+      if (
+        !Object.hasOwn(executeFunctions, toolName) ||
+        part.state !== 'output-available'
+      )
         return part;
 
       let result;

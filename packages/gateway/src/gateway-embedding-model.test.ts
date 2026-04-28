@@ -131,7 +131,7 @@ describe('GatewayEmbeddingModel', () => {
 
       const body = await server.calls[0].requestBodyJson;
       expect(body).toStrictEqual({ values: testValues });
-      expect('providerOptions' in body).toBe(false);
+      expect(Object.hasOwn(body, 'providerOptions')).toBe(false);
     });
 
     it('should convert gateway error responses', async () => {

@@ -13,16 +13,15 @@ export async function uploadSkill({
   displayTitle?: string;
   providerOptions?: ProviderOptions;
 }): Promise<UploadSkillResult> {
-  const skillsApi: SkillsV4 =
-    'uploadSkill' in api
-      ? api
-      : typeof api.skills === 'function'
-        ? api.skills()
-        : (() => {
-            throw new Error(
-              'The provider does not support skills. Make sure it exposes a skills() method.',
-            );
-          })();
+  const skillsApi: SkillsV4 = Object.hasOwn(api, 'uploadSkill')
+    ? api
+    : typeof api.skills === 'function'
+      ? api.skills()
+      : (() => {
+          throw new Error(
+            'The provider does not support skills. Make sure it exposes a skills() method.',
+          );
+        })();
 
   const result = await skillsApi.uploadSkill({
     files,

@@ -17,10 +17,9 @@ const audioFormatMap = {
  */
 export async function saveAudioFile(audio: GeneratedAudioFile) {
   const timestamp = Date.now();
-  const extension =
-    audio.mediaType in audioFormatMap
-      ? audioFormatMap[audio.mediaType as keyof typeof audioFormatMap]
-      : 'mp3';
+  const extension = Object.hasOwn(audioFormatMap, audio.mediaType)
+    ? audioFormatMap[audio.mediaType as keyof typeof audioFormatMap]
+    : 'mp3';
 
   // Save the audio file to disk.
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });

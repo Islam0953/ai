@@ -289,9 +289,9 @@ export async function experimental_generateVideo({
 
           // Merge videos arrays if both exist
           if (
-            'videos' in existingMetadata &&
+            Object.hasOwn(existingMetadata, 'videos') &&
             Array.isArray(existingMetadata.videos) &&
-            'videos' in metadata &&
+            Object.hasOwn(metadata, 'videos') &&
             Array.isArray(metadata.videos)
           ) {
             (providerMetadata[providerName] as { videos: unknown[] }).videos = [

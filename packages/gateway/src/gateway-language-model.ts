@@ -193,7 +193,10 @@ export class GatewayLanguageModel implements LanguageModelV4 {
 
   private isFilePart(part: unknown) {
     return (
-      part && typeof part === 'object' && 'type' in part && part.type === 'file'
+      part &&
+      typeof part === 'object' &&
+      Object.hasOwn(part, 'type') &&
+      part.type === 'file'
     );
   }
 

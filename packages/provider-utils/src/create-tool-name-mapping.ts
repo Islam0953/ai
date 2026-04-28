@@ -50,7 +50,7 @@ export function createToolNameMapping({
   const providerToolNameToCustomToolName: Record<string, string> = {};
 
   for (const tool of tools) {
-    if (tool.type === 'provider' && tool.id in providerToolNames) {
+    if (tool.type === 'provider' && Object.hasOwn(providerToolNames, tool.id)) {
       const providerToolName = providerToolNames[tool.id];
       customToolNameToProviderToolName[tool.name] = providerToolName;
       providerToolNameToCustomToolName[providerToolName] = tool.name;

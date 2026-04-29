@@ -1,27 +1,22 @@
-import {
-  Experimental_VideoModelV4,
-  FilesV4,
-  NoSuchModelError,
-  SkillsV4,
-} from '@ai-sdk/provider';
-import { MockEmbeddingModelV4 } from '../test/mock-embedding-model-v4';
-import { MockLanguageModelV4 } from '../test/mock-language-model-v4';
+import { NoSuchModelError } from '@ai-sdk/provider';
+import { MockEmbeddingModelV3 } from '../test/mock-embedding-model-v3';
+import { MockLanguageModelV3 } from '../test/mock-language-model-v3';
 import { NoSuchProviderError } from './no-such-provider-error';
 import { createProviderRegistry } from './provider-registry';
-import { MockImageModelV4 } from '../test/mock-image-model-v4';
-import { MockTranscriptionModelV4 } from '../test/mock-transcription-model-v4';
-import { MockSpeechModelV4 } from '../test/mock-speech-model-v4';
-import { MockRerankingModelV4 } from '../test/mock-reranking-model-v4';
-import { MockProviderV4 } from '../test/mock-provider-v4';
+import { MockImageModelV3 } from '../test/mock-image-model-v3';
+import { MockTranscriptionModelV3 } from '../test/mock-transcription-model-v3';
+import { MockSpeechModelV3 } from '../test/mock-speech-model-v3';
+import { MockRerankingModelV3 } from '../test/mock-reranking-model-v3';
+import { MockProviderV3 } from '../test/mock-provider-v3';
 import { describe, it, expect, vi } from 'vitest';
 
 describe('languageModel', () => {
   it('should return language model from provider', () => {
-    const model = new MockLanguageModelV4();
+    const model = new MockLanguageModelV3();
 
     const modelRegistry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         languageModel: (id: string) => {
           expect(id).toEqual('model');
           return model;
@@ -42,11 +37,11 @@ describe('languageModel', () => {
   });
 
   it('should return language model with additional colon from provider', () => {
-    const model = new MockLanguageModelV4();
+    const model = new MockLanguageModelV3();
 
     const modelRegistry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         languageModel: id => {
           expect(id).toEqual('model:part2');
           return model;
@@ -78,7 +73,7 @@ describe('languageModel', () => {
   it('should throw NoSuchModelError if provider does not return a model', () => {
     const registry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         languageModel: () => {
           return null as any;
         },
@@ -115,12 +110,12 @@ describe('languageModel', () => {
   });
 
   it('should support custom separator', () => {
-    const model = new MockLanguageModelV4();
+    const model = new MockLanguageModelV3();
 
     const modelRegistry = createProviderRegistry(
       {
         provider: {
-          specificationVersion: 'v4',
+          specificationVersion: 'v3',
           languageModel: id => {
             expect(id).toEqual('model');
             return model;
@@ -149,12 +144,12 @@ describe('languageModel', () => {
   });
 
   it('should support custom separator with multiple characters', () => {
-    const model = new MockLanguageModelV4();
+    const model = new MockLanguageModelV3();
 
     const modelRegistry = createProviderRegistry(
       {
         provider: {
-          specificationVersion: 'v4',
+          specificationVersion: 'v3',
           languageModel: id => {
             expect(id).toEqual('model');
             return model;
@@ -185,11 +180,11 @@ describe('languageModel', () => {
 
 describe('embeddingModel', () => {
   it('should return embedding model from provider using embeddingModel', () => {
-    const model = new MockEmbeddingModelV4();
+    const model = new MockEmbeddingModelV3();
 
     const modelRegistry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         embeddingModel: id => {
           expect(id).toEqual('model');
           return model;
@@ -227,7 +222,7 @@ describe('embeddingModel', () => {
   it('should throw NoSuchModelError if provider does not return a model', () => {
     const registry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         embeddingModel: () => {
           return null as any;
         },
@@ -258,12 +253,12 @@ describe('embeddingModel', () => {
   });
 
   it('should support custom separator', () => {
-    const model = new MockEmbeddingModelV4();
+    const model = new MockEmbeddingModelV3();
 
     const modelRegistry = createProviderRegistry(
       {
         provider: {
-          specificationVersion: 'v4',
+          specificationVersion: 'v3',
           embeddingModel: id => {
             expect(id).toEqual('model');
             return model;
@@ -294,11 +289,11 @@ describe('embeddingModel', () => {
 
 describe('imageModel', () => {
   it('should return image model from provider', () => {
-    const model = new MockImageModelV4();
+    const model = new MockImageModelV3();
 
     const modelRegistry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         imageModel: id => {
           expect(id).toEqual('model');
           return model;
@@ -326,7 +321,7 @@ describe('imageModel', () => {
   it('should throw NoSuchModelError if provider does not return a model', () => {
     const registry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         imageModel: () => null as any,
         languageModel: () => null as any,
         embeddingModel: () => null as any,
@@ -348,12 +343,12 @@ describe('imageModel', () => {
   });
 
   it('should support custom separator', () => {
-    const model = new MockImageModelV4();
+    const model = new MockImageModelV3();
 
     const modelRegistry = createProviderRegistry(
       {
         provider: {
-          specificationVersion: 'v4',
+          specificationVersion: 'v3',
           imageModel: id => {
             expect(id).toEqual('model');
             return model;
@@ -372,11 +367,11 @@ describe('imageModel', () => {
 
 describe('transcriptionModel', () => {
   it('should return transcription model from provider', () => {
-    const model = new MockTranscriptionModelV4();
+    const model = new MockTranscriptionModelV3();
 
     const modelRegistry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         transcriptionModel: id => {
           expect(id).toEqual('model');
           return model;
@@ -403,7 +398,7 @@ describe('transcriptionModel', () => {
   it('should throw NoSuchModelError if provider does not return a model', () => {
     const registry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         transcriptionModel: () => null as any,
         languageModel: () => null as any,
         embeddingModel: () => null as any,
@@ -429,11 +424,11 @@ describe('transcriptionModel', () => {
 
 describe('speechModel', () => {
   it('should return speech model from provider', () => {
-    const model = new MockSpeechModelV4();
+    const model = new MockSpeechModelV3();
 
     const modelRegistry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         speechModel: id => {
           expect(id).toEqual('model');
           return model;
@@ -460,7 +455,7 @@ describe('speechModel', () => {
   it('should throw NoSuchModelError if provider does not return a model', () => {
     const registry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         speechModel: () => null as any,
         languageModel: () => null as any,
         embeddingModel: () => null as any,
@@ -484,11 +479,11 @@ describe('speechModel', () => {
 
 describe('rerankingModel', () => {
   it('should return reranking model from provider using rerankingModel', () => {
-    const model = new MockRerankingModelV4();
+    const model = new MockRerankingModelV3();
 
     const modelRegistry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         rerankingModel: id => {
           expect(id).toEqual('model');
           return model;
@@ -526,7 +521,7 @@ describe('rerankingModel', () => {
   it('should throw NoSuchModelError if provider does not return a model', () => {
     const registry = createProviderRegistry({
       provider: {
-        specificationVersion: 'v4',
+        specificationVersion: 'v3',
         embeddingModel: () => {
           return null as any;
         },
@@ -557,12 +552,12 @@ describe('rerankingModel', () => {
   });
 
   it('should support custom separator', () => {
-    const model = new MockRerankingModelV4();
+    const model = new MockRerankingModelV3();
 
     const modelRegistry = createProviderRegistry(
       {
         provider: {
-          specificationVersion: 'v4',
+          specificationVersion: 'v3',
           rerankingModel: id => {
             expect(id).toEqual('model');
             return model;
@@ -593,18 +588,18 @@ describe('rerankingModel', () => {
 
 describe('middleware functionality', () => {
   it('should wrap all language models accessed through the provider registry', () => {
-    const model1 = new MockLanguageModelV4({ modelId: 'model-1' });
-    const model2 = new MockLanguageModelV4({ modelId: 'model-2' });
-    const model3 = new MockLanguageModelV4({ modelId: 'model-3' });
+    const model1 = new MockLanguageModelV3({ modelId: 'model-1' });
+    const model2 = new MockLanguageModelV3({ modelId: 'model-2' });
+    const model3 = new MockLanguageModelV3({ modelId: 'model-3' });
 
-    const provider1 = new MockProviderV4({
+    const provider1 = new MockProviderV3({
       languageModels: {
         'model-1': model1,
         'model-2': model2,
       },
     });
 
-    const provider2 = new MockProviderV4({
+    const provider2 = new MockProviderV3({
       languageModels: {
         'model-3': model3,
       },
@@ -621,7 +616,7 @@ describe('middleware functionality', () => {
       },
       {
         languageModelMiddleware: {
-          specificationVersion: 'v4',
+          specificationVersion: 'v3',
           overrideModelId,
         },
       },
@@ -644,18 +639,18 @@ describe('middleware functionality', () => {
   });
 
   it('should wrap all image models accessed through the provider registry', () => {
-    const model1 = new MockImageModelV4({ modelId: 'model-1' });
-    const model2 = new MockImageModelV4({ modelId: 'model-2' });
-    const model3 = new MockImageModelV4({ modelId: 'model-3' });
+    const model1 = new MockImageModelV3({ modelId: 'model-1' });
+    const model2 = new MockImageModelV3({ modelId: 'model-2' });
+    const model3 = new MockImageModelV3({ modelId: 'model-3' });
 
-    const provider1 = new MockProviderV4({
+    const provider1 = new MockProviderV3({
       imageModels: {
         'model-1': model1,
         'model-2': model2,
       },
     });
 
-    const provider2 = new MockProviderV4({
+    const provider2 = new MockProviderV3({
       imageModels: {
         'model-3': model3,
       },
@@ -672,7 +667,7 @@ describe('middleware functionality', () => {
       },
       {
         imageModelMiddleware: {
-          specificationVersion: 'v4',
+          specificationVersion: 'v3',
           overrideModelId,
         },
       },
@@ -692,152 +687,5 @@ describe('middleware functionality', () => {
     expect(overrideModelId).toHaveBeenCalledWith({ model: model1 });
     expect(overrideModelId).toHaveBeenCalledWith({ model: model2 });
     expect(overrideModelId).toHaveBeenCalledWith({ model: model3 });
-  });
-});
-
-describe('videoModel', () => {
-  it('should return video model from provider', () => {
-    const model = {
-      specificationVersion: 'v4',
-      provider: 'test',
-      modelId: 'model',
-      maxVideosPerCall: 1,
-      doGenerate: vi.fn(),
-    } as unknown as Experimental_VideoModelV4;
-
-    const registry = createProviderRegistry({
-      provider: {
-        specificationVersion: 'v4',
-        languageModel: () => null as any,
-        embeddingModel: () => null as any,
-        imageModel: () => null as any,
-        videoModel: (id: string) => {
-          expect(id).toEqual('model');
-          return model;
-        },
-      } as any,
-    });
-
-    expect(registry.videoModel('provider:model')).toEqual(model);
-  });
-
-  it('should throw NoSuchProviderError if provider does not exist', () => {
-    const registry = createProviderRegistry({});
-
-    // @ts-expect-error - should not accept arbitrary strings
-    expect(() => registry.videoModel('provider:model')).toThrowError(
-      NoSuchProviderError,
-    );
-  });
-
-  it('should throw NoSuchModelError if provider does not return a model', () => {
-    const registry = createProviderRegistry({
-      provider: {
-        specificationVersion: 'v4',
-        languageModel: () => null as any,
-        embeddingModel: () => null as any,
-        imageModel: () => null as any,
-        videoModel: () => null,
-      } as any,
-    });
-
-    expect(() => registry.videoModel('provider:model')).toThrowError(
-      NoSuchModelError,
-    );
-  });
-
-  it("should throw NoSuchModelError if model id doesn't contain a separator", () => {
-    const registry = createProviderRegistry({});
-
-    // @ts-expect-error - should not accept arbitrary strings
-    expect(() => registry.videoModel('model')).toThrowError(NoSuchModelError);
-  });
-});
-
-describe('files', () => {
-  const mockFilesV4: FilesV4 = {
-    specificationVersion: 'v4',
-    provider: 'test',
-    uploadFile: vi.fn(),
-  };
-
-  it('should return files interface from provider', () => {
-    const registry = createProviderRegistry({
-      provider: {
-        specificationVersion: 'v4',
-        languageModel: () => null as any,
-        embeddingModel: () => null as any,
-        imageModel: () => null as any,
-        files: () => mockFilesV4,
-      },
-    });
-
-    expect(registry.files('provider')).toBe(mockFilesV4);
-  });
-
-  it('should throw NoSuchProviderError if provider does not exist', () => {
-    const registry = createProviderRegistry({});
-
-    // @ts-expect-error - should not accept arbitrary strings
-    expect(() => registry.files('provider')).toThrowError(NoSuchProviderError);
-  });
-
-  it('should throw Error if provider has no files interface', () => {
-    const registry = createProviderRegistry({
-      provider: {
-        specificationVersion: 'v4',
-        languageModel: () => null as any,
-        embeddingModel: () => null as any,
-        imageModel: () => null as any,
-      },
-    });
-
-    expect(() => registry.files('provider')).toThrowError(
-      "Provider 'provider' does not support files.",
-    );
-  });
-});
-
-describe('skills', () => {
-  const mockSkillsV4: SkillsV4 = {
-    specificationVersion: 'v4',
-    provider: 'test',
-    uploadSkill: vi.fn(),
-  };
-
-  it('should return skills interface from provider', () => {
-    const registry = createProviderRegistry({
-      provider: {
-        specificationVersion: 'v4',
-        languageModel: () => null as any,
-        embeddingModel: () => null as any,
-        imageModel: () => null as any,
-        skills: () => mockSkillsV4,
-      },
-    });
-
-    expect(registry.skills('provider')).toBe(mockSkillsV4);
-  });
-
-  it('should throw NoSuchProviderError if provider does not exist', () => {
-    const registry = createProviderRegistry({});
-
-    // @ts-expect-error - should not accept arbitrary strings
-    expect(() => registry.skills('provider')).toThrowError(NoSuchProviderError);
-  });
-
-  it('should throw Error if provider has no skills interface', () => {
-    const registry = createProviderRegistry({
-      provider: {
-        specificationVersion: 'v4',
-        languageModel: () => null as any,
-        embeddingModel: () => null as any,
-        imageModel: () => null as any,
-      },
-    });
-
-    expect(() => registry.skills('provider')).toThrowError(
-      "Provider 'provider' does not support skills.",
-    );
   });
 });

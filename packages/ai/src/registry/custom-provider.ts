@@ -1,78 +1,40 @@
 import {
   EmbeddingModelV3,
-  EmbeddingModelV4,
   Experimental_VideoModelV3,
-  Experimental_VideoModelV4,
-  FilesV4,
-  ImageModelV2,
   ImageModelV3,
-  ImageModelV4,
-  LanguageModelV2,
   LanguageModelV3,
-  LanguageModelV4,
   NoSuchModelError,
   ProviderV2,
   ProviderV3,
-  ProviderV4,
   RerankingModelV3,
-  RerankingModelV4,
-  SkillsV4,
-  SpeechModelV2,
   SpeechModelV3,
-  SpeechModelV4,
-  TranscriptionModelV2,
   TranscriptionModelV3,
-  TranscriptionModelV4,
 } from '@ai-sdk/provider';
-import { asEmbeddingModelV4 } from '../model/as-embedding-model-v4';
-import { asImageModelV4 } from '../model/as-image-model-v4';
-import { asLanguageModelV4 } from '../model/as-language-model-v4';
-import { asProviderV4 } from '../model/as-provider-v4';
-import { asRerankingModelV4 } from '../model/as-reranking-model-v4';
-import { asSpeechModelV4 } from '../model/as-speech-model-v4';
-import { asTranscriptionModelV4 } from '../model/as-transcription-model-v4';
-import { asVideoModelV4 } from '../model/as-video-model-v4';
+import { asProviderV3 } from '../model/as-provider-v3';
 
 /**
  * Creates a custom provider with specified language models, text embedding models, image models, transcription models, speech models, and an optional fallback provider.
  *
  * @param {Object} options - The options for creating the custom provider.
- * @param {Record<string, LanguageModelV4>} [options.languageModels] - A record of language models, where keys are model IDs and values are LanguageModelV4 instances.
- * @param {Record<string, EmbeddingModelV4>} [options.embeddingModels] - A record of text embedding models, where keys are model IDs and values are EmbeddingModelV4 instances.
- * @param {Record<string, ImageModelV4>} [options.imageModels] - A record of image models, where keys are model IDs and values are ImageModelV4 instances.
- * @param {Record<string, TranscriptionModelV4>} [options.transcriptionModels] - A record of transcription models, where keys are model IDs and values are TranscriptionModelV4 instances.
- * @param {Record<string, SpeechModelV4>} [options.speechModels] - A record of speech models, where keys are model IDs and values are SpeechModelV4 instances.
- * @param {Record<string, RerankingModelV4>} [options.rerankingModels] - A record of reranking models, where keys are model IDs and values are RerankingModelV4 instances.
- * @param {ProviderV4} [options.fallbackProvider] - An optional fallback provider to use when a requested model is not found in the custom provider.
- * @returns {ProviderV4} A ProviderV4 object with languageModel, embeddingModel, imageModel, transcriptionModel, and speechModel methods.
+ * @param {Record<string, LanguageModelV3>} [options.languageModels] - A record of language models, where keys are model IDs and values are LanguageModelV3 instances.
+ * @param {Record<string, EmbeddingModelV3>} [options.embeddingModels] - A record of text embedding models, where keys are model IDs and values are EmbeddingModelV3 instances.
+ * @param {Record<string, ImageModelV3>} [options.imageModels] - A record of image models, where keys are model IDs and values are ImageModelV3 instances.
+ * @param {Record<string, TranscriptionModelV3>} [options.transcriptionModels] - A record of transcription models, where keys are model IDs and values are TranscriptionModelV3 instances.
+ * @param {Record<string, SpeechModelV3>} [options.speechModels] - A record of speech models, where keys are model IDs and values are SpeechModelV3 instances.
+ * @param {Record<string, RerankingModelV3>} [options.rerankingModels] - A record of reranking models, where keys are model IDs and values are RerankingModelV3 instances.
+ * @param {ProviderV3} [options.fallbackProvider] - An optional fallback provider to use when a requested model is not found in the custom provider.
+ * @returns {ProviderV3} A ProviderV3 object with languageModel, embeddingModel, imageModel, transcriptionModel, and speechModel methods.
  *
  * @throws {NoSuchModelError} Throws when a requested model is not found and no fallback provider is available.
  */
 export function customProvider<
-  LANGUAGE_MODELS extends Record<
-    string,
-    LanguageModelV2 | LanguageModelV3 | LanguageModelV4
-  >,
-  EMBEDDING_MODELS extends Record<string, EmbeddingModelV3 | EmbeddingModelV4>,
-  IMAGE_MODELS extends Record<
-    string,
-    ImageModelV2 | ImageModelV3 | ImageModelV4
-  >,
-  TRANSCRIPTION_MODELS extends Record<
-    string,
-    TranscriptionModelV2 | TranscriptionModelV3 | TranscriptionModelV4
-  >,
-  SPEECH_MODELS extends Record<
-    string,
-    SpeechModelV2 | SpeechModelV3 | SpeechModelV4
-  >,
-  RERANKING_MODELS extends Record<string, RerankingModelV3 | RerankingModelV4>,
-  VIDEO_MODELS extends Record<
-    string,
-    Experimental_VideoModelV3 | Experimental_VideoModelV4
-  >,
-  FILES extends FilesV4 | undefined = undefined,
-  SKILLS extends SkillsV4 | undefined = undefined,
+  LANGUAGE_MODELS extends Record<string, LanguageModelV3>,
+  EMBEDDING_MODELS extends Record<string, EmbeddingModelV3>,
+  IMAGE_MODELS extends Record<string, ImageModelV3>,
+  TRANSCRIPTION_MODELS extends Record<string, TranscriptionModelV3>,
+  SPEECH_MODELS extends Record<string, SpeechModelV3>,
+  RERANKING_MODELS extends Record<string, RerankingModelV3>,
+  VIDEO_MODELS extends Record<string, Experimental_VideoModelV3>,
 >({
   languageModels,
   embeddingModels,
@@ -81,8 +43,6 @@ export function customProvider<
   speechModels,
   rerankingModels,
   videoModels,
-  files,
-  skills,
   fallbackProvider: fallbackProviderArg,
 }: {
   languageModels?: LANGUAGE_MODELS;
@@ -92,37 +52,31 @@ export function customProvider<
   speechModels?: SPEECH_MODELS;
   rerankingModels?: RERANKING_MODELS;
   videoModels?: VIDEO_MODELS;
-  files?: FILES;
-  skills?: SKILLS;
-  fallbackProvider?: ProviderV4 | ProviderV3 | ProviderV2;
-}): ProviderV4 & {
-  languageModel(modelId: ExtractModelId<LANGUAGE_MODELS>): LanguageModelV4;
-  embeddingModel(modelId: ExtractModelId<EMBEDDING_MODELS>): EmbeddingModelV4;
-  imageModel(modelId: ExtractModelId<IMAGE_MODELS>): ImageModelV4;
+  fallbackProvider?: ProviderV3 | ProviderV2;
+}): ProviderV3 & {
+  languageModel(modelId: ExtractModelId<LANGUAGE_MODELS>): LanguageModelV3;
+  embeddingModel(modelId: ExtractModelId<EMBEDDING_MODELS>): EmbeddingModelV3;
+  imageModel(modelId: ExtractModelId<IMAGE_MODELS>): ImageModelV3;
   transcriptionModel(
     modelId: ExtractModelId<TRANSCRIPTION_MODELS>,
-  ): TranscriptionModelV4;
-  rerankingModel(modelId: ExtractModelId<RERANKING_MODELS>): RerankingModelV4;
-  speechModel(modelId: ExtractModelId<SPEECH_MODELS>): SpeechModelV4;
-  videoModel(modelId: ExtractModelId<VIDEO_MODELS>): Experimental_VideoModelV4;
-} & (FILES extends FilesV4 ? { files(): FilesV4 } : { files?(): FilesV4 }) &
-  (SKILLS extends SkillsV4 ? { skills(): SkillsV4 } : { skills?(): SkillsV4 }) {
+  ): TranscriptionModelV3;
+  rerankingModel(modelId: ExtractModelId<RERANKING_MODELS>): RerankingModelV3;
+  speechModel(modelId: ExtractModelId<SPEECH_MODELS>): SpeechModelV3;
+  videoModel(modelId: ExtractModelId<VIDEO_MODELS>): Experimental_VideoModelV3;
+} {
   const fallbackProvider = fallbackProviderArg
-    ? asProviderV4(fallbackProviderArg)
+    ? asProviderV3(fallbackProviderArg)
     : undefined;
 
-  const resolvedFiles = files ?? fallbackProvider?.files?.();
-  const resolvedSkills = skills ?? fallbackProvider?.skills?.();
-
   return {
-    specificationVersion: 'v4',
-    languageModel(modelId: ExtractModelId<LANGUAGE_MODELS>): LanguageModelV4 {
+    specificationVersion: 'v3',
+    languageModel(modelId: ExtractModelId<LANGUAGE_MODELS>): LanguageModelV3 {
       if (languageModels != null && modelId in languageModels) {
-        return asLanguageModelV4(languageModels[modelId]);
+        return languageModels[modelId];
       }
 
       if (fallbackProvider) {
-        return (fallbackProvider as ProviderV4).languageModel(modelId);
+        return (fallbackProvider as ProviderV3).languageModel(modelId);
       }
 
       throw new NoSuchModelError({ modelId, modelType: 'languageModel' });
@@ -130,25 +84,25 @@ export function customProvider<
 
     embeddingModel(
       modelId: ExtractModelId<EMBEDDING_MODELS>,
-    ): EmbeddingModelV4 {
+    ): EmbeddingModelV3 {
       if (embeddingModels != null && modelId in embeddingModels) {
-        return asEmbeddingModelV4(embeddingModels[modelId]);
+        return embeddingModels[modelId];
       }
 
       if (fallbackProvider) {
-        return (fallbackProvider as ProviderV4).embeddingModel(modelId);
+        return (fallbackProvider as ProviderV3).embeddingModel(modelId);
       }
 
       throw new NoSuchModelError({ modelId, modelType: 'embeddingModel' });
     },
 
-    imageModel(modelId: ExtractModelId<IMAGE_MODELS>): ImageModelV4 {
+    imageModel(modelId: ExtractModelId<IMAGE_MODELS>): ImageModelV3 {
       if (imageModels != null && modelId in imageModels) {
-        return asImageModelV4(imageModels[modelId]);
+        return imageModels[modelId];
       }
 
       if (fallbackProvider?.imageModel) {
-        return (fallbackProvider as ProviderV4).imageModel(modelId);
+        return (fallbackProvider as ProviderV3).imageModel(modelId);
       }
 
       throw new NoSuchModelError({ modelId, modelType: 'imageModel' });
@@ -156,34 +110,34 @@ export function customProvider<
 
     transcriptionModel(
       modelId: ExtractModelId<TRANSCRIPTION_MODELS>,
-    ): TranscriptionModelV4 {
+    ): TranscriptionModelV3 {
       if (transcriptionModels != null && modelId in transcriptionModels) {
-        return asTranscriptionModelV4(transcriptionModels[modelId]);
+        return transcriptionModels[modelId];
       }
 
       if (fallbackProvider?.transcriptionModel) {
-        return (fallbackProvider as ProviderV4).transcriptionModel!(modelId);
+        return (fallbackProvider as ProviderV3).transcriptionModel!(modelId);
       }
 
       throw new NoSuchModelError({ modelId, modelType: 'transcriptionModel' });
     },
 
-    speechModel(modelId: ExtractModelId<SPEECH_MODELS>): SpeechModelV4 {
+    speechModel(modelId: ExtractModelId<SPEECH_MODELS>): SpeechModelV3 {
       if (speechModels != null && modelId in speechModels) {
-        return asSpeechModelV4(speechModels[modelId]);
+        return speechModels[modelId];
       }
 
       if (fallbackProvider?.speechModel) {
-        return (fallbackProvider as ProviderV4).speechModel!(modelId);
+        return (fallbackProvider as ProviderV3).speechModel!(modelId);
       }
 
       throw new NoSuchModelError({ modelId, modelType: 'speechModel' });
     },
     rerankingModel(
       modelId: ExtractModelId<RERANKING_MODELS>,
-    ): RerankingModelV4 {
+    ): RerankingModelV3 {
       if (rerankingModels != null && modelId in rerankingModels) {
-        return asRerankingModelV4(rerankingModels[modelId]);
+        return rerankingModels[modelId];
       }
 
       if (fallbackProvider?.rerankingModel) {
@@ -194,21 +148,21 @@ export function customProvider<
     },
     videoModel(
       modelId: ExtractModelId<VIDEO_MODELS>,
-    ): Experimental_VideoModelV4 {
+    ): Experimental_VideoModelV3 {
       if (videoModels != null && modelId in videoModels) {
-        return asVideoModelV4(videoModels[modelId]);
+        return videoModels[modelId];
       }
 
-      const videoModel = (fallbackProvider as any)?.videoModel;
+      // TODO AI SDK v7
+      // @ts-expect-error - videoModel support is experimental
+      const videoModel = fallbackProvider?.videoModel;
       if (videoModel) {
         return videoModel(modelId);
       }
 
       throw new NoSuchModelError({ modelId, modelType: 'videoModel' });
     },
-    ...(resolvedFiles != null ? { files: () => resolvedFiles } : {}),
-    ...(resolvedSkills != null ? { skills: () => resolvedSkills } : {}),
-  } as any; // necessary workaround to satisfy the complex return type while maintaining type safety
+  };
 }
 
 /**

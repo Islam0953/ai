@@ -3,11 +3,13 @@ import {
   ImageModelV4,
   LanguageModelV4,
   NoSuchModelError,
+  ProviderV3,
   ProviderV4,
   RerankingModelV4,
   SpeechModelV4,
   TranscriptionModelV4,
 } from '@ai-sdk/provider';
+import { asProviderV4 } from '../model/as-provider-v4';
 import { wrapImageModel } from '../middleware/wrap-image-model';
 import { wrapLanguageModel } from '../middleware/wrap-language-model';
 import { ImageModelMiddleware, LanguageModelMiddleware } from '../types';
@@ -15,7 +17,10 @@ import type { ExtractLiteralUnion } from '../util/extract-literal-union';
 import { NoSuchProviderError } from './no-such-provider-error';
 
 export interface ProviderRegistryProvider<
-  PROVIDERS extends Record<string, ProviderV4> = Record<string, ProviderV4>,
+  PROVIDERS extends Record<string, ProviderV4 | ProviderV3> = Record<
+    string,
+    ProviderV4 | ProviderV3
+  >,
   SEPARATOR extends string = ':',
 > {
   languageModel<KEY extends keyof PROVIDERS>(
@@ -87,7 +92,7 @@ export interface ProviderRegistryProvider<
  * @returns A new ProviderRegistryProvider instance that provides access to all registered providers with optional middleware applied to language and image models.
  */
 export function createProviderRegistry<
-  PROVIDERS extends Record<string, ProviderV4>,
+  PROVIDERS extends Record<string, ProviderV4 | ProviderV3>,
   SEPARATOR extends string = ':',
 >(
   providers: PROVIDERS,
@@ -125,10 +130,10 @@ export function createProviderRegistry<
 export const experimental_createProviderRegistry = createProviderRegistry;
 
 class DefaultProviderRegistry<
-  PROVIDERS extends Record<string, ProviderV4>,
+  PROVIDERS extends Record<string, ProviderV4 | ProviderV3>,
   SEPARATOR extends string,
 > implements ProviderRegistryProvider<PROVIDERS, SEPARATOR> {
-  private providers: PROVIDERS = {} as PROVIDERS;
+  private providers: Partial<Record<keyof PROVIDERS, ProviderV4>> = {};
   private separator: SEPARATOR;
   private languageModelMiddleware?:
     | LanguageModelMiddleware
@@ -158,7 +163,7 @@ class DefaultProviderRegistry<
     id: K;
     provider: PROVIDERS[K];
   }): void {
-    this.providers[id] = provider;
+    this.providers[id] = asProviderV4(provider);
   }
 
   private getProvider(

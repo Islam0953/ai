@@ -2,6 +2,7 @@ import type {
   EmbeddingModelV4,
   ImageModelV4,
   LanguageModelV4,
+  ProviderV3,
   ProviderV4,
   RerankingModelV4,
   SpeechModelV4,
@@ -14,17 +15,26 @@ import {
   createProviderRegistry,
   type ProviderRegistryProvider,
 } from './provider-registry';
+import { MockEmbeddingModelV3 } from '../test/mock-embedding-model-v3';
 import { MockEmbeddingModelV4 } from '../test/mock-embedding-model-v4';
+import { MockImageModelV3 } from '../test/mock-image-model-v3';
 import { MockImageModelV4 } from '../test/mock-image-model-v4';
+import { MockLanguageModelV3 } from '../test/mock-language-model-v3';
 import { MockLanguageModelV4 } from '../test/mock-language-model-v4';
+import { MockProviderV3 } from '../test/mock-provider-v3';
 import { MockProviderV4 } from '../test/mock-provider-v4';
+import { MockRerankingModelV3 } from '../test/mock-reranking-model-v3';
 import { MockRerankingModelV4 } from '../test/mock-reranking-model-v4';
+import { MockSpeechModelV3 } from '../test/mock-speech-model-v3';
 import { MockSpeechModelV4 } from '../test/mock-speech-model-v4';
+import { MockTranscriptionModelV3 } from '../test/mock-transcription-model-v3';
 import { MockTranscriptionModelV4 } from '../test/mock-transcription-model-v4';
+
+type RegistryProvider = ProviderV4 | ProviderV3;
 
 /** Same construction as `ProviderRegistryProvider` for assertion-only tests. */
 type RegistryLanguageModelIdentifier<
-  registeredProviders extends Record<string, ProviderV4>,
+  registeredProviders extends Record<string, RegistryProvider>,
   separator extends string = ':',
 > = {
   [providerKey in keyof registeredProviders]: providerKey extends string
@@ -37,7 +47,7 @@ type RegistryLanguageModelIdentifier<
 }[keyof registeredProviders];
 
 type RegistryEmbeddingModelIdentifier<
-  registeredProviders extends Record<string, ProviderV4>,
+  registeredProviders extends Record<string, RegistryProvider>,
   separator extends string = ':',
 > = {
   [providerKey in keyof registeredProviders]: providerKey extends string
@@ -50,7 +60,7 @@ type RegistryEmbeddingModelIdentifier<
 }[keyof registeredProviders];
 
 type RegistryImageModelIdentifier<
-  registeredProviders extends Record<string, ProviderV4>,
+  registeredProviders extends Record<string, RegistryProvider>,
   separator extends string = ':',
 > = {
   [providerKey in keyof registeredProviders]: providerKey extends string
@@ -63,7 +73,7 @@ type RegistryImageModelIdentifier<
 }[keyof registeredProviders];
 
 type RegistryTranscriptionModelIdentifier<
-  registeredProviders extends Record<string, ProviderV4>,
+  registeredProviders extends Record<string, RegistryProvider>,
   separator extends string = ':',
 > = {
   [providerKey in keyof registeredProviders]: providerKey extends string
@@ -76,7 +86,7 @@ type RegistryTranscriptionModelIdentifier<
 }[keyof registeredProviders];
 
 type RegistrySpeechModelIdentifier<
-  registeredProviders extends Record<string, ProviderV4>,
+  registeredProviders extends Record<string, RegistryProvider>,
   separator extends string = ':',
 > = {
   [providerKey in keyof registeredProviders]: providerKey extends string
@@ -89,7 +99,7 @@ type RegistrySpeechModelIdentifier<
 }[keyof registeredProviders];
 
 type RegistryRerankingModelIdentifier<
-  registeredProviders extends Record<string, ProviderV4>,
+  registeredProviders extends Record<string, RegistryProvider>,
   separator extends string = ':',
 > = {
   [providerKey in keyof registeredProviders]: providerKey extends string
@@ -286,6 +296,67 @@ describe('createProviderRegistry autocomplete / literal identifiers', () => {
       (typeof registryWithPlainProvider)['languageModel']
     >[0];
     expectTypeOf<looseLanguageModelArgument>().toMatchTypeOf<`plain:${string}`>();
+  });
+});
+
+describe('createProviderRegistry ProviderV3 typing', () => {
+  const languageModel = new MockLanguageModelV3();
+  const embeddingModel = new MockEmbeddingModelV3();
+  const imageModel = new MockImageModelV3();
+  const transcriptionModel = new MockTranscriptionModelV3();
+  const speechModel = new MockSpeechModelV3();
+  const rerankingModel = new MockRerankingModelV3();
+
+  const v3Provider = new MockProviderV3({
+    languageModels: { language: languageModel },
+    embeddingModels: { embedding: embeddingModel },
+    imageModels: { image: imageModel },
+    transcriptionModels: { transcription: transcriptionModel },
+    speechModels: { speech: speechModel },
+    rerankingModels: { reranking: rerankingModel },
+  });
+
+  const registry = createProviderRegistry({
+    v3: v3Provider,
+  });
+
+  it('accepts ProviderV3 providers and exposes ProviderV4 models', () => {
+    expectTypeOf(registry).toEqualTypeOf<
+      ProviderRegistryProvider<{ v3: MockProviderV3 }, ':'>
+    >();
+
+    expectTypeOf(
+      registry.languageModel('v3:language'),
+    ).toEqualTypeOf<LanguageModelV4>();
+    expectTypeOf(
+      registry.embeddingModel('v3:embedding'),
+    ).toEqualTypeOf<EmbeddingModelV4>();
+    expectTypeOf(registry.imageModel('v3:image')).toEqualTypeOf<ImageModelV4>();
+    expectTypeOf(
+      registry.transcriptionModel('v3:transcription'),
+    ).toEqualTypeOf<TranscriptionModelV4>();
+    expectTypeOf(
+      registry.speechModel('v3:speech'),
+    ).toEqualTypeOf<SpeechModelV4>();
+    expectTypeOf(
+      registry.rerankingModel('v3:reranking'),
+    ).toEqualTypeOf<RerankingModelV4>();
+  });
+
+  it('keeps ProviderV3 registry identifiers scoped to registered provider keys', () => {
+    type looseLanguageModelArgument = Parameters<
+      (typeof registry)['languageModel']
+    >[0];
+
+    expectTypeOf<
+      RegistryLanguageModelIdentifier<{ v3: MockProviderV3 }>
+    >().toEqualTypeOf<never>();
+    expectTypeOf<looseLanguageModelArgument>().toMatchTypeOf<`v3:${string}`>();
+
+    registry.languageModel('v3:anything-goes');
+
+    // @ts-expect-error provider key must exist in the registry
+    registry.languageModel('unknown:language');
   });
 });
 

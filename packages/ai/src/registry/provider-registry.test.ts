@@ -1,13 +1,20 @@
 import { NoSuchModelError } from '@ai-sdk/provider';
 import { MockEmbeddingModelV4 } from '../test/mock-embedding-model-v4';
+import { MockEmbeddingModelV3 } from '../test/mock-embedding-model-v3';
 import { MockLanguageModelV4 } from '../test/mock-language-model-v4';
+import { MockLanguageModelV3 } from '../test/mock-language-model-v3';
 import { NoSuchProviderError } from './no-such-provider-error';
 import { createProviderRegistry } from './provider-registry';
 import { MockImageModelV4 } from '../test/mock-image-model-v4';
+import { MockImageModelV3 } from '../test/mock-image-model-v3';
 import { MockTranscriptionModelV4 } from '../test/mock-transcription-model-v4';
+import { MockTranscriptionModelV3 } from '../test/mock-transcription-model-v3';
 import { MockSpeechModelV4 } from '../test/mock-speech-model-v4';
+import { MockSpeechModelV3 } from '../test/mock-speech-model-v3';
 import { MockRerankingModelV4 } from '../test/mock-reranking-model-v4';
+import { MockRerankingModelV3 } from '../test/mock-reranking-model-v3';
 import { MockProviderV4 } from '../test/mock-provider-v4';
+import { MockProviderV3 } from '../test/mock-provider-v3';
 import { describe, it, expect, vi } from 'vitest';
 
 describe('languageModel', () => {
@@ -583,6 +590,71 @@ describe('rerankingModel', () => {
     );
 
     expect(modelRegistry.rerankingModel('provider|model')).toEqual(model);
+  });
+});
+
+describe('ProviderV3 compatibility', () => {
+  it('should adapt ProviderV3 models to ProviderV4 models', () => {
+    const registry = createProviderRegistry({
+      provider: new MockProviderV3({
+        languageModels: {
+          language: new MockLanguageModelV3({
+            provider: 'provider',
+            modelId: 'language',
+          }),
+        },
+        embeddingModels: {
+          embedding: new MockEmbeddingModelV3({
+            provider: 'provider',
+            modelId: 'embedding',
+          }),
+        },
+        imageModels: {
+          image: new MockImageModelV3({
+            provider: 'provider',
+            modelId: 'image',
+          }),
+        },
+        transcriptionModels: {
+          transcription: new MockTranscriptionModelV3({
+            provider: 'provider',
+            modelId: 'transcription',
+          }),
+        },
+        speechModels: {
+          speech: new MockSpeechModelV3({
+            provider: 'provider',
+            modelId: 'speech',
+          }),
+        },
+        rerankingModels: {
+          reranking: new MockRerankingModelV3({
+            provider: 'provider',
+            modelId: 'reranking',
+          }),
+        },
+      }),
+    });
+
+    expect(
+      registry.languageModel('provider:language').specificationVersion,
+    ).toBe('v4');
+    expect(
+      registry.embeddingModel('provider:embedding').specificationVersion,
+    ).toBe('v4');
+    expect(registry.imageModel('provider:image').specificationVersion).toBe(
+      'v4',
+    );
+    expect(
+      registry.transcriptionModel('provider:transcription')
+        .specificationVersion,
+    ).toBe('v4');
+    expect(registry.speechModel('provider:speech').specificationVersion).toBe(
+      'v4',
+    );
+    expect(
+      registry.rerankingModel('provider:reranking').specificationVersion,
+    ).toBe('v4');
   });
 });
 

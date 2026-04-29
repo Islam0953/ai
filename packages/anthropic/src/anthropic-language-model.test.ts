@@ -1,11 +1,13 @@
-import {
-  APICallError,
-  NoSuchProviderReferenceError,
-  LanguageModelV4,
+import type {
   LanguageModelV4GenerateResult,
   LanguageModelV4Prompt,
   LanguageModelV4StreamPart,
   LanguageModelV4StreamResult,
+} from '@ai-sdk/provider';
+import {
+  APICallError,
+  NoSuchProviderReferenceError,
+  LanguageModelV4,
 } from '@ai-sdk/provider';
 import {
   convertReadableStreamToArray,
@@ -14,7 +16,7 @@ import {
 import { createTestServer } from '@ai-sdk/test-server/with-vitest';
 import fs from 'node:fs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AnthropicLanguageModelOptions } from './anthropic-options';
+import type { AnthropicLanguageModelOptions } from './anthropic-options';
 import { getModelCapabilities } from './anthropic-language-model';
 import { anthropic, createAnthropic } from './anthropic-provider';
 

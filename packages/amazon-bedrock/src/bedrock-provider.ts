@@ -1,13 +1,13 @@
 import { anthropicTools } from '@ai-sdk/anthropic/internal';
-import {
+import type {
   EmbeddingModelV4,
   ImageModelV4,
   LanguageModelV4,
   ProviderV4,
   RerankingModelV4,
 } from '@ai-sdk/provider';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import {
-  FetchFunction,
   generateId,
   loadOptionalSetting,
   loadSetting,
@@ -15,18 +15,18 @@ import {
   withUserAgentSuffix,
 } from '@ai-sdk/provider-utils';
 import { BedrockChatLanguageModel } from './bedrock-chat-language-model';
-import { BedrockChatModelId } from './bedrock-chat-options';
+import type { BedrockChatModelId } from './bedrock-chat-options';
 import { BedrockEmbeddingModel } from './bedrock-embedding-model';
-import { BedrockEmbeddingModelId } from './bedrock-embedding-options';
+import type { BedrockEmbeddingModelId } from './bedrock-embedding-options';
 import { BedrockImageModel } from './bedrock-image-model';
-import { BedrockImageModelId } from './bedrock-image-settings';
+import type { BedrockImageModelId } from './bedrock-image-settings';
+import type { BedrockCredentials } from './bedrock-sigv4-fetch';
 import {
-  BedrockCredentials,
   createApiKeyFetchFunction,
   createSigV4FetchFunction,
 } from './bedrock-sigv4-fetch';
 import { BedrockRerankingModel } from './reranking/bedrock-reranking-model';
-import { BedrockRerankingModelId } from './reranking/bedrock-reranking-options';
+import type { BedrockRerankingModelId } from './reranking/bedrock-reranking-options';
 import { VERSION } from './version';
 
 export interface AmazonBedrockProviderSettings {

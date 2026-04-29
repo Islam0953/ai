@@ -1,4 +1,4 @@
-import {
+import type {
   LanguageModelV4StreamPart,
   LanguageModelV4Usage,
 } from '@ai-sdk/provider';
@@ -8,7 +8,7 @@ import {
   convertReadableStreamToArray,
 } from '@ai-sdk/provider-utils/test';
 import { describe, expect, it, vi } from 'vitest';
-import z from 'zod';
+import { z } from 'zod';
 import { NoSuchToolError } from '../error/no-such-tool-error';
 import { MockLanguageModelV4 } from '../test/mock-language-model-v4';
 import type {
@@ -16,7 +16,7 @@ import type {
   LanguageModelCallStartEvent,
 } from './language-model-events';
 import { streamLanguageModelCall } from './stream-language-model-call';
-import { ToolCallRepairFunction } from './tool-call-repair-function';
+import type { ToolCallRepairFunction } from './tool-call-repair-function';
 import type { ToolSet } from '@ai-sdk/provider-utils';
 
 const testUsage: LanguageModelV4Usage = {

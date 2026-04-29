@@ -1,4 +1,5 @@
-import { mistral, type MistralLanguageModelOptions } from '@ai-sdk/mistral';
+import { mistral } from '@ai-sdk/mistral';
+import type { MistralLanguageModelOptions } from '@ai-sdk/mistral';
 import { generateText, Output } from 'ai';
 import { z } from 'zod';
 import { run } from '../../lib/run';

@@ -1,6 +1,7 @@
-import { openai, OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
+import type { OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
+import { openai } from '@ai-sdk/openai';
 import { tool, ToolLoopAgent } from 'ai';
-import z from 'zod';
+import { z } from 'zod';
 import { run } from '../../lib/run';
 
 const agent = new ToolLoopAgent({

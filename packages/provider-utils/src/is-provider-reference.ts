@@ -1,4 +1,4 @@
-import {
+import type {
   LanguageModelV4FilePart,
   SharedV4ProviderReference,
 } from '@ai-sdk/provider';

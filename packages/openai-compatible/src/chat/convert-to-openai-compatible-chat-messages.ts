@@ -1,9 +1,9 @@
-import {
+import type {
   LanguageModelV4Prompt,
   SharedV4ProviderMetadata,
-  UnsupportedFunctionalityError,
 } from '@ai-sdk/provider';
-import { OpenAICompatibleChatPrompt } from './openai-compatible-api-types';
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
+import type { OpenAICompatibleChatPrompt } from './openai-compatible-api-types';
 import {
   convertBase64ToUint8Array,
   convertToBase64,

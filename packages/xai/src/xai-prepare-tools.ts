@@ -1,9 +1,9 @@
-import {
+import type {
   LanguageModelV4CallOptions,
   SharedV4Warning,
-  UnsupportedFunctionalityError,
 } from '@ai-sdk/provider';
-import { XaiToolChoice } from './xai-chat-prompt';
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
+import type { XaiToolChoice } from './xai-chat-prompt';
 
 export function prepareTools({
   tools,

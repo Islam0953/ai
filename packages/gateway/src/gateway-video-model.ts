@@ -14,8 +14,8 @@ import {
   parseJsonEventStream,
   postJsonToApi,
   resolve,
-  type Resolvable,
 } from '@ai-sdk/provider-utils';
+import type { Resolvable } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
 import type { GatewayConfig } from './gateway-config';
 import { asGatewayError } from './errors';

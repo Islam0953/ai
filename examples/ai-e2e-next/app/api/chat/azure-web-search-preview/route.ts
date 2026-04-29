@@ -1,12 +1,6 @@
 import { azure } from '@ai-sdk/azure';
-import {
-  convertToModelMessages,
-  InferUITools,
-  streamText,
-  ToolSet,
-  UIDataTypes,
-  UIMessage,
-} from 'ai';
+import type { InferUITools, ToolSet, UIDataTypes, UIMessage } from 'ai';
+import { convertToModelMessages, streamText } from 'ai';
 
 const tools = {
   web_search_preview: azure.tools.webSearchPreview({}),

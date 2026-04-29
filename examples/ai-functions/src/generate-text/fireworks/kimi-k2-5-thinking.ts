@@ -1,7 +1,5 @@
-import {
-  fireworks,
-  type FireworksLanguageModelOptions,
-} from '@ai-sdk/fireworks';
+import { fireworks } from '@ai-sdk/fireworks';
+import type { FireworksLanguageModelOptions } from '@ai-sdk/fireworks';
 import { generateText } from 'ai';
 import { run } from '../../lib/run';
 

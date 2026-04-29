@@ -1,11 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { JSONSchema7 } from '@ai-sdk/provider';
+import type { JSONSchema7 } from '@ai-sdk/provider';
 import { z } from 'zod/v3';
-import {
-  ignoreOverride,
-  jsonDescription,
-  PostProcessCallback,
-} from './options';
+import type { PostProcessCallback } from './options';
+import { ignoreOverride, jsonDescription } from './options';
 import { zod3ToJsonSchema } from './zod3-to-json-schema';
 import { delay } from '../../delay';
 

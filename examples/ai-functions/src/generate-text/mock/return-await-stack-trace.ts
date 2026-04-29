@@ -1,4 +1,5 @@
-import { generateText, LanguageModelMiddleware, wrapLanguageModel } from 'ai';
+import type { LanguageModelMiddleware } from 'ai';
+import { generateText, wrapLanguageModel } from 'ai';
 import { MockLanguageModelV3 } from 'ai/test';
 import { run } from '../../lib/run';
 

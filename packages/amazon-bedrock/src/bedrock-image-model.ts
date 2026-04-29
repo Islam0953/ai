@@ -1,11 +1,10 @@
-import {
+import type {
   ImageModelV4,
   ImageModelV4File,
   SharedV4Warning,
 } from '@ai-sdk/provider';
+import type { FetchFunction, Resolvable } from '@ai-sdk/provider-utils';
 import {
-  FetchFunction,
-  Resolvable,
   combineHeaders,
   convertUint8ArrayToBase64,
   createJsonErrorResponseHandler,
@@ -16,10 +15,8 @@ import {
   WORKFLOW_SERIALIZE,
   WORKFLOW_DESERIALIZE,
 } from '@ai-sdk/provider-utils';
-import {
-  BedrockImageModelId,
-  modelMaxImagesPerCall,
-} from './bedrock-image-settings';
+import type { BedrockImageModelId } from './bedrock-image-settings';
+import { modelMaxImagesPerCall } from './bedrock-image-settings';
 import { BedrockErrorSchema } from './bedrock-error';
 import { z } from 'zod/v4';
 

@@ -1,14 +1,11 @@
-import {
-  SharedV4Warning,
-  LanguageModelV4Message,
-  UnsupportedFunctionalityError,
-} from '@ai-sdk/provider';
+import type { SharedV4Warning, LanguageModelV4Message } from '@ai-sdk/provider';
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
 import {
   convertToBase64,
   isProviderReference,
   resolveProviderReference,
 } from '@ai-sdk/provider-utils';
-import {
+import type {
   XaiResponsesInput,
   XaiResponsesUserMessageContentPart,
 } from './xai-responses-api';

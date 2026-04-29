@@ -1,23 +1,16 @@
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import {
   EventSourceParserStream,
-  FetchFunction,
   withUserAgentSuffix,
   getRuntimeEnvironmentUserAgent,
 } from '@ai-sdk/provider-utils';
 import { MCPClientError } from '../error/mcp-client-error';
-import {
-  JSONRPCMessage,
-  JSONRPCMessageSchema,
-  parseJSONRPCMessage,
-} from './json-rpc-message';
-import { MCPTransport } from './mcp-transport';
+import type { JSONRPCMessage } from './json-rpc-message';
+import { JSONRPCMessageSchema, parseJSONRPCMessage } from './json-rpc-message';
+import type { MCPTransport } from './mcp-transport';
 import { VERSION } from '../version';
-import {
-  OAuthClientProvider,
-  extractResourceMetadataUrl,
-  UnauthorizedError,
-  auth,
-} from './oauth';
+import type { OAuthClientProvider } from './oauth';
+import { extractResourceMetadataUrl, UnauthorizedError, auth } from './oauth';
 import { LATEST_PROTOCOL_VERSION } from './types';
 
 /**

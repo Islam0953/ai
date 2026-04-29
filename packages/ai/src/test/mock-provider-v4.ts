@@ -1,13 +1,13 @@
-import {
+import type {
   EmbeddingModelV4,
   ImageModelV4,
   LanguageModelV4,
-  NoSuchModelError,
   ProviderV4,
   SpeechModelV4,
   TranscriptionModelV4,
   RerankingModelV4,
 } from '@ai-sdk/provider';
+import { NoSuchModelError } from '@ai-sdk/provider';
 
 export class MockProviderV4 implements ProviderV4 {
   readonly specificationVersion = 'v4' as const;

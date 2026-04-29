@@ -1,10 +1,10 @@
 import { generateText } from 'ai';
 import { run } from '../../lib/run';
-import {
-  openai,
+import type {
   OpenAILanguageModelResponsesOptions,
   OpenaiResponsesReasoningProviderMetadata,
 } from '@ai-sdk/openai';
+import { openai } from '@ai-sdk/openai';
 
 run(async () => {
   const result = await generateText({

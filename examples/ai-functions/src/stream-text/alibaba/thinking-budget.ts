@@ -1,4 +1,5 @@
-import { alibaba, type AlibabaLanguageModelOptions } from '@ai-sdk/alibaba';
+import { alibaba } from '@ai-sdk/alibaba';
+import type { AlibabaLanguageModelOptions } from '@ai-sdk/alibaba';
 import { streamText } from 'ai';
 import { run } from '../../lib/run';
 

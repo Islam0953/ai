@@ -1,4 +1,4 @@
-import {
+import type {
   APICallError,
   LanguageModelV4,
   LanguageModelV4CallOptions,
@@ -9,16 +9,18 @@ import {
   LanguageModelV4StreamResult,
   SharedV4Warning,
 } from '@ai-sdk/provider';
+import type {
+  FetchFunction,
+  ParseResult,
+  ResponseHandler,
+} from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   createEventSourceResponseHandler,
   createJsonErrorResponseHandler,
   createJsonResponseHandler,
-  FetchFunction,
   parseProviderOptions,
-  ParseResult,
   postJsonToApi,
-  ResponseHandler,
   serializeModelOptions,
   WORKFLOW_SERIALIZE,
   WORKFLOW_DESERIALIZE,
@@ -28,18 +30,14 @@ import {
   toCamelCase,
   warnIfDeprecatedProviderOptionsKey,
 } from '../utils/to-camel-case';
-import {
-  defaultOpenAICompatibleErrorStructure,
-  ProviderErrorStructure,
-} from '../openai-compatible-error';
+import type { ProviderErrorStructure } from '../openai-compatible-error';
+import { defaultOpenAICompatibleErrorStructure } from '../openai-compatible-error';
 import { convertOpenAICompatibleCompletionUsage } from './convert-openai-compatible-completion-usage';
 import { convertToOpenAICompatibleCompletionPrompt } from './convert-to-openai-compatible-completion-prompt';
 import { getResponseMetadata } from './get-response-metadata';
 import { mapOpenAICompatibleFinishReason } from './map-openai-compatible-finish-reason';
-import {
-  OpenAICompatibleCompletionModelId,
-  openaiCompatibleLanguageModelCompletionOptions,
-} from './openai-compatible-completion-options';
+import type { OpenAICompatibleCompletionModelId } from './openai-compatible-completion-options';
+import { openaiCompatibleLanguageModelCompletionOptions } from './openai-compatible-completion-options';
 
 type OpenAICompatibleCompletionConfig = {
   provider: string;

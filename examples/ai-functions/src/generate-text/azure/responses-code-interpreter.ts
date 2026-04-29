@@ -1,7 +1,7 @@
-import {
-  azure,
-  type AzureResponsesSourceDocumentProviderMetadata,
-  type AzureResponsesTextProviderMetadata,
+import { azure } from '@ai-sdk/azure';
+import type {
+  AzureResponsesSourceDocumentProviderMetadata,
+  AzureResponsesTextProviderMetadata,
 } from '@ai-sdk/azure';
 import { generateText } from 'ai';
 import { run } from '../../lib/run';

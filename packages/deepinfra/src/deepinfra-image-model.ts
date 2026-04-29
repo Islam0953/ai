@@ -1,8 +1,9 @@
-import {
+import type {
   ImageModelV4,
   ImageModelV4File,
   SharedV4Warning,
 } from '@ai-sdk/provider';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   convertBase64ToUint8Array,
@@ -10,14 +11,13 @@ import {
   createJsonErrorResponseHandler,
   createJsonResponseHandler,
   downloadBlob,
-  FetchFunction,
   postFormDataToApi,
   postJsonToApi,
   serializeModelOptions,
   WORKFLOW_SERIALIZE,
   WORKFLOW_DESERIALIZE,
 } from '@ai-sdk/provider-utils';
-import { DeepInfraImageModelId } from './deepinfra-image-settings';
+import type { DeepInfraImageModelId } from './deepinfra-image-settings';
 import { z } from 'zod/v4';
 
 interface DeepInfraImageModelConfig {

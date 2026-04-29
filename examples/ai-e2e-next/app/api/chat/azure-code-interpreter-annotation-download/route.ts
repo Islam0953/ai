@@ -1,17 +1,10 @@
-import {
-  azure,
-  type AzureResponsesSourceDocumentProviderMetadata,
-  type OpenAILanguageModelResponsesOptions,
+import { azure } from '@ai-sdk/azure';
+import type {
+  AzureResponsesSourceDocumentProviderMetadata,
+  OpenAILanguageModelResponsesOptions,
 } from '@ai-sdk/azure';
-import {
-  convertToModelMessages,
-  InferUITools,
-  streamText,
-  ToolSet,
-  UIDataTypes,
-  UIMessage,
-  validateUIMessages,
-} from 'ai';
+import type { InferUITools, ToolSet, UIDataTypes, UIMessage } from 'ai';
+import { convertToModelMessages, streamText, validateUIMessages } from 'ai';
 
 const tools = {
   code_interpreter: azure.tools.codeInterpreter(),

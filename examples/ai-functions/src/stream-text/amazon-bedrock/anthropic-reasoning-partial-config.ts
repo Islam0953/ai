@@ -1,7 +1,5 @@
-import {
-  bedrock,
-  type AmazonBedrockLanguageModelOptions,
-} from '@ai-sdk/amazon-bedrock';
+import { bedrock } from '@ai-sdk/amazon-bedrock';
+import type { AmazonBedrockLanguageModelOptions } from '@ai-sdk/amazon-bedrock';
 import { streamText } from 'ai';
 import { run } from '../../lib/run';
 

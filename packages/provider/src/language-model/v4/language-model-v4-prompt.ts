@@ -1,7 +1,7 @@
-import { JSONValue } from '../../json-value/json-value';
-import { SharedV4ProviderOptions } from '../../shared/v4/shared-v4-provider-options';
-import { SharedV4ProviderReference } from '../../shared/v4/shared-v4-provider-reference';
-import { LanguageModelV4DataContent } from './language-model-v4-data-content';
+import type { JSONValue } from '../../json-value/json-value';
+import type { SharedV4ProviderOptions } from '../../shared/v4/shared-v4-provider-options';
+import type { SharedV4ProviderReference } from '../../shared/v4/shared-v4-provider-reference';
+import type { LanguageModelV4DataContent } from './language-model-v4-data-content';
 
 /**
  * A prompt is a list of messages.

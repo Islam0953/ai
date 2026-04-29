@@ -1,5 +1,6 @@
 import { togetherai } from '@ai-sdk/togetherai';
-import { streamText, ModelMessage, ToolCallPart, ToolResultPart } from 'ai';
+import type { ModelMessage, ToolCallPart, ToolResultPart } from 'ai';
+import { streamText } from 'ai';
 import { weatherTool } from '../../tools/weather-tool';
 import { run } from '../../lib/run';
 

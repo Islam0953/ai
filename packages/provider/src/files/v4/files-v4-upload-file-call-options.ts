@@ -1,4 +1,4 @@
-import { SharedV4ProviderOptions } from '../../shared/v4/shared-v4-provider-options';
+import type { SharedV4ProviderOptions } from '../../shared/v4/shared-v4-provider-options';
 
 /**
  * Options for uploading a file via the files interface.

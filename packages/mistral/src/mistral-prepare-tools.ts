@@ -1,9 +1,9 @@
-import {
+import type {
   LanguageModelV4CallOptions,
   SharedV4Warning,
-  UnsupportedFunctionalityError,
 } from '@ai-sdk/provider';
-import { MistralToolChoice } from './mistral-chat-prompt';
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
+import type { MistralToolChoice } from './mistral-chat-prompt';
 
 export function prepareTools({
   tools,

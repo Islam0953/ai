@@ -1,4 +1,4 @@
-import {
+import type {
   APICallError,
   LanguageModelV4,
   LanguageModelV4CallOptions,
@@ -15,18 +15,20 @@ import {
   createEventSourceResponseHandler,
   createJsonErrorResponseHandler,
   createJsonResponseHandler,
-  FetchFunction,
   generateId,
   isCustomReasoning,
   parseProviderOptions,
-  ParseResult,
   postJsonToApi,
-  ResponseHandler,
   serializeModelOptions,
-  type StreamingToolCallDelta,
   StreamingToolCallTracker,
   WORKFLOW_SERIALIZE,
   WORKFLOW_DESERIALIZE,
+} from '@ai-sdk/provider-utils';
+import type {
+  StreamingToolCallDelta,
+  FetchFunction,
+  ParseResult,
+  ResponseHandler,
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
 import {
@@ -34,19 +36,15 @@ import {
   toCamelCase,
   warnIfDeprecatedProviderOptionsKey,
 } from '../utils/to-camel-case';
-import {
-  defaultOpenAICompatibleErrorStructure,
-  ProviderErrorStructure,
-} from '../openai-compatible-error';
+import type { ProviderErrorStructure } from '../openai-compatible-error';
+import { defaultOpenAICompatibleErrorStructure } from '../openai-compatible-error';
 import { convertOpenAICompatibleChatUsage } from './convert-openai-compatible-chat-usage';
 import { convertToOpenAICompatibleChatMessages } from './convert-to-openai-compatible-chat-messages';
 import { getResponseMetadata } from './get-response-metadata';
 import { mapOpenAICompatibleFinishReason } from './map-openai-compatible-finish-reason';
-import {
-  OpenAICompatibleChatModelId,
-  openaiCompatibleLanguageModelChatOptions,
-} from './openai-compatible-chat-options';
-import { MetadataExtractor } from './openai-compatible-metadata-extractor';
+import type { OpenAICompatibleChatModelId } from './openai-compatible-chat-options';
+import { openaiCompatibleLanguageModelChatOptions } from './openai-compatible-chat-options';
+import type { MetadataExtractor } from './openai-compatible-metadata-extractor';
 import { prepareTools } from './openai-compatible-prepare-tools';
 
 type OpenAICompatibleStreamingToolCallDelta = StreamingToolCallDelta & {

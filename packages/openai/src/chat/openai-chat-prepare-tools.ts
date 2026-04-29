@@ -1,9 +1,9 @@
-import {
+import type {
   LanguageModelV4CallOptions,
   SharedV4Warning,
-  UnsupportedFunctionalityError,
 } from '@ai-sdk/provider';
-import {
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
+import type {
   OpenAIChatToolChoice,
   OpenAIChatFunctionTool,
 } from './openai-chat-api';

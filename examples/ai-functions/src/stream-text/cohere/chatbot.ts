@@ -1,5 +1,6 @@
 import { cohere } from '@ai-sdk/cohere';
-import { isStepCount, ModelMessage, streamText, tool } from 'ai';
+import type { ModelMessage } from 'ai';
+import { isStepCount, streamText, tool } from 'ai';
 import * as readline from 'node:readline/promises';
 import { z } from 'zod';
 import { run } from '../../lib/run';

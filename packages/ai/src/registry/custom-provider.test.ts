@@ -1,4 +1,5 @@
-import { FilesV4, NoSuchModelError, SkillsV4 } from '@ai-sdk/provider';
+import type { FilesV4, SkillsV4 } from '@ai-sdk/provider';
+import { NoSuchModelError } from '@ai-sdk/provider';
 import { describe, expect, it, vi } from 'vitest';
 import { MockEmbeddingModelV4 } from '../test/mock-embedding-model-v4';
 import { MockImageModelV4 } from '../test/mock-image-model-v4';

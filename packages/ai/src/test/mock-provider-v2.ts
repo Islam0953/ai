@@ -1,12 +1,12 @@
-import {
+import type {
   EmbeddingModelV2,
   ImageModelV2,
   LanguageModelV2,
-  NoSuchModelError,
   ProviderV2,
   SpeechModelV2,
   TranscriptionModelV2,
 } from '@ai-sdk/provider';
+import { NoSuchModelError } from '@ai-sdk/provider';
 
 export class MockProviderV2 implements ProviderV2 {
   languageModel: ProviderV2['languageModel'];

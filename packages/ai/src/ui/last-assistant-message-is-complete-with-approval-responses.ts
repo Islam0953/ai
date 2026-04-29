@@ -1,4 +1,5 @@
-import { isToolUIPart, type UIMessage } from './ui-messages';
+import { isToolUIPart } from './ui-messages';
+import type { UIMessage } from './ui-messages';
 
 /**
  * Check if the last message is an assistant message with completed tool call approvals.

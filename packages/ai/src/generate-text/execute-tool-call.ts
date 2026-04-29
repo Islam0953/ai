@@ -3,29 +3,24 @@ import type {
   InferToolInput,
   InferToolSetContext,
   ToolSet,
-} from '@ai-sdk/provider-utils';
-import {
-  executeTool,
-  isExecutableTool,
   ModelMessage,
 } from '@ai-sdk/provider-utils';
-import {
-  getToolTimeoutMs,
-  TimeoutConfiguration,
-} from '../prompt/request-options';
+import { executeTool, isExecutableTool } from '@ai-sdk/provider-utils';
+import type { TimeoutConfiguration } from '../prompt/request-options';
+import { getToolTimeoutMs } from '../prompt/request-options';
 import { mergeAbortSignals } from '../util/merge-abort-signals';
 import { notify } from '../util/notify';
 import { now } from '../util/now';
-import { TypedToolCall } from './tool-call';
-import { TypedToolError } from './tool-error';
-import {
+import type { TypedToolCall } from './tool-call';
+import type { TypedToolError } from './tool-error';
+import type {
   OnToolExecutionEndCallback,
   OnToolExecutionStartCallback,
   ToolExecutionEndEvent,
   ToolExecutionStartEvent,
 } from './tool-execution-events';
-import { ToolOutput } from './tool-output';
-import { TypedToolResult } from './tool-result';
+import type { ToolOutput } from './tool-output';
+import type { TypedToolResult } from './tool-result';
 import { validateToolContext } from './validate-tool-context';
 
 /**

@@ -1,4 +1,4 @@
-import {
+import type {
   LanguageModelV4,
   LanguageModelV4CallOptions,
   LanguageModelV4Content,
@@ -9,6 +9,7 @@ import {
   LanguageModelV4Usage,
   SharedV4Warning,
 } from '@ai-sdk/provider';
+import type { ParseResult } from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   createEventSourceResponseHandler,
@@ -18,7 +19,6 @@ import {
   jsonSchema,
   mapReasoningToProviderEffort,
   parseProviderOptions,
-  ParseResult,
   postJsonToApi,
   serializeModelOptions,
   WORKFLOW_SERIALIZE,
@@ -26,16 +26,16 @@ import {
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
 import { convertToOpenResponsesInput } from './convert-to-open-responses-input';
-import {
+import type {
   FunctionToolParam,
   OpenResponsesRequestBody,
   OpenResponsesResponseBody,
   OpenResponsesChunk,
-  openResponsesErrorSchema,
   ToolChoiceParam,
 } from './open-responses-api';
+import { openResponsesErrorSchema } from './open-responses-api';
 import { mapOpenResponsesFinishReason } from './map-open-responses-finish-reason';
-import { OpenResponsesConfig } from './open-responses-config';
+import type { OpenResponsesConfig } from './open-responses-config';
 import { openResponsesOptionsSchema } from './open-responses-options';
 
 export class OpenResponsesLanguageModel implements LanguageModelV4 {

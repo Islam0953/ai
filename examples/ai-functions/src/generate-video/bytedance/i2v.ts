@@ -1,7 +1,5 @@
-import {
-  type ByteDanceVideoProviderOptions,
-  byteDance,
-} from '@ai-sdk/bytedance';
+import { byteDance } from '@ai-sdk/bytedance';
+import type { ByteDanceVideoProviderOptions } from '@ai-sdk/bytedance';
 import { experimental_generateVideo as generateVideo } from 'ai';
 import { presentVideos } from '../../lib/present-video';
 import { run } from '../../lib/run';

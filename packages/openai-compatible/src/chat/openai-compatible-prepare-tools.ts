@@ -1,8 +1,8 @@
-import {
+import type {
   LanguageModelV4CallOptions,
   SharedV4Warning,
-  UnsupportedFunctionalityError,
 } from '@ai-sdk/provider';
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
 
 export function prepareTools({
   tools,

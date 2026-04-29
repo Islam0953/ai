@@ -1,4 +1,8 @@
-import { FilesV4, FilesV4UploadFileResult, ProviderV4 } from '@ai-sdk/provider';
+import type {
+  FilesV4,
+  FilesV4UploadFileResult,
+  ProviderV4,
+} from '@ai-sdk/provider';
 import { describe, expect, it, vi } from 'vitest';
 import { uploadFile } from './upload-file';
 

@@ -3,21 +3,21 @@ import type {
   LanguageModelV4Prompt,
   LanguageModelV4ToolResultPart,
 } from '@ai-sdk/provider';
-import {
-  type Experimental_LanguageModelStreamPart as ModelCallStreamPart,
-  type LanguageModel,
-  type ModelMessage,
-  type StepResult,
-  type ToolCallRepairFunction,
-  type ToolChoice,
-  type ToolSet,
-  experimental_filterActiveTools as filterActiveTools,
+import { experimental_filterActiveTools as filterActiveTools } from 'ai';
+import type {
+  Experimental_LanguageModelStreamPart as ModelCallStreamPart,
+  LanguageModel,
+  ModelMessage,
+  StepResult,
+  ToolCallRepairFunction,
+  ToolChoice,
+  ToolSet,
 } from 'ai';
-import {
-  doStreamStep,
-  type ModelStopCondition,
-  type ParsedToolCall,
-  type ProviderExecutedToolResult,
+import { doStreamStep } from './do-stream-step.js';
+import type {
+  ModelStopCondition,
+  ParsedToolCall,
+  ProviderExecutedToolResult,
 } from './do-stream-step.js';
 import { serializeToolSet } from './serializable-schema.js';
 import type {

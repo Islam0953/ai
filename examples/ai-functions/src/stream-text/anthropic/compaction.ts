@@ -1,7 +1,5 @@
-import {
-  anthropic,
-  type AnthropicLanguageModelOptions,
-} from '@ai-sdk/anthropic';
+import { anthropic } from '@ai-sdk/anthropic';
+import type { AnthropicLanguageModelOptions } from '@ai-sdk/anthropic';
 import { streamText } from 'ai';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';

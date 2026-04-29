@@ -1,4 +1,5 @@
-import { type FlexibleSchema, validateTypes } from '@ai-sdk/provider-utils';
+import { validateTypes } from '@ai-sdk/provider-utils';
+import type { FlexibleSchema } from '@ai-sdk/provider-utils';
 
 /**
  * Validates a tool context value against the tool's optional context schema.

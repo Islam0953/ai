@@ -1,5 +1,6 @@
-import { JSONObject, JSONSchema7, JSONValue } from '@ai-sdk/provider';
-import { InferSchema, lazySchema, zodSchema } from '@ai-sdk/provider-utils';
+import type { JSONObject, JSONSchema7, JSONValue } from '@ai-sdk/provider';
+import type { InferSchema } from '@ai-sdk/provider-utils';
+import { lazySchema, zodSchema } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
 
 const jsonValueSchema: z.ZodType<JSONValue> = z.lazy(() =>

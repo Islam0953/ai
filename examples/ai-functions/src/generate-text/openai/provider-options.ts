@@ -1,4 +1,5 @@
-import { openai, type OpenAIChatLanguageModelOptions } from '@ai-sdk/openai';
+import { openai } from '@ai-sdk/openai';
+import type { OpenAIChatLanguageModelOptions } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import { run } from '../../lib/run';
 

@@ -1,6 +1,7 @@
 import { vertex } from '@ai-sdk/google-vertex';
-import { type GoogleLanguageModelOptions } from '@ai-sdk/google';
-import { convertToModelMessages, streamText, UIDataTypes, UIMessage } from 'ai';
+import type { GoogleLanguageModelOptions } from '@ai-sdk/google';
+import type { UIDataTypes, UIMessage } from 'ai';
+import { convertToModelMessages, streamText } from 'ai';
 import { z } from 'zod';
 
 export const maxDuration = 60;

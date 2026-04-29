@@ -1,18 +1,15 @@
-import { ProviderErrorStructure } from '@ai-sdk/openai-compatible';
+import type { ProviderErrorStructure } from '@ai-sdk/openai-compatible';
+import type { LanguageModelV4, ProviderV4 } from '@ai-sdk/provider';
+import { NoSuchModelError } from '@ai-sdk/provider';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import {
-  LanguageModelV4,
-  NoSuchModelError,
-  ProviderV4,
-} from '@ai-sdk/provider';
-import {
-  FetchFunction,
   loadApiKey,
   withoutTrailingSlash,
   withUserAgentSuffix,
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
 import { MoonshotAIChatLanguageModel } from './moonshotai-chat-language-model';
-import { MoonshotAIChatModelId } from './moonshotai-chat-options';
+import type { MoonshotAIChatModelId } from './moonshotai-chat-options';
 import { VERSION } from './version';
 
 export type MoonshotAIErrorData = z.infer<typeof moonshotaiErrorSchema>;

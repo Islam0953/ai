@@ -1,8 +1,7 @@
-import {
-  openai,
-  type OpenAILanguageModelResponsesOptions,
-} from '@ai-sdk/openai';
-import { convertToModelMessages, streamText, UIMessage } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import type { OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
+import type { UIMessage } from 'ai';
+import { convertToModelMessages, streamText } from 'ai';
 
 export const maxDuration = 30;
 

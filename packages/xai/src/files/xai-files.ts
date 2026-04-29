@@ -1,19 +1,20 @@
-import {
+import type {
   FilesV4,
   FilesV4UploadFileCallOptions,
   FilesV4UploadFileResult,
 } from '@ai-sdk/provider';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   convertBase64ToUint8Array,
   createJsonResponseHandler,
-  FetchFunction,
   parseProviderOptions,
   postFormDataToApi,
 } from '@ai-sdk/provider-utils';
 import { xaiFailedResponseHandler } from '../xai-error';
 import { xaiFilesResponseSchema } from './xai-files-api';
-import { xaiFilesOptionsSchema, XaiFilesOptions } from './xai-files-options';
+import type { XaiFilesOptions } from './xai-files-options';
+import { xaiFilesOptionsSchema } from './xai-files-options';
 
 interface XaiFilesConfig {
   provider: string;

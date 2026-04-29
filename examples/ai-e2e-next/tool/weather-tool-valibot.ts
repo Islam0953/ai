@@ -1,4 +1,5 @@
-import { UIToolInvocation, tool } from 'ai';
+import type { UIToolInvocation } from 'ai';
+import { tool } from 'ai';
 import * as v from 'valibot';
 import { valibotSchema } from '@ai-sdk/valibot';
 

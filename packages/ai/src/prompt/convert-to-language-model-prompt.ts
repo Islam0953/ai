@@ -1,18 +1,15 @@
-import {
+import type {
   LanguageModelV4FilePart,
   LanguageModelV4Message,
   LanguageModelV4Prompt,
   LanguageModelV4TextPart,
   LanguageModelV4ToolResultOutput,
 } from '@ai-sdk/provider';
-import {
-  asArray,
+import type {
   CustomPart,
   DataContent,
   FilePart,
   ImagePart,
-  isProviderReference,
-  isUrlSupported,
   ModelMessage,
   ReasoningFilePart,
   ReasoningPart,
@@ -22,18 +19,21 @@ import {
   ToolResultPart,
 } from '@ai-sdk/provider-utils';
 import {
+  asArray,
+  isProviderReference,
+  isUrlSupported,
+} from '@ai-sdk/provider-utils';
+import {
   detectMediaType,
   imageMediaTypeSignatures,
 } from '../util/detect-media-type';
-import {
-  createDefaultDownloadFunction,
-  DownloadFunction,
-} from '../util/download/download-function';
+import type { DownloadFunction } from '../util/download/download-function';
+import { createDefaultDownloadFunction } from '../util/download/download-function';
 import { convertToLanguageModelV4DataContent } from './data-content';
 import { logWarnings } from '../logger/log-warnings';
 import type { Warning } from '../types/warning';
 import { InvalidMessageRoleError } from './invalid-message-role-error';
-import { StandardizedPrompt } from './standardize-prompt';
+import type { StandardizedPrompt } from './standardize-prompt';
 import { MissingToolResultsError } from '../error/missing-tool-result-error';
 
 export async function convertToLanguageModelPrompt({

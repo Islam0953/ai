@@ -1,9 +1,9 @@
-import {
+import type {
   LanguageModelV4DataContent,
   LanguageModelV4Prompt,
-  UnsupportedFunctionalityError,
 } from '@ai-sdk/provider';
-import { MistralPrompt } from './mistral-chat-prompt';
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
+import type { MistralPrompt } from './mistral-chat-prompt';
 import { convertToBase64, isProviderReference } from '@ai-sdk/provider-utils';
 
 function formatFileUrl({

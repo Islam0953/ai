@@ -1,5 +1,4 @@
-import {
-  APICallError,
+import type {
   LanguageModelV4,
   LanguageModelV4CallOptions,
   LanguageModelV4Content,
@@ -9,28 +8,27 @@ import {
   LanguageModelV4StreamResult,
   SharedV4Warning,
 } from '@ai-sdk/provider';
+import { APICallError } from '@ai-sdk/provider';
+import type { ParseResult } from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   createEventSourceResponseHandler,
   createJsonResponseHandler,
   generateId,
   parseProviderOptions,
-  ParseResult,
   postJsonToApi,
   serializeModelOptions,
   WORKFLOW_SERIALIZE,
   WORKFLOW_DESERIALIZE,
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
-import { HuggingFaceConfig } from '../huggingface-config';
+import type { HuggingFaceConfig } from '../huggingface-config';
 import { huggingfaceFailedResponseHandler } from '../huggingface-error';
-import {
-  convertHuggingFaceResponsesUsage,
-  HuggingFaceResponsesUsage,
-} from './convert-huggingface-responses-usage';
+import type { HuggingFaceResponsesUsage } from './convert-huggingface-responses-usage';
+import { convertHuggingFaceResponsesUsage } from './convert-huggingface-responses-usage';
 import { convertToHuggingFaceResponsesMessages } from './convert-to-huggingface-responses-messages';
 import { prepareResponsesTools } from './huggingface-responses-prepare-tools';
-import { HuggingFaceResponsesModelId } from './huggingface-responses-settings';
+import type { HuggingFaceResponsesModelId } from './huggingface-responses-settings';
 import { mapHuggingFaceResponsesFinishReason } from './map-huggingface-responses-finish-reason';
 
 export class HuggingFaceResponsesLanguageModel implements LanguageModelV4 {

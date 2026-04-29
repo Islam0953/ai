@@ -1,10 +1,9 @@
-import {
+import type {
   EmbeddingModelV4,
   Experimental_VideoModelV4,
   FilesV4,
   ImageModelV4,
   LanguageModelV4,
-  NoSuchModelError,
   ProviderV2,
   ProviderV3,
   ProviderV4,
@@ -13,10 +12,11 @@ import {
   SpeechModelV4,
   TranscriptionModelV4,
 } from '@ai-sdk/provider';
+import { NoSuchModelError } from '@ai-sdk/provider';
 import { wrapImageModel } from '../middleware/wrap-image-model';
 import { wrapLanguageModel } from '../middleware/wrap-language-model';
 import { asProviderV4 } from '../model/as-provider-v4';
-import { ImageModelMiddleware, LanguageModelMiddleware } from '../types';
+import type { ImageModelMiddleware, LanguageModelMiddleware } from '../types';
 import { NoSuchProviderError } from './no-such-provider-error';
 
 type ExtractLiteralUnion<T> = T extends string

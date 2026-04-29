@@ -1,19 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import type { FormGroup } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Chat } from '@ai-sdk/angular';
-import {
-  isToolUIPart,
-  type DataUIPart,
-  type ToolUIPart,
-  type UIDataTypes,
-  type UIMessagePart,
-  type UITools,
+import { isToolUIPart } from 'ai';
+import type {
+  DataUIPart,
+  ToolUIPart,
+  UIDataTypes,
+  UIMessagePart,
+  UITools,
 } from 'ai';
 
 @Component({

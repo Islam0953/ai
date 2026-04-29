@@ -1,6 +1,7 @@
 import { generateImageTool } from '@/tool/generate-image-tool';
 import { openai } from '@ai-sdk/openai';
-import { ToolLoopAgent, InferAgentUIMessage } from 'ai';
+import type { InferAgentUIMessage } from 'ai';
+import { ToolLoopAgent } from 'ai';
 
 export const openaiImageGenerationCustomToolAgent = new ToolLoopAgent({
   model: openai('gpt-5-mini'),

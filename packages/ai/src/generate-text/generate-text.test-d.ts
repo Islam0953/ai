@@ -1,5 +1,6 @@
-import { JSONValue } from '@ai-sdk/provider';
-import { Context, tool } from '@ai-sdk/provider-utils';
+import type { JSONValue } from '@ai-sdk/provider';
+import type { Context } from '@ai-sdk/provider-utils';
+import { tool } from '@ai-sdk/provider-utils';
 import { describe, expectTypeOf, it } from 'vitest';
 import { z } from 'zod';
 import { generateText, Output } from '../generate-text';

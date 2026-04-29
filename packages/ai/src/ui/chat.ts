@@ -1,33 +1,33 @@
-import {
+import type {
   FlexibleSchema,
-  generateId as generateIdFunc,
   IdGenerator,
   InferSchema,
 } from '@ai-sdk/provider-utils';
-import { FinishReason } from '../types/language-model';
-import { UIMessageChunk } from '../ui-message-stream/ui-message-chunks';
+import { generateId as generateIdFunc } from '@ai-sdk/provider-utils';
+import type { FinishReason } from '../types/language-model';
+import type { UIMessageChunk } from '../ui-message-stream/ui-message-chunks';
 import { consumeStream } from '../util/consume-stream';
 import { SerialJobExecutor } from '../util/serial-job-executor';
-import { ChatTransport } from './chat-transport';
+import type { ChatTransport } from './chat-transport';
 import { convertFileListToFileUIParts } from './convert-file-list-to-file-ui-parts';
 import { DefaultChatTransport } from './default-chat-transport';
+import type { StreamingUIMessageState } from './process-ui-message-stream';
 import {
   createStreamingUIMessageState,
   processUIMessageStream,
-  StreamingUIMessageState,
 } from './process-ui-message-stream';
-import {
+import { isToolUIPart } from './ui-messages';
+import type {
+  DataUIPart,
+  FileUIPart,
+  InferUIMessageData,
+  InferUIMessageMetadata,
+  InferUIMessageTools,
+  UIDataTypes,
+  UIMessage,
   InferUIMessageToolCall,
-  isToolUIPart,
   UIMessagePart,
   UITools,
-  type DataUIPart,
-  type FileUIPart,
-  type InferUIMessageData,
-  type InferUIMessageMetadata,
-  type InferUIMessageTools,
-  type UIDataTypes,
-  type UIMessage,
 } from './ui-messages';
 
 export type CreateUIMessage<UI_MESSAGE extends UIMessage> = Omit<

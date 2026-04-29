@@ -1,63 +1,63 @@
-import { JSONSchema7, JSONValue } from '@ai-sdk/provider';
-import {
-  asSchema,
-  dynamicTool,
+import type { JSONSchema7, JSONValue } from '@ai-sdk/provider';
+import type {
   FlexibleSchema,
-  jsonSchema,
-  safeParseJSON,
-  safeValidateTypes,
   Tool,
-  tool,
   ToolExecutionOptions,
   ToolResultOutput,
 } from '@ai-sdk/provider-utils';
-import { z } from 'zod/v4';
-import { MCPClientError } from '../error/mcp-client-error';
 import {
+  asSchema,
+  dynamicTool,
+  jsonSchema,
+  safeParseJSON,
+  safeValidateTypes,
+  tool,
+} from '@ai-sdk/provider-utils';
+import type { z } from 'zod/v4';
+import { MCPClientError } from '../error/mcp-client-error';
+import type {
   JSONRPCError,
   JSONRPCNotification,
   JSONRPCRequest,
   JSONRPCResponse,
 } from './json-rpc-message';
-import {
-  createMcpTransport,
-  isCustomMcpTransport,
-  MCPTransport,
-  MCPTransportConfig,
-} from './mcp-transport';
-import {
+import type { MCPTransport, MCPTransportConfig } from './mcp-transport';
+import { createMcpTransport, isCustomMcpTransport } from './mcp-transport';
+import type {
   CallToolResult,
-  CallToolResultSchema,
   ClientCapabilities,
   Configuration,
   Configuration as ClientConfiguration,
   ElicitationRequest,
-  ElicitationRequestSchema,
   ElicitResult,
-  ElicitResultSchema,
-  InitializeResultSchema,
-  LATEST_PROTOCOL_VERSION,
   ListResourceTemplatesResult,
-  ListResourceTemplatesResultSchema,
   ListResourcesResult,
-  ListResourcesResultSchema,
   ListPromptsResult,
-  ListPromptsResultSchema,
   ListToolsResult,
-  ListToolsResultSchema,
   McpToolSet,
   Notification,
   PaginatedRequest,
   ReadResourceResult,
-  ReadResourceResultSchema,
   GetPromptResult,
-  GetPromptResultSchema,
   Request,
   RequestOptions,
   ServerCapabilities,
-  SUPPORTED_PROTOCOL_VERSIONS,
   ToolSchemas,
   ToolMeta,
+} from './types';
+import {
+  CallToolResultSchema,
+  ElicitationRequestSchema,
+  ElicitResultSchema,
+  InitializeResultSchema,
+  LATEST_PROTOCOL_VERSION,
+  ListResourceTemplatesResultSchema,
+  ListResourcesResultSchema,
+  ListPromptsResultSchema,
+  ListToolsResultSchema,
+  ReadResourceResultSchema,
+  GetPromptResultSchema,
+  SUPPORTED_PROTOCOL_VERSIONS,
 } from './types';
 
 const CLIENT_VERSION = '1.0.0';

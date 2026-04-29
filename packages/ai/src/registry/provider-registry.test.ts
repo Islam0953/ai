@@ -1,9 +1,9 @@
-import {
+import type {
   Experimental_VideoModelV4,
   FilesV4,
-  NoSuchModelError,
   SkillsV4,
 } from '@ai-sdk/provider';
+import { NoSuchModelError } from '@ai-sdk/provider';
 import { MockEmbeddingModelV4 } from '../test/mock-embedding-model-v4';
 import { MockLanguageModelV4 } from '../test/mock-language-model-v4';
 import { NoSuchProviderError } from './no-such-provider-error';

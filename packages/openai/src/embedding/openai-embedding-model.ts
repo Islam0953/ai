@@ -1,7 +1,5 @@
-import {
-  EmbeddingModelV4,
-  TooManyEmbeddingValuesForCallError,
-} from '@ai-sdk/provider';
+import type { EmbeddingModelV4 } from '@ai-sdk/provider';
+import { TooManyEmbeddingValuesForCallError } from '@ai-sdk/provider';
 import {
   combineHeaders,
   createJsonResponseHandler,
@@ -11,12 +9,10 @@ import {
   WORKFLOW_DESERIALIZE,
   WORKFLOW_SERIALIZE,
 } from '@ai-sdk/provider-utils';
-import { OpenAIConfig } from '../openai-config';
+import type { OpenAIConfig } from '../openai-config';
 import { openaiFailedResponseHandler } from '../openai-error';
-import {
-  OpenAIEmbeddingModelId,
-  openaiEmbeddingModelOptions,
-} from './openai-embedding-options';
+import type { OpenAIEmbeddingModelId } from './openai-embedding-options';
+import { openaiEmbeddingModelOptions } from './openai-embedding-options';
 import { openaiTextEmbeddingResponseSchema } from './openai-embedding-api';
 
 export class OpenAIEmbeddingModel implements EmbeddingModelV4 {

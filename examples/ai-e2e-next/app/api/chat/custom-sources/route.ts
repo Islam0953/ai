@@ -1,10 +1,10 @@
 import { openai } from '@ai-sdk/openai';
+import type { UIMessage } from 'ai';
 import {
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
   streamText,
-  UIMessage,
 } from 'ai';
 
 export async function POST(req: Request) {

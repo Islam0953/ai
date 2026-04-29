@@ -6,15 +6,12 @@ import type {
 } from '@ai-sdk/provider';
 import {
   convertBase64ToUint8Array,
-  type DataContent,
-  type ProviderOptions,
   withUserAgentSuffix,
 } from '@ai-sdk/provider-utils';
+import type { DataContent, ProviderOptions } from '@ai-sdk/provider-utils';
 import { NoVideoGeneratedError } from '../error/no-video-generated-error';
-import {
-  DefaultGeneratedFile,
-  type GeneratedFile,
-} from '../generate-text/generated-file';
+import { DefaultGeneratedFile } from '../generate-text/generated-file';
+import type { GeneratedFile } from '../generate-text/generated-file';
 import { logWarnings } from '../logger/log-warnings';
 import { resolveVideoModel } from '../model/resolve-model';
 import type { VideoModel } from '../types/video-model';

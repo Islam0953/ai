@@ -1,4 +1,4 @@
-import {
+import type {
   LanguageModelV4,
   LanguageModelV4CallOptions,
   LanguageModelV4Content,
@@ -9,35 +9,32 @@ import {
   LanguageModelV4Usage,
   SharedV4Warning,
 } from '@ai-sdk/provider';
+import type { FetchFunction, ParseResult } from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   createEventSourceResponseHandler,
   createJsonResponseHandler,
-  FetchFunction,
   isCustomReasoning,
   mapReasoningToProviderEffort,
   parseProviderOptions,
-  ParseResult,
   postJsonToApi,
   serializeModelOptions,
   WORKFLOW_SERIALIZE,
   WORKFLOW_DESERIALIZE,
 } from '@ai-sdk/provider-utils';
-import { z } from 'zod/v4';
+import type { z } from 'zod/v4';
 import { getResponseMetadata } from '../get-response-metadata';
 import { xaiFailedResponseHandler } from '../xai-error';
 import { convertToXaiResponsesInput } from './convert-to-xai-responses-input';
 import { convertXaiResponsesUsage } from './convert-xai-responses-usage';
 import { mapXaiResponsesFinishReason } from './map-xai-responses-finish-reason';
+import type { XaiResponsesIncludeOptions } from './xai-responses-api';
 import {
-  XaiResponsesIncludeOptions,
   xaiResponsesChunkSchema,
   xaiResponsesResponseSchema,
 } from './xai-responses-api';
-import {
-  XaiResponsesModelId,
-  xaiLanguageModelResponsesOptions,
-} from './xai-responses-options';
+import type { XaiResponsesModelId } from './xai-responses-options';
+import { xaiLanguageModelResponsesOptions } from './xai-responses-options';
 import { prepareResponsesTools } from './xai-responses-prepare-tools';
 
 type XaiResponsesConfig = {

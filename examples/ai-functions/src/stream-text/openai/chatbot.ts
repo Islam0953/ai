@@ -1,5 +1,7 @@
-import { openai, OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
-import { isStepCount, ModelMessage, streamText, tool, APICallError } from 'ai';
+import type { OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
+import { openai } from '@ai-sdk/openai';
+import type { ModelMessage } from 'ai';
+import { isStepCount, streamText, tool, APICallError } from 'ai';
 import * as readline from 'node:readline/promises';
 import { z } from 'zod';
 import { run } from '../../lib/run';

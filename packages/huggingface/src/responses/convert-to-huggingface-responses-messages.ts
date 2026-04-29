@@ -1,8 +1,5 @@
-import {
-  SharedV4Warning,
-  LanguageModelV4Prompt,
-  UnsupportedFunctionalityError,
-} from '@ai-sdk/provider';
+import type { SharedV4Warning, LanguageModelV4Prompt } from '@ai-sdk/provider';
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
 import { isProviderReference } from '@ai-sdk/provider-utils';
 
 export async function convertToHuggingFaceResponsesMessages({

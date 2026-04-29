@@ -3,15 +3,8 @@ import type {
   OpenAILanguageModelResponsesOptions,
   OpenaiResponsesSourceDocumentProviderMetadata,
 } from '@ai-sdk/openai';
-import {
-  convertToModelMessages,
-  InferUITools,
-  streamText,
-  ToolSet,
-  UIDataTypes,
-  UIMessage,
-  validateUIMessages,
-} from 'ai';
+import type { InferUITools, ToolSet, UIDataTypes, UIMessage } from 'ai';
+import { convertToModelMessages, streamText, validateUIMessages } from 'ai';
 
 const tools = {
   code_interpreter: openai.tools.codeInterpreter(),

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SharedV4Warning } from '@ai-sdk/provider';
+import type { SharedV4Warning } from '@ai-sdk/provider';
 import { createToolNameMapping } from '@ai-sdk/provider-utils';
 import { convertToAnthropicPrompt } from './convert-to-anthropic-prompt';
 import { CacheControlValidator } from './get-cache-control';

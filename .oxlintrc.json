@@ -17,6 +17,14 @@
       "rules": {
         "no-unused-vars": "off"
       }
+    },
+    {
+      "files": [
+        "packages/provider-utils/src/to-json-schema/zod3-to-json-schema/**"
+      ],
+      "rules": {
+        "import/no-cycle": "off"
+      }
     }
   ],
   "rules": {

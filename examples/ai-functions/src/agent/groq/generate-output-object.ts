@@ -1,4 +1,5 @@
-import { groq, type GroqLanguageModelOptions } from '@ai-sdk/groq';
+import { groq } from '@ai-sdk/groq';
+import type { GroqLanguageModelOptions } from '@ai-sdk/groq';
 import { generateText, Output } from 'ai';
 import { z } from 'zod';
 import { run } from '../../lib/run';

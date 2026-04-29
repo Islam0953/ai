@@ -1,19 +1,17 @@
-import {
+import type {
   EmbeddingModelV4,
   ImageModelV4,
   LanguageModelV4,
   ProviderV4,
 } from '@ai-sdk/provider';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import {
-  FetchFunction,
   withoutTrailingSlash,
   withUserAgentSuffix,
 } from '@ai-sdk/provider-utils';
-import {
-  OpenAICompatibleChatConfig,
-  OpenAICompatibleChatLanguageModel,
-} from './chat/openai-compatible-chat-language-model';
-import { MetadataExtractor } from './chat/openai-compatible-metadata-extractor';
+import type { OpenAICompatibleChatConfig } from './chat/openai-compatible-chat-language-model';
+import { OpenAICompatibleChatLanguageModel } from './chat/openai-compatible-chat-language-model';
+import type { MetadataExtractor } from './chat/openai-compatible-metadata-extractor';
 import { OpenAICompatibleCompletionLanguageModel } from './completion/openai-compatible-completion-language-model';
 import { OpenAICompatibleEmbeddingModel } from './embedding/openai-compatible-embedding-model';
 import { OpenAICompatibleImageModel } from './image/openai-compatible-image-model';

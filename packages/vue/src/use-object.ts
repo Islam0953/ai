@@ -1,18 +1,11 @@
-import {
-  isAbortError,
-  safeValidateTypes,
-  type FetchFunction,
-} from '@ai-sdk/provider-utils';
-import {
-  asSchema,
-  isDeepEqualData,
-  parsePartialJson,
-  type DeepPartial,
-  type FlexibleSchema,
-  type InferSchema,
-} from 'ai';
+import { isAbortError, safeValidateTypes } from '@ai-sdk/provider-utils';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
+import { asSchema, isDeepEqualData, parsePartialJson } from 'ai';
+import type { DeepPartial, FlexibleSchema, InferSchema } from 'ai';
+import type * as SwrvModule from 'swrv';
 import swrv from 'swrv';
-import { ref, type Ref } from 'vue';
+import { ref } from 'vue';
+import type { Ref } from 'vue';
 
 // use function to allow for mocking in tests
 const getOriginalFetch = () => fetch;
@@ -75,7 +68,7 @@ export type Experimental_UseObjectHelpers<RESULT, INPUT> = {
 let uniqueId = 0;
 
 // @ts-expect-error - some issues with the default export of useSWRV
-const useSWRV = (swrv.default as (typeof import('swrv'))['default']) || swrv;
+const useSWRV = (swrv.default as (typeof SwrvModule)['default']) || swrv;
 const store: Record<string, any> = {};
 
 export const experimental_useObject = function useObject<

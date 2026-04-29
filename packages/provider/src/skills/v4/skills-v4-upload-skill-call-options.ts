@@ -1,4 +1,4 @@
-import { SharedV4ProviderOptions } from '../../shared/v4/shared-v4-provider-options';
+import type { SharedV4ProviderOptions } from '../../shared/v4/shared-v4-provider-options';
 
 export interface SkillsV4File {
   /**

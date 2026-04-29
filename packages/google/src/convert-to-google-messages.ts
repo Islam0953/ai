@@ -1,13 +1,11 @@
-import {
-  LanguageModelV4Prompt,
-  UnsupportedFunctionalityError,
-} from '@ai-sdk/provider';
+import type { LanguageModelV4Prompt } from '@ai-sdk/provider';
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
 import {
   convertToBase64,
   isProviderReference,
   resolveProviderReference,
 } from '@ai-sdk/provider-utils';
-import {
+import type {
   GoogleContent,
   GoogleContentPart,
   GoogleFunctionResponsePart,

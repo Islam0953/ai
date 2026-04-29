@@ -1,5 +1,5 @@
 import { bedrock } from '@ai-sdk/amazon-bedrock';
-import { type AmazonBedrockEmbeddingModelOptions } from '@ai-sdk/amazon-bedrock';
+import type { AmazonBedrockEmbeddingModelOptions } from '@ai-sdk/amazon-bedrock';
 import { embed } from 'ai';
 import { run } from '../../lib/run';
 

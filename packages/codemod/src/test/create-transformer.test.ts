@@ -1,8 +1,6 @@
-import {
-  createTransformer,
-  TransformContext,
-} from '../codemods/lib/create-transformer';
-import { FileInfo, API, JSCodeshift } from 'jscodeshift';
+import type { TransformContext } from '../codemods/lib/create-transformer';
+import { createTransformer } from '../codemods/lib/create-transformer';
+import type { FileInfo, API, JSCodeshift } from 'jscodeshift';
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 
 describe('createTransformer', () => {

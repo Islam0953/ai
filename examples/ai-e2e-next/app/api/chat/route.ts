@@ -1,10 +1,6 @@
 import { openai } from '@ai-sdk/openai';
-import {
-  consumeStream,
-  convertToModelMessages,
-  streamText,
-  UIMessage,
-} from 'ai';
+import type { UIMessage } from 'ai';
+import { consumeStream, convertToModelMessages, streamText } from 'ai';
 
 export const maxDuration = 30;
 

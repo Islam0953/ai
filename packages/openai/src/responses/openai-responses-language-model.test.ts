@@ -1,4 +1,4 @@
-import {
+import type {
   LanguageModelV4Content,
   LanguageModelV4FunctionTool,
   LanguageModelV4GenerateResult,
@@ -14,9 +14,9 @@ import { createTestServer } from '@ai-sdk/test-server/with-vitest';
 import fs from 'node:fs';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { OpenAIResponsesLanguageModel } from './openai-responses-language-model';
+import type { OpenAILanguageModelResponsesOptions } from './openai-responses-options';
 import {
   openaiResponsesModelIds,
-  OpenAILanguageModelResponsesOptions,
   openaiResponsesReasoningModelIds,
 } from './openai-responses-options';
 

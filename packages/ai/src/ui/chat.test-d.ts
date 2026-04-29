@@ -1,8 +1,13 @@
 import { z } from 'zod/v4';
 import { tool } from '@ai-sdk/provider-utils';
-import { ChatInit } from './chat';
+import type { ChatInit } from './chat';
 import type { ToolSet } from '@ai-sdk/provider-utils';
-import { InferUITools, UIDataTypes, UIMessage, UITools } from './ui-messages';
+import type {
+  InferUITools,
+  UIDataTypes,
+  UIMessage,
+  UITools,
+} from './ui-messages';
 import { describe, it, expectTypeOf } from 'vitest';
 
 type ToolCallCallback<TOOLS extends ToolSet | UITools> = NonNullable<

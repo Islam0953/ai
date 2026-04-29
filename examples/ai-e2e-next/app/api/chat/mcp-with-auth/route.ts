@@ -6,12 +6,11 @@ import {
   createUIMessageStream,
   createUIMessageStreamResponse,
 } from 'ai';
-import {
-  createMCPClient,
-  auth,
-  type OAuthClientInformation,
-  type OAuthClientMetadata,
-  type OAuthTokens,
+import { createMCPClient, auth } from '@ai-sdk/mcp';
+import type {
+  OAuthClientInformation,
+  OAuthClientMetadata,
+  OAuthTokens,
 } from '@ai-sdk/mcp';
 import { createServer } from 'node:http';
 

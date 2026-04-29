@@ -1,4 +1,4 @@
-import {
+import type {
   EmbeddingModelV4Embedding,
   LanguageModelV4,
   LanguageModelV4GenerateResult,

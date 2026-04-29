@@ -1,4 +1,4 @@
-import {
+import type {
   ImageModelV4,
   ImageModelV4File,
   SharedV4ProviderOptions,
@@ -8,6 +8,7 @@ import {
   toCamelCase,
   warnIfDeprecatedProviderOptionsKey,
 } from '../utils/to-camel-case';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   convertBase64ToUint8Array,
@@ -15,7 +16,6 @@ import {
   createJsonErrorResponseHandler,
   createJsonResponseHandler,
   downloadBlob,
-  FetchFunction,
   postFormDataToApi,
   postJsonToApi,
   serializeModelOptions,
@@ -23,11 +23,9 @@ import {
   WORKFLOW_DESERIALIZE,
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
-import {
-  defaultOpenAICompatibleErrorStructure,
-  ProviderErrorStructure,
-} from '../openai-compatible-error';
-import { OpenAICompatibleImageModelId } from './openai-compatible-image-settings';
+import type { ProviderErrorStructure } from '../openai-compatible-error';
+import { defaultOpenAICompatibleErrorStructure } from '../openai-compatible-error';
+import type { OpenAICompatibleImageModelId } from './openai-compatible-image-settings';
 
 export type OpenAICompatibleImageModelConfig = {
   provider: string;

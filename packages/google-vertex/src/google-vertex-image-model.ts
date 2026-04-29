@@ -1,13 +1,13 @@
 import type { GoogleLanguageModelOptions } from '@ai-sdk/google';
 import { GoogleLanguageModel } from '@ai-sdk/google/internal';
-import {
+import type {
   ImageModelV4,
   ImageModelV4File,
   LanguageModelV4Prompt,
   SharedV4Warning,
 } from '@ai-sdk/provider';
+import type { Resolvable } from '@ai-sdk/provider-utils';
 import {
-  Resolvable,
   combineHeaders,
   convertToBase64,
   convertUint8ArrayToBase64,
@@ -22,7 +22,7 @@ import {
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
 import { googleVertexFailedResponseHandler } from './google-vertex-error';
-import { GoogleVertexImageModelId } from './google-vertex-image-settings';
+import type { GoogleVertexImageModelId } from './google-vertex-image-settings';
 
 interface GoogleVertexImageModelConfig {
   provider: string;

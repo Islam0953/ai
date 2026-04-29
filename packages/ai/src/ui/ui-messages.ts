@@ -1,14 +1,14 @@
-import {
+import type {
   InferToolInput,
   InferToolOutput,
   Tool,
   ToolCall,
   ToolSet,
 } from '@ai-sdk/provider-utils';
-import { ProviderMetadata } from '../types/provider-metadata';
-import { ProviderReference } from '../types/provider-reference';
-import { DeepPartial } from '../util/deep-partial';
-import { ValueOf } from '../util/value-of';
+import type { ProviderMetadata } from '../types/provider-metadata';
+import type { ProviderReference } from '../types/provider-reference';
+import type { DeepPartial } from '../util/deep-partial';
+import type { ValueOf } from '../util/value-of';
 
 /**
  * The data types that can be used in the UI message for the UI message data parts.

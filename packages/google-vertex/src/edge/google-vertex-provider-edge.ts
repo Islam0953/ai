@@ -1,13 +1,11 @@
 import { loadOptionalSetting, resolve } from '@ai-sdk/provider-utils';
-import {
-  createVertex as createVertexOriginal,
+import type {
   GoogleVertexProvider,
   GoogleVertexProviderSettings as GoogleVertexProviderSettingsOriginal,
 } from '../google-vertex-provider';
-import {
-  generateAuthToken,
-  GoogleCredentials,
-} from './google-vertex-auth-edge';
+import { createVertex as createVertexOriginal } from '../google-vertex-provider';
+import type { GoogleCredentials } from './google-vertex-auth-edge';
+import { generateAuthToken } from './google-vertex-auth-edge';
 
 export type { GoogleVertexProvider };
 

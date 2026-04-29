@@ -1,4 +1,5 @@
-import { type ReplicateVideoModelOptions, replicate } from '@ai-sdk/replicate';
+import { replicate } from '@ai-sdk/replicate';
+import type { ReplicateVideoModelOptions } from '@ai-sdk/replicate';
 import { experimental_generateVideo } from 'ai';
 import { presentVideos } from '../../lib/present-video';
 import { run } from '../../lib/run';

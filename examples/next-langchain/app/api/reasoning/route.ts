@@ -1,6 +1,7 @@
 import { toBaseMessages, toUIMessageStream } from '@ai-sdk/langchain';
 import { ChatOpenAI } from '@langchain/openai';
-import { createUIMessageStreamResponse, UIMessage } from 'ai';
+import type { UIMessage } from 'ai';
+import { createUIMessageStreamResponse } from 'ai';
 import { NextResponse } from 'next/server';
 
 export const maxDuration = 30;

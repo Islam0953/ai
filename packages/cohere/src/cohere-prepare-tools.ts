@@ -1,9 +1,9 @@
-import {
+import type {
   LanguageModelV4CallOptions,
   SharedV4Warning,
-  UnsupportedFunctionalityError,
 } from '@ai-sdk/provider';
-import { CohereToolChoice } from './cohere-chat-prompt';
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
+import type { CohereToolChoice } from './cohere-chat-prompt';
 
 export function prepareTools({
   tools,

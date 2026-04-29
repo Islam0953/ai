@@ -1,4 +1,4 @@
-import {
+import type {
   JSONObject,
   LanguageModelV4,
   LanguageModelV4CallOptions,
@@ -12,10 +12,12 @@ import {
   SharedV4ProviderMetadata,
   SharedV4Warning,
 } from '@ai-sdk/provider';
-import {
+import type {
   FetchFunction,
   ParseResult,
   Resolvable,
+} from '@ai-sdk/provider-utils';
+import {
   combineHeaders,
   createJsonErrorResponseHandler,
   createJsonResponseHandler,
@@ -31,23 +33,25 @@ import {
 } from '@ai-sdk/provider-utils';
 import { getModelCapabilities } from '@ai-sdk/anthropic/internal';
 import { z } from 'zod/v4';
-import {
-  BEDROCK_STOP_REASONS,
+import type {
   BedrockConverseInput,
   BedrockStopReason,
 } from './bedrock-api-types';
-import {
+import { BEDROCK_STOP_REASONS } from './bedrock-api-types';
+import type {
   AmazonBedrockLanguageModelOptions,
   BedrockChatModelId,
-  amazonBedrockLanguageModelOptions,
 } from './bedrock-chat-options';
+import { amazonBedrockLanguageModelOptions } from './bedrock-chat-options';
 import { BedrockErrorSchema } from './bedrock-error';
 import { createBedrockEventStreamResponseHandler } from './bedrock-event-stream-response-handler';
 import { prepareTools } from './bedrock-prepare-tools';
-import { BedrockUsage, convertBedrockUsage } from './convert-bedrock-usage';
+import type { BedrockUsage } from './convert-bedrock-usage';
+import { convertBedrockUsage } from './convert-bedrock-usage';
 import { convertToBedrockChatMessages } from './convert-to-bedrock-chat-messages';
 import { mapBedrockFinishReason } from './map-bedrock-finish-reason';
 import { isMistralModel, normalizeToolCallId } from './normalize-tool-call-id';
+import type { BedrockReasoningMetadata } from './bedrock-reasoning-metadata';
 
 type BedrockChatConfig = {
   baseUrl: () => string;
@@ -1177,14 +1181,10 @@ const BedrockStreamSchema = z.object({
   validationException: z.record(z.string(), z.unknown()).nullish(),
 });
 
-export const bedrockReasoningMetadataSchema = z.object({
-  signature: z.string().optional(),
-  redactedData: z.string().optional(),
-});
-
-export type BedrockReasoningMetadata = z.infer<
-  typeof bedrockReasoningMetadataSchema
->;
+export {
+  bedrockReasoningMetadataSchema,
+  type BedrockReasoningMetadata,
+} from './bedrock-reasoning-metadata';
 
 const bedrockReasoningEffortMap: Partial<
   Record<string, 'low' | 'medium' | 'high' | 'max'>

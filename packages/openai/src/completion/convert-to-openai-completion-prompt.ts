@@ -1,6 +1,6 @@
+import type { LanguageModelV4Prompt } from '@ai-sdk/provider';
 import {
   InvalidPromptError,
-  LanguageModelV4Prompt,
   UnsupportedFunctionalityError,
 } from '@ai-sdk/provider';
 

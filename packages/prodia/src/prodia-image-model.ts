@@ -13,14 +13,13 @@ import {
   zodSchema,
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
-import type { ProdiaModelConfig } from './prodia-api';
+import type { ProdiaJobResult, ProdiaModelConfig } from './prodia-api';
 import {
   buildProdiaProviderMetadata,
   parseMultipart,
   prodiaFailedResponseHandler,
   prodiaJobResultSchema,
 } from './prodia-api';
-import type { ProdiaJobResult } from './prodia-api';
 import type { ProdiaImageModelId } from './prodia-image-settings';
 
 export class ProdiaImageModel implements ImageModelV4 {

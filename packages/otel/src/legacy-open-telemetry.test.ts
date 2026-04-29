@@ -1,4 +1,4 @@
-import {
+import type {
   EmbeddingModelV4,
   LanguageModelV4StreamPart,
   LanguageModelV4Usage,
@@ -11,13 +11,8 @@ import {
 } from '@ai-sdk/provider-utils/test';
 import * as assert from 'node:assert';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import {
-  Attributes,
-  Span,
-  SpanOptions,
-  SpanStatusCode,
-  Tracer,
-} from '@opentelemetry/api';
+import type { Attributes, Span, SpanOptions, Tracer } from '@opentelemetry/api';
+import { SpanStatusCode } from '@opentelemetry/api';
 import { z } from 'zod/v4';
 import {
   embed,

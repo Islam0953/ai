@@ -1,16 +1,13 @@
+import type { LanguageModelV4, ProviderV4 } from '@ai-sdk/provider';
+import { NoSuchModelError } from '@ai-sdk/provider';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import {
-  LanguageModelV4,
-  NoSuchModelError,
-  ProviderV4,
-} from '@ai-sdk/provider';
-import {
-  FetchFunction,
   generateId,
   loadApiKey,
   withoutTrailingSlash,
 } from '@ai-sdk/provider-utils';
 import { HuggingFaceResponsesLanguageModel } from './responses/huggingface-responses-language-model';
-import { HuggingFaceResponsesModelId } from './responses/huggingface-responses-settings';
+import type { HuggingFaceResponsesModelId } from './responses/huggingface-responses-settings';
 
 export interface HuggingFaceProviderSettings {
   /**

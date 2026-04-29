@@ -1,7 +1,7 @@
-import {
-  type LanguageModelV4DataContent,
-  type LanguageModelV4Prompt,
-  UnsupportedFunctionalityError,
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
+import type {
+  LanguageModelV4DataContent,
+  LanguageModelV4Prompt,
 } from '@ai-sdk/provider';
 import { convertToBase64, isProviderReference } from '@ai-sdk/provider-utils';
 import type { AlibabaChatPrompt } from './alibaba-chat-prompt';

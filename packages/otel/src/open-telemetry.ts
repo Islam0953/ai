@@ -1,14 +1,11 @@
-import {
+import type {
   Attributes,
   AttributeValue,
-  context,
   Context as OpenTelemetryContext,
   Span,
-  SpanKind,
-  SpanStatusCode,
-  trace,
   Tracer,
 } from '@opentelemetry/api';
+import { context, SpanKind, SpanStatusCode, trace } from '@opentelemetry/api';
 import type {
   EmbeddingModelCallEndEvent,
   EmbedEndEvent,

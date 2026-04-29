@@ -1,4 +1,4 @@
-import {
+import type {
   APICallError,
   LanguageModelV4,
   LanguageModelV4CallOptions,
@@ -8,19 +8,21 @@ import {
   LanguageModelV4StreamPart,
   LanguageModelV4StreamResult,
 } from '@ai-sdk/provider';
+import type {
+  FetchFunction,
+  InferSchema,
+  ParseResult,
+  ResponseHandler,
+} from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   createEventSourceResponseHandler,
   createJsonErrorResponseHandler,
   createJsonResponseHandler,
-  FetchFunction,
   generateId,
-  InferSchema,
   isCustomReasoning,
   parseProviderOptions,
-  ParseResult,
   postJsonToApi,
-  ResponseHandler,
   serializeModelOptions,
   StreamingToolCallTracker,
   WORKFLOW_SERIALIZE,
@@ -28,16 +30,14 @@ import {
 } from '@ai-sdk/provider-utils';
 import { convertToDeepSeekChatMessages } from './convert-to-deepseek-chat-messages';
 import { convertDeepSeekUsage } from './convert-to-deepseek-usage';
+import type { DeepSeekChatTokenUsage } from './deepseek-chat-api-types';
 import {
   deepseekChatChunkSchema,
   deepseekChatResponseSchema,
-  DeepSeekChatTokenUsage,
   deepSeekErrorSchema,
 } from './deepseek-chat-api-types';
-import {
-  DeepSeekChatModelId,
-  deepseekLanguageModelOptions,
-} from './deepseek-chat-options';
+import type { DeepSeekChatModelId } from './deepseek-chat-options';
+import { deepseekLanguageModelOptions } from './deepseek-chat-options';
 import { prepareTools } from './deepseek-prepare-tools';
 import { getResponseMetadata } from './get-response-metadata';
 import { mapDeepSeekFinishReason } from './map-deepseek-finish-reason';

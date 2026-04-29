@@ -1,4 +1,4 @@
-import {
+import type {
   LanguageModelV4,
   LanguageModelV4CallOptions,
   LanguageModelV4Content,
@@ -11,21 +11,23 @@ import {
   SharedV4ProviderMetadata,
   SharedV4Warning,
 } from '@ai-sdk/provider';
+import type {
+  FetchFunction,
+  InferSchema,
+  ParseResult,
+  Resolvable,
+} from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   createEventSourceResponseHandler,
   createJsonResponseHandler,
-  FetchFunction,
   generateId,
-  InferSchema,
   isCustomReasoning,
   lazySchema,
   mapReasoningToProviderBudget,
   mapReasoningToProviderEffort,
   parseProviderOptions,
-  ParseResult,
   postJsonToApi,
-  Resolvable,
   resolve,
   serializeModelOptions,
   WORKFLOW_SERIALIZE,
@@ -33,22 +35,21 @@ import {
   zodSchema,
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
-import {
-  convertGoogleUsage,
-  GoogleUsageMetadata,
-} from './convert-google-usage';
+import type { GoogleUsageMetadata } from './convert-google-usage';
+import { convertGoogleUsage } from './convert-google-usage';
 import { convertJSONSchemaToOpenAPISchema } from './convert-json-schema-to-openapi-schema';
 import { convertToGoogleMessages } from './convert-to-google-messages';
 import { getModelPath } from './get-model-path';
 import { googleFailedResponseHandler } from './google-error';
+import type { GoogleModelId } from './google-options';
 import {
-  GoogleModelId,
   googleLanguageModelOptions,
   VertexServiceTierMap,
 } from './google-options';
-import { GoogleProviderMetadata } from './google-prompt';
+import type { GoogleProviderMetadata } from './google-prompt';
 import { prepareTools } from './google-prepare-tools';
-import { GoogleJSONAccumulator, PartialArg } from './google-json-accumulator';
+import type { PartialArg } from './google-json-accumulator';
+import { GoogleJSONAccumulator } from './google-json-accumulator';
 import { mapGoogleFinishReason } from './map-google-finish-reason';
 
 type GoogleConfig = {

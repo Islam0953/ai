@@ -1,9 +1,10 @@
-import {
+import type {
   LanguageModelV4Prompt,
   LanguageModelV4ToolApprovalResponsePart,
   SharedV4Warning,
-  UnsupportedFunctionalityError,
 } from '@ai-sdk/provider';
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
+import type { ToolNameMapping } from '@ai-sdk/provider-utils';
 import {
   convertToBase64,
   isNonNullable,
@@ -11,7 +12,6 @@ import {
   parseJSON,
   parseProviderOptions,
   resolveProviderReference,
-  ToolNameMapping,
   validateTypes,
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
@@ -24,7 +24,7 @@ import {
   localShellOutputSchema,
 } from '../tool/local-shell';
 import { shellInputSchema, shellOutputSchema } from '../tool/shell';
-import {
+import type {
   OpenAIResponsesCompactionItem,
   OpenAIResponsesCustomToolCallOutput,
   OpenAIResponsesFunctionCallOutput,

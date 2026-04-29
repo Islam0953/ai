@@ -1,24 +1,22 @@
-import {
-  AISDKError,
-  type Experimental_VideoModelV4,
-  type SharedV4Warning,
+import { AISDKError } from '@ai-sdk/provider';
+import type {
+  Experimental_VideoModelV4,
+  SharedV4Warning,
 } from '@ai-sdk/provider';
 import {
   combineHeaders,
   convertUint8ArrayToBase64,
   createJsonResponseHandler,
   delay,
-  type FetchFunction,
   getFromApi,
   parseProviderOptions,
   postJsonToApi,
 } from '@ai-sdk/provider-utils';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
 import { xaiFailedResponseHandler } from './xai-error';
-import {
-  type XaiParsedVideoModelOptions,
-  xaiVideoModelOptionsSchema,
-} from './xai-video-options';
+import { xaiVideoModelOptionsSchema } from './xai-video-options';
+import type { XaiParsedVideoModelOptions } from './xai-video-options';
 import type { XaiVideoModelId } from './xai-video-settings';
 
 interface XaiVideoModelConfig {

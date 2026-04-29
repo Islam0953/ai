@@ -1,4 +1,4 @@
-import {
+import type {
   LanguageModelV4,
   LanguageModelV4CallOptions,
   LanguageModelV4Content,
@@ -9,12 +9,9 @@ import {
   SharedV4Warning,
 } from '@ai-sdk/provider';
 import {
-  FetchFunction,
-  ParseResult,
   combineHeaders,
   createEventSourceResponseHandler,
   createJsonResponseHandler,
-  type InferSchema,
   isCustomReasoning,
   mapReasoningToProviderBudget,
   parseProviderOptions,
@@ -23,14 +20,18 @@ import {
   WORKFLOW_SERIALIZE,
   WORKFLOW_DESERIALIZE,
 } from '@ai-sdk/provider-utils';
+import type {
+  InferSchema,
+  FetchFunction,
+  ParseResult,
+} from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
-import {
-  CohereChatModelId,
-  cohereLanguageModelOptions,
-} from './cohere-chat-options';
+import type { CohereChatModelId } from './cohere-chat-options';
+import { cohereLanguageModelOptions } from './cohere-chat-options';
 import { cohereFailedResponseHandler } from './cohere-error';
 import { prepareTools } from './cohere-prepare-tools';
-import { CohereUsageTokens, convertCohereUsage } from './convert-cohere-usage';
+import type { CohereUsageTokens } from './convert-cohere-usage';
+import { convertCohereUsage } from './convert-cohere-usage';
 import { convertToCohereChatPrompt } from './convert-to-cohere-chat-prompt';
 import { mapCohereFinishReason } from './map-cohere-finish-reason';
 

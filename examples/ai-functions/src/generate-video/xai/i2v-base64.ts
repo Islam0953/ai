@@ -1,4 +1,5 @@
-import { type XaiVideoModelOptions, xai } from '@ai-sdk/xai';
+import { xai } from '@ai-sdk/xai';
+import type { XaiVideoModelOptions } from '@ai-sdk/xai';
 import { experimental_generateVideo as generateVideo } from 'ai';
 import fs from 'node:fs';
 import { presentVideos } from '../../lib/present-video';

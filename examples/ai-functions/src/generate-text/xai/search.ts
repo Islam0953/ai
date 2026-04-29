@@ -1,4 +1,5 @@
-import { xai, type XaiLanguageModelChatOptions } from '@ai-sdk/xai';
+import { xai } from '@ai-sdk/xai';
+import type { XaiLanguageModelChatOptions } from '@ai-sdk/xai';
 import { generateText } from 'ai';
 import { run } from '../../lib/run';
 

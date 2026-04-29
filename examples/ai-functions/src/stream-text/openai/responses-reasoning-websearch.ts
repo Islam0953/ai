@@ -1,7 +1,5 @@
-import {
-  openai,
-  type OpenAILanguageModelResponsesOptions,
-} from '@ai-sdk/openai';
+import { openai } from '@ai-sdk/openai';
+import type { OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
 import { generateText, streamText } from 'ai';
 import { run } from '../../lib/run';
 

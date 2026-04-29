@@ -1,5 +1,4 @@
-import {
-  APICallError,
+import type {
   JSONObject,
   LanguageModelV4,
   LanguageModelV4CallOptions,
@@ -15,21 +14,24 @@ import {
   SharedV4ProviderMetadata,
   SharedV4Warning,
 } from '@ai-sdk/provider';
+import { APICallError } from '@ai-sdk/provider';
+import type {
+  FetchFunction,
+  InferSchema,
+  ParseResult,
+  Resolvable,
+} from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   createEventSourceResponseHandler,
   createJsonResponseHandler,
   createToolNameMapping,
-  FetchFunction,
   generateId,
-  InferSchema,
   isCustomReasoning,
   mapReasoningToProviderBudget,
   mapReasoningToProviderEffort,
   parseProviderOptions,
-  ParseResult,
   postJsonToApi,
-  Resolvable,
   resolve,
   resolveProviderReference,
   serializeModelOptions,
@@ -37,26 +39,23 @@ import {
   WORKFLOW_DESERIALIZE,
 } from '@ai-sdk/provider-utils';
 import { anthropicFailedResponseHandler } from './anthropic-error';
-import { AnthropicMessageMetadata } from './anthropic-message-metadata';
-import {
+import type { AnthropicMessageMetadata } from './anthropic-message-metadata';
+import type {
   AnthropicContainer,
-  anthropicChunkSchema,
-  anthropicResponseSchema,
   AnthropicReasoningMetadata,
   AnthropicResponseContextManagement,
   AnthropicTool,
   Citation,
 } from './anthropic-api';
-import {
+import { anthropicChunkSchema, anthropicResponseSchema } from './anthropic-api';
+import type {
   AnthropicModelId,
   AnthropicLanguageModelOptions,
-  anthropicLanguageModelOptions,
 } from './anthropic-options';
+import { anthropicLanguageModelOptions } from './anthropic-options';
 import { prepareTools } from './anthropic-prepare-tools';
-import {
-  AnthropicUsage,
-  convertAnthropicUsage,
-} from './convert-anthropic-usage';
+import type { AnthropicUsage } from './convert-anthropic-usage';
+import { convertAnthropicUsage } from './convert-anthropic-usage';
 import { convertToAnthropicPrompt } from './convert-to-anthropic-prompt';
 import { CacheControlValidator } from './get-cache-control';
 import { mapAnthropicStopReason } from './map-anthropic-stop-reason';

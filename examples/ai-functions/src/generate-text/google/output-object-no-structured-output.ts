@@ -1,4 +1,5 @@
-import { google, type GoogleLanguageModelOptions } from '@ai-sdk/google';
+import { google } from '@ai-sdk/google';
+import type { GoogleLanguageModelOptions } from '@ai-sdk/google';
 import { generateText, Output } from 'ai';
 import { z } from 'zod';
 import { run } from '../../lib/run';

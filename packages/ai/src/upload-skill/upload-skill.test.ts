@@ -1,4 +1,4 @@
-import { ProviderV4, SkillsV4 } from '@ai-sdk/provider';
+import type { ProviderV4, SkillsV4 } from '@ai-sdk/provider';
 import { describe, it, expect, vi } from 'vitest';
 import { uploadSkill } from './upload-skill';
 

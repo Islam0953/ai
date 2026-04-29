@@ -1,8 +1,7 @@
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { Mock } from 'vitest';
 import {
   extractResourceMetadataUrl,
-  type OAuthClientProvider,
-  type AuthResult,
   discoverOAuthProtectedResourceMetadata,
   buildDiscoveryUrls,
   discoverAuthorizationServerMetadata,
@@ -12,7 +11,8 @@ import {
   registerClient,
   auth,
 } from './oauth';
-import { AuthorizationServerMetadata } from './oauth-types';
+import type { OAuthClientProvider, AuthResult } from './oauth';
+import type { AuthorizationServerMetadata } from './oauth-types';
 import { ServerError } from '../error/oauth-error';
 import { LATEST_PROTOCOL_VERSION } from './types';
 

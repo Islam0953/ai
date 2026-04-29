@@ -1,13 +1,10 @@
-import { FilesV4, ProviderV4 } from '@ai-sdk/provider';
-import {
-  convertBase64ToUint8Array,
-  DataContent,
-  ProviderOptions,
-} from '@ai-sdk/provider-utils';
+import type { FilesV4, ProviderV4 } from '@ai-sdk/provider';
+import type { DataContent, ProviderOptions } from '@ai-sdk/provider-utils';
+import { convertBase64ToUint8Array } from '@ai-sdk/provider-utils';
 import { convertToLanguageModelV4DataContent } from '../prompt/data-content';
-import { ProviderMetadata } from '../types/provider-metadata';
-import { ProviderReference } from '../types/provider-reference';
-import { Warning } from '../types/warning';
+import type { ProviderMetadata } from '../types/provider-metadata';
+import type { ProviderReference } from '../types/provider-reference';
+import type { Warning } from '../types/warning';
 import {
   audioMediaTypeSignatures,
   detectMediaType,
@@ -15,7 +12,7 @@ import {
   imageMediaTypeSignatures,
   videoMediaTypeSignatures,
 } from '../util/detect-media-type';
-import { UploadFileResult } from './upload-file-result';
+import type { UploadFileResult } from './upload-file-result';
 
 /**
  * Uploads a file using a files API interface.

@@ -1,6 +1,6 @@
-import { ProviderV4, SkillsV4, SkillsV4File } from '@ai-sdk/provider';
-import { ProviderOptions } from '@ai-sdk/provider-utils';
-import { UploadSkillResult } from './upload-skill-result';
+import type { ProviderV4, SkillsV4, SkillsV4File } from '@ai-sdk/provider';
+import type { ProviderOptions } from '@ai-sdk/provider-utils';
+import type { UploadSkillResult } from './upload-skill-result';
 
 export async function uploadSkill({
   api,

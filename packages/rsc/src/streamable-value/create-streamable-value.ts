@@ -1,10 +1,7 @@
 import { HANGING_STREAM_WARNING_TIME_MS } from '../util/constants';
 import { createResolvablePromise } from '../util/create-resolvable-promise';
-import {
-  STREAMABLE_VALUE_TYPE,
-  StreamablePatch,
-  StreamableValue,
-} from './streamable-value';
+import type { StreamablePatch, StreamableValue } from './streamable-value';
+import { STREAMABLE_VALUE_TYPE } from './streamable-value';
 
 const STREAMABLE_VALUE_INTERNAL_LOCK = Symbol('streamable.value.lock');
 

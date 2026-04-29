@@ -1,5 +1,5 @@
 import type { ImageModelV4, SharedV4Warning } from '@ai-sdk/provider';
-import type { Resolvable } from '@ai-sdk/provider-utils';
+import type { Resolvable, FetchFunction } from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   convertImageModelFileToDataUri,
@@ -7,7 +7,6 @@ import {
   createJsonErrorResponseHandler,
   createJsonResponseHandler,
   createStatusCodeErrorResponseHandler,
-  FetchFunction,
   getFromApi,
   parseProviderOptions,
   postJsonToApi,
@@ -17,7 +16,7 @@ import {
   WORKFLOW_DESERIALIZE,
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
-import { FalImageModelId, FalImageSize } from './fal-image-settings';
+import type { FalImageModelId, FalImageSize } from './fal-image-settings';
 import { falImageModelOptionsSchema } from './fal-image-options';
 
 interface FalImageModelConfig {

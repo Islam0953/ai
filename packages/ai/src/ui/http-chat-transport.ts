@@ -1,12 +1,8 @@
-import {
-  FetchFunction,
-  Resolvable,
-  normalizeHeaders,
-  resolve,
-} from '@ai-sdk/provider-utils';
-import { UIMessageChunk } from '../ui-message-stream/ui-message-chunks';
-import { ChatTransport } from './chat-transport';
-import { UIMessage } from './ui-messages';
+import type { FetchFunction, Resolvable } from '@ai-sdk/provider-utils';
+import { normalizeHeaders, resolve } from '@ai-sdk/provider-utils';
+import type { UIMessageChunk } from '../ui-message-stream/ui-message-chunks';
+import type { ChatTransport } from './chat-transport';
+import type { UIMessage } from './ui-messages';
 
 export type PrepareSendMessagesRequest<UI_MESSAGE extends UIMessage> = (
   options: {

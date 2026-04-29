@@ -1,7 +1,5 @@
-import {
-  createCallbacksTransformer,
-  StreamCallbacks,
-} from './stream-callbacks';
+import type { StreamCallbacks } from './stream-callbacks';
+import { createCallbacksTransformer } from './stream-callbacks';
 import { describe, it, expect, vi } from 'vitest';
 
 describe('createCallbacksTransformer', () => {

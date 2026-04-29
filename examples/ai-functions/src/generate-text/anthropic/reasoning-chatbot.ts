@@ -1,5 +1,6 @@
 import { createAnthropic } from '@ai-sdk/anthropic';
-import { ModelMessage, generateText, isStepCount } from 'ai';
+import type { ModelMessage } from 'ai';
+import { generateText, isStepCount } from 'ai';
 import * as readline from 'node:readline/promises';
 import { weatherTool } from '../../tools/weather-tool';
 import { run } from '../../lib/run';

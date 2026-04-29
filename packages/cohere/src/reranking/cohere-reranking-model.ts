@@ -1,20 +1,16 @@
-import { RerankingModelV4, SharedV4Warning } from '@ai-sdk/provider';
+import type { RerankingModelV4, SharedV4Warning } from '@ai-sdk/provider';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   createJsonResponseHandler,
-  FetchFunction,
   parseProviderOptions,
   postJsonToApi,
 } from '@ai-sdk/provider-utils';
 import { cohereFailedResponseHandler } from '../cohere-error';
-import {
-  CohereRerankingInput,
-  cohereRerankingResponseSchema,
-} from './cohere-reranking-api';
-import {
-  CohereRerankingModelId,
-  cohereRerankingModelOptionsSchema,
-} from './cohere-reranking-options';
+import type { CohereRerankingInput } from './cohere-reranking-api';
+import { cohereRerankingResponseSchema } from './cohere-reranking-api';
+import type { CohereRerankingModelId } from './cohere-reranking-options';
+import { cohereRerankingModelOptionsSchema } from './cohere-reranking-options';
 
 type CohereRerankingConfig = {
   provider: string;

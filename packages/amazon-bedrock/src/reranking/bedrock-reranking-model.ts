@@ -1,7 +1,6 @@
-import { RerankingModelV4 } from '@ai-sdk/provider';
+import type { RerankingModelV4 } from '@ai-sdk/provider';
+import type { FetchFunction, Resolvable } from '@ai-sdk/provider-utils';
 import {
-  FetchFunction,
-  Resolvable,
   combineHeaders,
   createJsonErrorResponseHandler,
   createJsonResponseHandler,
@@ -10,14 +9,10 @@ import {
   resolve,
 } from '@ai-sdk/provider-utils';
 import { BedrockErrorSchema } from '../bedrock-error';
-import {
-  BedrockRerankingInput,
-  bedrockRerankingResponseSchema,
-} from './bedrock-reranking-api';
-import {
-  BedrockRerankingModelId,
-  amazonBedrockRerankingModelOptionsSchema,
-} from './bedrock-reranking-options';
+import type { BedrockRerankingInput } from './bedrock-reranking-api';
+import { bedrockRerankingResponseSchema } from './bedrock-reranking-api';
+import type { BedrockRerankingModelId } from './bedrock-reranking-options';
+import { amazonBedrockRerankingModelOptionsSchema } from './bedrock-reranking-options';
 
 type BedrockRerankingConfig = {
   baseUrl: () => string;

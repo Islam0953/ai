@@ -1,10 +1,5 @@
-import {
-  Embedding,
-  EmbeddingModel,
-  embed,
-  embedMany,
-  cosineSimilarity,
-} from 'ai';
+import type { Embedding, EmbeddingModel } from 'ai';
+import { embed, embedMany, cosineSimilarity } from 'ai';
 
 export interface Route<NAME extends string> {
   name: NAME;

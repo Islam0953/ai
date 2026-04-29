@@ -1,4 +1,4 @@
-import {
+import type {
   EmbeddingModelV3,
   EmbeddingModelV4,
   Experimental_VideoModelV3,
@@ -10,7 +10,6 @@ import {
   LanguageModelV2,
   LanguageModelV3,
   LanguageModelV4,
-  NoSuchModelError,
   ProviderV2,
   ProviderV3,
   ProviderV4,
@@ -24,6 +23,7 @@ import {
   TranscriptionModelV3,
   TranscriptionModelV4,
 } from '@ai-sdk/provider';
+import { NoSuchModelError } from '@ai-sdk/provider';
 import { asEmbeddingModelV4 } from '../model/as-embedding-model-v4';
 import { asImageModelV4 } from '../model/as-image-model-v4';
 import { asLanguageModelV4 } from '../model/as-language-model-v4';

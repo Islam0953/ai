@@ -1,5 +1,6 @@
 import { openai } from '@ai-sdk/openai';
-import { LanguageModelUsage, Output, streamText } from 'ai';
+import type { LanguageModelUsage } from 'ai';
+import { Output, streamText } from 'ai';
 import { z } from 'zod';
 import { run } from '../../lib/run';
 

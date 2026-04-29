@@ -1,5 +1,7 @@
-import { openai, OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
-import { ToolLoopAgent, InferAgentUIMessage } from 'ai';
+import type { OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
+import { openai } from '@ai-sdk/openai';
+import type { InferAgentUIMessage } from 'ai';
+import { ToolLoopAgent } from 'ai';
 import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
 import { createApplyPatchExecutor } from '@/lib/apply-patch-file-editor';

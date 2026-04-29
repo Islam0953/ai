@@ -9,10 +9,10 @@ import {
 import { z } from 'zod/v4';
 import { asGatewayError } from './errors';
 import type { GatewayConfig } from './gateway-config';
-import {
-  KNOWN_MODEL_TYPES,
-  type GatewayLanguageModelEntry,
-  type KnownModelType,
+import { KNOWN_MODEL_TYPES } from './gateway-model-entry';
+import type {
+  GatewayLanguageModelEntry,
+  KnownModelType,
 } from './gateway-model-entry';
 
 type GatewayFetchMetadataConfig = GatewayConfig;

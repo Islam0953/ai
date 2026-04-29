@@ -1,14 +1,17 @@
-import {
+import type {
   FetchFunction,
   FlexibleSchema,
   InferSchema,
-  isAbortError,
   Resolvable,
+} from '@ai-sdk/provider-utils';
+import {
+  isAbortError,
   resolve,
   normalizeHeaders,
   safeValidateTypes,
 } from '@ai-sdk/provider-utils';
-import { asSchema, DeepPartial, isDeepEqualData, parsePartialJson } from 'ai';
+import type { DeepPartial } from 'ai';
+import { asSchema, isDeepEqualData, parsePartialJson } from 'ai';
 import { useCallback, useId, useRef, useState } from 'react';
 import useSWR from 'swr';
 

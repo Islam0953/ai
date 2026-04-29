@@ -1,33 +1,31 @@
-import {
+import type {
   ImageModelV4,
   ImageModelV4CallOptions,
   ImageModelV4File,
   ImageModelV4ProviderMetadata,
 } from '@ai-sdk/provider';
+import type { DataContent, ProviderOptions } from '@ai-sdk/provider-utils';
 import {
   convertBase64ToUint8Array,
-  DataContent,
-  ProviderOptions,
   withUserAgentSuffix,
 } from '@ai-sdk/provider-utils';
 import { NoImageGeneratedError } from '../error/no-image-generated-error';
-import {
-  DefaultGeneratedFile,
-  GeneratedFile,
-} from '../generate-text/generated-file';
+import type { GeneratedFile } from '../generate-text/generated-file';
+import { DefaultGeneratedFile } from '../generate-text/generated-file';
 import { logWarnings } from '../logger/log-warnings';
 import { resolveImageModel } from '../model/resolve-model';
 import type { ImageModel } from '../types/image-model';
-import { ImageModelResponseMetadata } from '../types/image-model-response-metadata';
-import { addImageModelUsage, ImageModelUsage } from '../types/usage';
-import { Warning } from '../types/warning';
+import type { ImageModelResponseMetadata } from '../types/image-model-response-metadata';
+import type { ImageModelUsage } from '../types/usage';
+import { addImageModelUsage } from '../types/usage';
+import type { Warning } from '../types/warning';
 import {
   detectMediaType,
   imageMediaTypeSignatures,
 } from '../util/detect-media-type';
 import { prepareRetries } from '../util/prepare-retries';
 import { VERSION } from '../version';
-import { GenerateImageResult } from './generate-image-result';
+import type { GenerateImageResult } from './generate-image-result';
 import { convertDataContentToUint8Array } from '../prompt/data-content';
 import { splitDataUrl } from '../prompt/split-data-url';
 

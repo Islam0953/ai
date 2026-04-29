@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react';
 import {
   MessageCircle,
   Cpu,
@@ -8,7 +9,6 @@ import {
   Activity,
   Image,
   Wand2,
-  LucideIcon,
 } from 'lucide-react';
 
 export interface NavItem {

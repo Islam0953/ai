@@ -1,9 +1,9 @@
-import {
+import type {
   Context,
   InferToolSetContext,
   ModelMessage,
-  tool,
 } from '@ai-sdk/provider-utils';
+import { tool } from '@ai-sdk/provider-utils';
 import { describe, expectTypeOf, it } from 'vitest';
 import { z } from 'zod';
 import type { ToolApprovalConfiguration } from './tool-approval-configuration';

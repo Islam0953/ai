@@ -1,7 +1,8 @@
 import { describe, expectTypeOf, it } from 'vitest';
 import { z } from 'zod/v4';
-import { Tool, tool } from '@ai-sdk/provider-utils';
-import { ActiveTools } from './active-tools';
+import type { Tool } from '@ai-sdk/provider-utils';
+import { tool } from '@ai-sdk/provider-utils';
+import type { ActiveTools } from './active-tools';
 import { filterActiveTools } from './filter-active-tools';
 
 const mockTools = {

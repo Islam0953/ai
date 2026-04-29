@@ -9,8 +9,8 @@ import {
 } from './gateway-model-not-found-error';
 import { GatewayInternalServerError } from './gateway-internal-server-error';
 import { GatewayResponseError } from './gateway-response-error';
+import type { InferSchema } from '@ai-sdk/provider-utils';
 import {
-  InferSchema,
   lazySchema,
   safeValidateTypes,
   zodSchema,

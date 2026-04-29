@@ -3,8 +3,8 @@
 import ChatInput from '@/components/chat-input';
 import DynamicToolWithApprovalView from '@/components/tool/dynamic-tool-with-approval-view';
 import { useChat } from '@ai-sdk/react';
+import type { ChatRequestOptions } from 'ai';
 import {
-  ChatRequestOptions,
   DefaultChatTransport,
   lastAssistantMessageIsCompleteWithApprovalResponses,
 } from 'ai';

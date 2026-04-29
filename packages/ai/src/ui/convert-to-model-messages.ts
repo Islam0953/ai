@@ -1,36 +1,38 @@
-import {
+import { isNonNullable } from '@ai-sdk/provider-utils';
+import type {
+  ToolSet,
   AssistantContent,
   CustomPart,
   FilePart,
-  isNonNullable,
   ModelMessage,
   TextPart,
   ToolApprovalResponse,
   ToolResultPart,
 } from '@ai-sdk/provider-utils';
-import type { ToolSet } from '@ai-sdk/provider-utils';
 import { createToolModelOutput } from '../prompt/create-tool-model-output';
 import { MessageConversionError } from '../prompt/message-conversion-error';
-import {
+import type {
   CustomContentUIPart,
   DataUIPart,
   DynamicToolUIPart,
   FileUIPart,
-  getToolName,
   InferUIMessageData,
   InferUIMessageTools,
+  ReasoningFileUIPart,
+  ReasoningUIPart,
+  TextUIPart,
+  ToolUIPart,
+  UIMessage,
+} from './ui-messages';
+import {
+  getToolName,
   isCustomContentUIPart,
   isDataUIPart,
   isFileUIPart,
   isReasoningFileUIPart,
   isReasoningUIPart,
-  ReasoningFileUIPart,
   isTextUIPart,
   isToolUIPart,
-  ReasoningUIPart,
-  TextUIPart,
-  ToolUIPart,
-  UIMessage,
 } from './ui-messages';
 
 /**

@@ -1,12 +1,12 @@
-import {
+import type {
   LanguageModelV4CallOptions,
   SharedV4ProviderReference,
   SharedV4Warning,
-  UnsupportedFunctionalityError,
 } from '@ai-sdk/provider';
+import { UnsupportedFunctionalityError } from '@ai-sdk/provider';
+import type { ToolNameMapping } from '@ai-sdk/provider-utils';
 import {
   resolveProviderReference,
-  ToolNameMapping,
   validateTypes,
 } from '@ai-sdk/provider-utils';
 import { codeInterpreterArgsSchema } from '../tool/code-interpreter';
@@ -18,7 +18,7 @@ import { shellArgsSchema } from '../tool/shell';
 import { toolSearchArgsSchema } from '../tool/tool-search';
 import { webSearchArgsSchema } from '../tool/web-search';
 import { webSearchPreviewArgsSchema } from '../tool/web-search-preview';
-import { OpenAIResponsesTool } from './openai-responses-api';
+import type { OpenAIResponsesTool } from './openai-responses-api';
 
 export async function prepareResponsesTools({
   tools,

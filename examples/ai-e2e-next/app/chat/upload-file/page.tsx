@@ -2,7 +2,8 @@
 
 import ChatInput from '@/components/chat-input';
 import { useChat } from '@ai-sdk/react';
-import { DefaultChatTransport, FileUIPart, generateId } from 'ai';
+import type { FileUIPart } from 'ai';
+import { DefaultChatTransport, generateId } from 'ai';
 import { useRef, useState } from 'react';
 
 const MODELS = [

@@ -1,5 +1,6 @@
 import { anthropic } from '@ai-sdk/anthropic';
-import { ToolLoopAgent, InferAgentUIMessage } from 'ai';
+import type { InferAgentUIMessage } from 'ai';
+import { ToolLoopAgent } from 'ai';
 
 export const anthropicWebFetch20260209Agent = new ToolLoopAgent({
   model: anthropic('claude-sonnet-4-6'),

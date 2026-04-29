@@ -1,15 +1,13 @@
-import { LanguageModelV4Prompt } from '@ai-sdk/provider';
+import type { LanguageModelV4Prompt } from '@ai-sdk/provider';
 import type { Context as AISDKContext } from '@ai-sdk/provider-utils';
-import {
+import type {
   Attributes,
   AttributeValue,
-  context,
   Context as OpenTelemetryContext,
   Span,
-  SpanStatusCode,
-  trace,
   Tracer,
 } from '@opentelemetry/api';
+import { context, SpanStatusCode, trace } from '@opentelemetry/api';
 import type {
   EmbeddingModelCallEndEvent,
   EmbedEndEvent,

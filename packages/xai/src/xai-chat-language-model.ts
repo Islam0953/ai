@@ -1,5 +1,4 @@
-import {
-  APICallError,
+import type {
   LanguageModelV4,
   LanguageModelV4CallOptions,
   LanguageModelV4Content,
@@ -10,16 +9,16 @@ import {
   LanguageModelV4Usage,
   SharedV4Warning,
 } from '@ai-sdk/provider';
+import { APICallError } from '@ai-sdk/provider';
+import type { FetchFunction, ParseResult } from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   createEventSourceResponseHandler,
   createJsonResponseHandler,
   extractResponseHeaders,
-  FetchFunction,
   isCustomReasoning,
   mapReasoningToProviderEffort,
   parseProviderOptions,
-  ParseResult,
   postJsonToApi,
   safeParseJSON,
   serializeModelOptions,
@@ -31,10 +30,8 @@ import { convertToXaiChatMessages } from './convert-to-xai-chat-messages';
 import { convertXaiChatUsage } from './convert-xai-chat-usage';
 import { getResponseMetadata } from './get-response-metadata';
 import { mapXaiFinishReason } from './map-xai-finish-reason';
-import {
-  XaiChatModelId,
-  xaiLanguageModelChatOptions,
-} from './xai-chat-options';
+import type { XaiChatModelId } from './xai-chat-options';
+import { xaiLanguageModelChatOptions } from './xai-chat-options';
 import { xaiFailedResponseHandler } from './xai-error';
 import { prepareTools } from './xai-prepare-tools';
 

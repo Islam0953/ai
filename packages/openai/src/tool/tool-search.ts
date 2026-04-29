@@ -1,7 +1,7 @@
-import { JSONObject } from '@ai-sdk/provider';
+import type { JSONObject } from '@ai-sdk/provider';
+import type { FlexibleSchema } from '@ai-sdk/provider-utils';
 import {
   createProviderDefinedToolFactoryWithOutputSchema,
-  FlexibleSchema,
   lazySchema,
   zodSchema,
 } from '@ai-sdk/provider-utils';

@@ -1,5 +1,7 @@
-import { openai, OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
-import { APICallError, streamText, UserModelMessage } from 'ai';
+import type { OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
+import { openai } from '@ai-sdk/openai';
+import type { UserModelMessage } from 'ai';
+import { APICallError, streamText } from 'ai';
 import { run } from '../../lib/run';
 
 run(async () => {

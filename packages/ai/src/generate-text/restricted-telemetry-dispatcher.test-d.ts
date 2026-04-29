@@ -1,4 +1,5 @@
-import { tool, type ToolSet } from '@ai-sdk/provider-utils';
+import { tool } from '@ai-sdk/provider-utils';
+import type { ToolSet } from '@ai-sdk/provider-utils';
 import { describe, expectTypeOf, it } from 'vitest';
 import { z } from 'zod';
 import type { Callback } from '../util/callback';

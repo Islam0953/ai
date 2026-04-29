@@ -1,9 +1,5 @@
-import {
-  callCompletionApi,
-  generateId,
-  type CompletionRequestOptions,
-  type UseCompletionOptions,
-} from 'ai';
+import { callCompletionApi, generateId } from 'ai';
+import type { CompletionRequestOptions, UseCompletionOptions } from 'ai';
 import {
   KeyedCompletionStore,
   getCompletionContext,

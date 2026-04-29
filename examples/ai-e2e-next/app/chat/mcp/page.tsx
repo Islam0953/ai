@@ -2,13 +2,8 @@
 
 import ChatInput from '@/components/chat-input';
 import { useChat } from '@ai-sdk/react';
-import {
-  DefaultChatTransport,
-  getToolName,
-  type DynamicToolUIPart,
-  type ToolUIPart,
-  isToolUIPart,
-} from 'ai';
+import { DefaultChatTransport, getToolName, isToolUIPart } from 'ai';
+import type { DynamicToolUIPart, ToolUIPart } from 'ai';
 
 export default function Chat() {
   const { error, status, sendMessage, messages, regenerate, stop } = useChat({

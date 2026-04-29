@@ -2,22 +2,16 @@ import {
   generateId,
   isAbortError,
   safeValidateTypes,
-  type FetchFunction,
 } from '@ai-sdk/provider-utils';
-import {
-  asSchema,
-  isDeepEqualData,
-  parsePartialJson,
-  type DeepPartial,
-  type FlexibleSchema,
-  type InferSchema,
-} from 'ai';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
+import { asSchema, isDeepEqualData, parsePartialJson } from 'ai';
+import type { DeepPartial, FlexibleSchema, InferSchema } from 'ai';
 import {
   getStructuredObjectContext,
   hasStructuredObjectContext,
   KeyedStructuredObjectStore,
-  type StructuredObjectStore,
 } from './structured-object-context.svelte.js';
+import type { StructuredObjectStore } from './structured-object-context.svelte.js';
 
 export type Experimental_StructuredObjectOptions<
   SCHEMA extends FlexibleSchema,

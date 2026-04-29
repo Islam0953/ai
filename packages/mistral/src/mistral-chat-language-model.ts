@@ -1,4 +1,4 @@
-import {
+import type {
   LanguageModelV4,
   LanguageModelV4CallOptions,
   LanguageModelV4Content,
@@ -8,31 +8,29 @@ import {
   LanguageModelV4StreamResult,
   SharedV4Warning,
 } from '@ai-sdk/provider';
+import type { FetchFunction, ParseResult } from '@ai-sdk/provider-utils';
 import {
   combineHeaders,
   createEventSourceResponseHandler,
   createJsonResponseHandler,
-  FetchFunction,
   generateId,
   injectJsonInstructionIntoMessages,
   isCustomReasoning,
   mapReasoningToProviderEffort,
   parseProviderOptions,
-  ParseResult,
   postJsonToApi,
   serializeModelOptions,
   WORKFLOW_SERIALIZE,
   WORKFLOW_DESERIALIZE,
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
-import { convertMistralUsage, MistralUsage } from './convert-mistral-usage';
+import type { MistralUsage } from './convert-mistral-usage';
+import { convertMistralUsage } from './convert-mistral-usage';
 import { convertToMistralChatMessages } from './convert-to-mistral-chat-messages';
 import { getResponseMetadata } from './get-response-metadata';
 import { mapMistralFinishReason } from './map-mistral-finish-reason';
-import {
-  MistralChatModelId,
-  mistralLanguageModelOptions,
-} from './mistral-chat-options';
+import type { MistralChatModelId } from './mistral-chat-options';
+import { mistralLanguageModelOptions } from './mistral-chat-options';
 import { mistralFailedResponseHandler } from './mistral-error';
 import { prepareTools } from './mistral-prepare-tools';
 

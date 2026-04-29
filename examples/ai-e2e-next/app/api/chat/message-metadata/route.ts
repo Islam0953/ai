@@ -1,8 +1,7 @@
-import { createAgentUIStreamResponse, UIMessage } from 'ai';
-import {
-  ExampleMetadata,
-  openaiMetadataAgent,
-} from '@/agent/openai/metadata-agent';
+import type { UIMessage } from 'ai';
+import { createAgentUIStreamResponse } from 'ai';
+import type { ExampleMetadata } from '@/agent/openai/metadata-agent';
+import { openaiMetadataAgent } from '@/agent/openai/metadata-agent';
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();

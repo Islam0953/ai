@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import * as z4 from 'zod/v4';
 import { safeParseJSON } from './parse-json';
-import { asSchema, StandardSchema, zodSchema } from './schema';
+import type { StandardSchema } from './schema';
+import { asSchema, zodSchema } from './schema';
 
 describe('zodSchema', () => {
   describe('zod/v4', () => {

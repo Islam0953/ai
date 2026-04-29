@@ -1,7 +1,7 @@
-import { JSONValue } from '@ai-sdk/provider';
-import { DataContent } from './data-content';
-import { ProviderOptions } from './provider-options';
-import { ProviderReference } from './provider-reference';
+import type { JSONValue } from '@ai-sdk/provider';
+import type { DataContent } from './data-content';
+import type { ProviderOptions } from './provider-options';
+import type { ProviderReference } from './provider-reference';
 
 /**
  * Text content part of a prompt. It contains a string of text.

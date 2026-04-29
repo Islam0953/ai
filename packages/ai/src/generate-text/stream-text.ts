@@ -1,7 +1,6 @@
+import type { LanguageModelV4, SharedV4Warning } from '@ai-sdk/provider';
 import {
   getErrorMessage,
-  LanguageModelV4,
-  SharedV4Warning,
   UnsupportedFunctionalityError,
 } from '@ai-sdk/provider';
 import type {
@@ -11,71 +10,74 @@ import type {
   SensitiveContext,
   ToolApprovalResponse,
   ToolSet,
+  IdGenerator,
+  ProviderOptions,
+  ToolContent,
 } from '@ai-sdk/provider-utils';
 import {
   asArray,
   createIdGenerator,
   DelayedPromise,
   filterNullable,
-  IdGenerator,
   isAbortError,
-  ProviderOptions,
-  ToolContent,
 } from '@ai-sdk/provider-utils';
-import { ServerResponse } from 'node:http';
+import type { ServerResponse } from 'node:http';
 import { NoOutputGeneratedError } from '../error';
 import { logWarnings } from '../logger/log-warnings';
 import { resolveLanguageModel } from '../model/resolve-model';
 import { createToolModelOutput } from '../prompt/create-tool-model-output';
-import { LanguageModelCallOptions } from '../prompt/language-model-call-options';
+import type { LanguageModelCallOptions } from '../prompt/language-model-call-options';
 import { prepareLanguageModelCallOptions } from '../prompt/prepare-language-model-call-options';
 import { prepareToolChoice } from '../prompt/prepare-tool-choice';
 import { prepareTools } from '../prompt/prepare-tools';
-import { Prompt } from '../prompt/prompt';
+import type { Prompt } from '../prompt/prompt';
+import type {
+  RequestOptions,
+  TimeoutConfiguration,
+} from '../prompt/request-options';
 import {
   getChunkTimeoutMs,
   getStepTimeoutMs,
   getTotalTimeoutMs,
-  RequestOptions,
-  TimeoutConfiguration,
 } from '../prompt/request-options';
 import { standardizePrompt } from '../prompt/standardize-prompt';
 import { wrapGatewayError } from '../prompt/wrap-gateway-error';
-import { TelemetryOptions } from '../telemetry/telemetry-options';
+import type { TelemetryOptions } from '../telemetry/telemetry-options';
 import { createTextStreamResponse } from '../text-stream/create-text-stream-response';
 import { pipeTextStreamToResponse } from '../text-stream/pipe-text-stream-to-response';
-import { LanguageModelRequestMetadata } from '../types';
-import {
+import type { LanguageModelRequestMetadata } from '../types';
+import type {
   CallWarning,
   FinishReason,
   LanguageModel,
   ToolChoice,
 } from '../types/language-model';
-import { ProviderMetadata } from '../types/provider-metadata';
+import type { ProviderMetadata } from '../types/provider-metadata';
+import type { LanguageModelUsage } from '../types/usage';
 import {
   addLanguageModelUsage,
   createNullLanguageModelUsage,
-  LanguageModelUsage,
 } from '../types/usage';
-import { UIMessage } from '../ui';
+import type { UIMessage } from '../ui';
 import { createUIMessageStreamResponse } from '../ui-message-stream/create-ui-message-stream-response';
 import { getResponseUIMessageId } from '../ui-message-stream/get-response-ui-message-id';
 import { handleUIMessageStreamFinish } from '../ui-message-stream/handle-ui-message-stream-finish';
 import { pipeUIMessageStreamToResponse } from '../ui-message-stream/pipe-ui-message-stream-to-response';
-import {
+import type {
   InferUIMessageChunk,
   UIMessageChunk,
 } from '../ui-message-stream/ui-message-chunks';
-import { UIMessageStreamResponseInit } from '../ui-message-stream/ui-message-stream-response-init';
-import { InferUIMessageData, InferUIMessageMetadata } from '../ui/ui-messages';
-import {
-  AsyncIterableStream,
-  createAsyncIterableStream,
-} from '../util/async-iterable-stream';
+import type { UIMessageStreamResponseInit } from '../ui-message-stream/ui-message-stream-response-init';
+import type {
+  InferUIMessageData,
+  InferUIMessageMetadata,
+} from '../ui/ui-messages';
+import type { AsyncIterableStream } from '../util/async-iterable-stream';
+import { createAsyncIterableStream } from '../util/async-iterable-stream';
 import type { Callback } from '../util/callback';
 import { consumeStream } from '../util/consume-stream';
 import { createStitchableStream } from '../util/create-stitchable-stream';
-import { DownloadFunction } from '../util/download/download-function';
+import type { DownloadFunction } from '../util/download/download-function';
 import { mergeAbortSignals } from '../util/merge-abort-signals';
 import { mergeObjects } from '../util/merge-objects';
 import { notify } from '../util/notify';
@@ -83,7 +85,7 @@ import { now as originalNow } from '../util/now';
 import { prepareRetries } from '../util/prepare-retries';
 import type { ActiveTools } from './active-tools';
 import { collectToolApprovals } from './collect-tool-approvals';
-import { ContentPart } from './content-part';
+import type { ContentPart } from './content-part';
 import type {
   OnLanguageModelCallEndCallback,
   OnLanguageModelCallStartCallback,
@@ -92,44 +94,41 @@ import { createExecuteToolsTransformation } from './create-execute-tools-transfo
 import { executeToolCall } from './execute-tool-call';
 import { filterActiveTools } from './filter-active-tools';
 import { invokeToolCallbacksFromStream } from './invoke-tool-callbacks-from-stream';
-import { Output, text } from './output';
-import {
+import type { Output } from './output';
+import { text } from './output';
+import type {
   InferCompleteOutput,
   InferElementOutput,
   InferPartialOutput,
 } from './output-utils';
-import { PrepareStepFunction } from './prepare-step';
+import type { PrepareStepFunction } from './prepare-step';
 import { convertToReasoningOutputs } from './reasoning-output';
 import { createRestrictedTelemetryDispatcher } from './restricted-telemetry-dispatcher';
-import { ResponseMessage } from './response-message';
-import { DefaultStepResult, StepResult } from './step-result';
-import {
-  isStepCount,
-  isStopConditionMet,
-  StopCondition,
-} from './stop-condition';
-import {
-  LanguageModelStreamPart,
-  streamLanguageModelCall,
-} from './stream-language-model-call';
-import {
+import type { ResponseMessage } from './response-message';
+import type { StepResult } from './step-result';
+import { DefaultStepResult } from './step-result';
+import type { StopCondition } from './stop-condition';
+import { isStepCount, isStopConditionMet } from './stop-condition';
+import type { LanguageModelStreamPart } from './stream-language-model-call';
+import { streamLanguageModelCall } from './stream-language-model-call';
+import type {
   ConsumeStreamOptions,
   StreamTextResult,
   TextStreamPart,
   UIMessageStreamOptions,
 } from './stream-text-result';
 import { toResponseMessages } from './to-response-messages';
-import { ToolApprovalConfiguration } from './tool-approval-configuration';
-import { TypedToolCall } from './tool-call';
-import { ToolCallRepairFunction } from './tool-call-repair-function';
-import {
+import type { ToolApprovalConfiguration } from './tool-approval-configuration';
+import type { TypedToolCall } from './tool-call';
+import type { ToolCallRepairFunction } from './tool-call-repair-function';
+import type {
   OnToolExecutionEndCallback,
   OnToolExecutionStartCallback,
 } from './tool-execution-events';
-import { ToolOutput } from './tool-output';
-import { StaticToolOutputDenied } from './tool-output-denied';
-import { ToolsContextParameter } from './tools-context-parameter';
-import {
+import type { ToolOutput } from './tool-output';
+import type { StaticToolOutputDenied } from './tool-output-denied';
+import type { ToolsContextParameter } from './tools-context-parameter';
+import type {
   GenerateTextOnFinishCallback,
   GenerateTextOnStartCallback,
   GenerateTextOnStepFinishCallback,

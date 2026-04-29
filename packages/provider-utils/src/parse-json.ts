@@ -1,11 +1,8 @@
-import {
-  JSONParseError,
-  JSONValue,
-  TypeValidationError,
-} from '@ai-sdk/provider';
+import type { JSONValue } from '@ai-sdk/provider';
+import { JSONParseError, TypeValidationError } from '@ai-sdk/provider';
 import { secureJsonParse } from './secure-json-parse';
 import { safeValidateTypes, validateTypes } from './validate-types';
-import { FlexibleSchema } from './schema';
+import type { FlexibleSchema } from './schema';
 
 /**
  * Parses a JSON string into an unknown object.

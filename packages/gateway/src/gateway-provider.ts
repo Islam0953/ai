@@ -1,27 +1,28 @@
 import {
   loadOptionalSetting,
   withoutTrailingSlash,
-  type FetchFunction,
+  withUserAgentSuffix,
 } from '@ai-sdk/provider-utils';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import { asGatewayError, GatewayAuthenticationError } from './errors';
 import {
   GATEWAY_AUTH_METHOD_HEADER,
   parseAuthMethod,
 } from './errors/parse-auth-method';
-import {
-  GatewayFetchMetadata,
-  type GatewayFetchMetadataResponse,
-  type GatewayCreditsResponse,
+import { GatewayFetchMetadata } from './gateway-fetch-metadata';
+import type {
+  GatewayFetchMetadataResponse,
+  GatewayCreditsResponse,
 } from './gateway-fetch-metadata';
-import {
-  GatewaySpendReport,
-  type GatewaySpendReportParams,
-  type GatewaySpendReportResponse,
+import { GatewaySpendReport } from './gateway-spend-report';
+import type {
+  GatewaySpendReportParams,
+  GatewaySpendReportResponse,
 } from './gateway-spend-report';
-import {
-  GatewayGenerationInfoFetcher,
-  type GatewayGenerationInfoParams,
-  type GatewayGenerationInfo,
+import { GatewayGenerationInfoFetcher } from './gateway-generation-info';
+import type {
+  GatewayGenerationInfoParams,
+  GatewayGenerationInfo,
 } from './gateway-generation-info';
 import { GatewayLanguageModel } from './gateway-language-model';
 import { GatewayEmbeddingModel } from './gateway-embedding-model';
@@ -43,7 +44,6 @@ import type {
   Experimental_VideoModelV4,
   ProviderV4,
 } from '@ai-sdk/provider';
-import { withUserAgentSuffix } from '@ai-sdk/provider-utils';
 import { VERSION } from './version';
 
 export interface GatewayProvider extends ProviderV4 {

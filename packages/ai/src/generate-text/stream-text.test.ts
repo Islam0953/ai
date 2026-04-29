@@ -1,5 +1,4 @@
-import {
-  APICallError,
+import type {
   LanguageModelV4,
   LanguageModelV4CallOptions,
   LanguageModelV4FunctionTool,
@@ -10,16 +9,19 @@ import {
   SharedV4ProviderMetadata,
   SharedV4Warning,
 } from '@ai-sdk/provider';
-import type { ToolSet } from '@ai-sdk/provider-utils';
+import { APICallError } from '@ai-sdk/provider';
+import type {
+  ToolSet,
+  ModelMessage,
+  Tool,
+  ToolExecuteFunction,
+} from '@ai-sdk/provider-utils';
 import {
   delay,
   DelayedPromise,
   dynamicTool,
   jsonSchema,
-  ModelMessage,
   tool,
-  Tool,
-  ToolExecuteFunction,
 } from '@ai-sdk/provider-utils';
 import {
   convertArrayToReadableStream,
@@ -40,7 +42,8 @@ import {
   vitest,
 } from 'vitest';
 import { z } from 'zod/v4';
-import { Output, type LanguageModelCallEndEvent } from '..';
+import { Output } from '..';
+import type { LanguageModelCallEndEvent } from '..';
 import * as logWarningsModule from '../logger/log-warnings';
 import { MockLanguageModelV4 } from '../test/mock-language-model-v4';
 import { createMockServerResponse } from '../test/mock-server-response';
@@ -49,15 +52,15 @@ import {
   asLanguageModelUsage,
   createNullLanguageModelUsage,
 } from '../types/usage';
-import { StepResult } from './step-result';
+import type { StepResult } from './step-result';
 import { isLoopFinished, isStepCount } from './stop-condition';
 import { streamText } from './stream-text';
-import { StreamTextResult, TextStreamPart } from './stream-text-result';
-import {
+import type { StreamTextResult, TextStreamPart } from './stream-text-result';
+import type {
   OnToolExecutionEndCallback,
   OnToolExecutionStartCallback,
 } from './tool-execution-events';
-import {
+import type {
   GenerateTextOnFinishCallback,
   GenerateTextOnStartCallback,
   GenerateTextOnStepStartCallback,

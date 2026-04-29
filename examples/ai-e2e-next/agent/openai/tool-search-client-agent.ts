@@ -1,5 +1,7 @@
-import { openai, OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
-import { InferAgentUIMessage, tool, ToolLoopAgent } from 'ai';
+import type { OpenAILanguageModelResponsesOptions } from '@ai-sdk/openai';
+import { openai } from '@ai-sdk/openai';
+import type { InferAgentUIMessage } from 'ai';
+import { tool, ToolLoopAgent } from 'ai';
 import { z } from 'zod';
 
 const weatherTool = tool({

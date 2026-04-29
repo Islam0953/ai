@@ -1,6 +1,6 @@
-import {
-  openai,
-  type OpenAILanguageModelChatOptions,
+import { openai } from '@ai-sdk/openai';
+import type {
+  OpenAILanguageModelChatOptions,
   OpenaiResponsesProviderMetadata,
 } from '@ai-sdk/openai';
 import { streamText } from 'ai';

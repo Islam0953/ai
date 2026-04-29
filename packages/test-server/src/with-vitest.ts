@@ -2,10 +2,8 @@ import { beforeAll, beforeEach, afterAll } from 'vitest';
 import {
   createTestServer as createCoreTestServer,
   TestResponseController,
-  type UrlResponse,
-  type UrlHandler,
-  type UrlHandlers,
 } from './index';
+import type { UrlResponse, UrlHandler, UrlHandlers } from './index';
 
 export function createTestServer<
   URLS extends {

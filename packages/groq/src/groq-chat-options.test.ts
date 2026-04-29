@@ -1,8 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import {
-  groqLanguageModelOptions,
-  GroqLanguageModelOptions,
-} from './groq-chat-options';
+import type { GroqLanguageModelOptions } from './groq-chat-options';
+import { groqLanguageModelOptions } from './groq-chat-options';
 
 describe('groqLanguageModelOptions', () => {
   describe('reasoningEffort', () => {

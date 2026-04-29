@@ -1,8 +1,5 @@
-import {
-  AISDKError,
-  TranscriptionModelV4,
-  SharedV4Warning,
-} from '@ai-sdk/provider';
+import type { TranscriptionModelV4, SharedV4Warning } from '@ai-sdk/provider';
+import { AISDKError } from '@ai-sdk/provider';
 import {
   combineHeaders,
   convertBase64ToUint8Array,
@@ -18,9 +15,9 @@ import {
   WORKFLOW_DESERIALIZE,
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod/v4';
-import { GladiaConfig } from './gladia-config';
+import type { GladiaConfig } from './gladia-config';
 import { gladiaFailedResponseHandler } from './gladia-error';
-import { GladiaTranscriptionInitiateAPITypes } from './gladia-api-types';
+import type { GladiaTranscriptionInitiateAPITypes } from './gladia-api-types';
 
 // https://docs.gladia.io/api-reference/v2/pre-recorded/init
 const gladiaTranscriptionModelOptionsSchema = z.object({

@@ -1,4 +1,5 @@
-import { createUIMessageStreamResponse, UIMessage } from 'ai';
+import type { UIMessage } from 'ai';
+import { createUIMessageStreamResponse } from 'ai';
 import { NextResponse } from 'next/server';
 
 import { createAgent, humanInTheLoopMiddleware } from 'langchain';

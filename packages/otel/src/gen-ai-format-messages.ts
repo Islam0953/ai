@@ -1,4 +1,4 @@
-import {
+import type {
   LanguageModelV4CustomPart,
   LanguageModelV4FilePart,
   LanguageModelV4Message,

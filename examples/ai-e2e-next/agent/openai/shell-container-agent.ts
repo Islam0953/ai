@@ -1,5 +1,6 @@
 import { openai } from '@ai-sdk/openai';
-import { ToolLoopAgent, InferAgentUIMessage } from 'ai';
+import type { InferAgentUIMessage } from 'ai';
+import { ToolLoopAgent } from 'ai';
 
 export const openaiShellContainerAgent = new ToolLoopAgent({
   model: openai.responses('gpt-5.4'),

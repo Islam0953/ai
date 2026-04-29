@@ -1,13 +1,7 @@
-import {
-  type Experimental_VideoModelV4,
-  NoSuchModelError,
-  type ProviderV4,
-} from '@ai-sdk/provider';
-import {
-  type FetchFunction,
-  loadApiKey,
-  withoutTrailingSlash,
-} from '@ai-sdk/provider-utils';
+import { NoSuchModelError } from '@ai-sdk/provider';
+import type { Experimental_VideoModelV4, ProviderV4 } from '@ai-sdk/provider';
+import { loadApiKey, withoutTrailingSlash } from '@ai-sdk/provider-utils';
+import type { FetchFunction } from '@ai-sdk/provider-utils';
 import { ByteDanceVideoModel } from './bytedance-video-model';
 import type { ByteDanceVideoModelId } from './bytedance-video-settings';
 

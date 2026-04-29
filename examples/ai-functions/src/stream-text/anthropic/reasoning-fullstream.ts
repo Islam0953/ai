@@ -1,13 +1,10 @@
-import {
-  anthropic,
-  type AnthropicLanguageModelOptions,
-} from '@ai-sdk/anthropic';
+import { anthropic } from '@ai-sdk/anthropic';
+import type { AnthropicLanguageModelOptions } from '@ai-sdk/anthropic';
+import type { ToolCallPart, ToolResultPart } from 'ai';
 import {
   extractReasoningMiddleware,
   isStepCount,
   streamText,
-  ToolCallPart,
-  ToolResultPart,
   wrapLanguageModel,
 } from 'ai';
 import { weatherTool } from '../../tools/weather-tool';

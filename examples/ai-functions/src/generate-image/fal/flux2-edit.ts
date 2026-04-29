@@ -1,4 +1,5 @@
-import { fal, type FalImageModelOptions } from '@ai-sdk/fal';
+import { fal } from '@ai-sdk/fal';
+import type { FalImageModelOptions } from '@ai-sdk/fal';
 import { generateImage } from 'ai';
 import { presentImages } from '../../lib/present-image';
 import { run } from '../../lib/run';

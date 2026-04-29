@@ -1,6 +1,6 @@
 {
   "name": "@ai-sdk/anthropic",
-  "version": "4.0.0-beta.40",
+  "version": "4.0.0-beta.39",
   "type": "module",
   "license": "Apache-2.0",
   "sideEffects": false,
@@ -63,7 +63,7 @@
     "zod": "^3.25.76 || ^4.1.8"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public",

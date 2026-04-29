@@ -11,13 +11,8 @@ import {
 import { wrapImageModel } from '../middleware/wrap-image-model';
 import { wrapLanguageModel } from '../middleware/wrap-language-model';
 import { ImageModelMiddleware, LanguageModelMiddleware } from '../types';
+import type { ExtractLiteralUnion } from '../util/extract-literal-union';
 import { NoSuchProviderError } from './no-such-provider-error';
-
-type ExtractLiteralUnion<T> = T extends string
-  ? string extends T
-    ? never
-    : T
-  : never;
 
 export interface ProviderRegistryProvider<
   PROVIDERS extends Record<string, ProviderV4> = Record<string, ProviderV4>,

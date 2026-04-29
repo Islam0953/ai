@@ -12863,6 +12863,7 @@ describe('streamText', () => {
               "input": {
                 "value": "value",
               },
+              "name": undefined,
               "providerExecuted": undefined,
               "providerMetadata": undefined,
               "title": undefined,
@@ -12919,6 +12920,7 @@ describe('streamText', () => {
                 "input": {
                   "value": "value",
                 },
+                "name": undefined,
                 "providerExecuted": undefined,
                 "providerMetadata": undefined,
                 "title": undefined,
@@ -18321,6 +18323,7 @@ describe('streamText', () => {
                 "cities": "San Francisco",
               },
               "invalid": true,
+              "name": undefined,
               "providerExecuted": undefined,
               "providerMetadata": undefined,
               "title": undefined,
@@ -18398,6 +18401,7 @@ describe('streamText', () => {
                   "cities": "San Francisco",
                 },
                 "invalid": true,
+                "name": undefined,
                 "providerExecuted": undefined,
                 "providerMetadata": undefined,
                 "title": undefined,

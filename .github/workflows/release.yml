@@ -43,10 +43,13 @@ jobs:
         with:
           version: 10.11.0
 
-      - name: Setup Node.js 24
+      - name: Setup Node.js 22
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 22
+
+      - name: Update npm to v11
+        run: npm install --global npm@11
 
       - name: Install Dependencies
         run: pnpm i

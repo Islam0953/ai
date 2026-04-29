@@ -2347,6 +2347,7 @@ class DefaultStreamTextResult<
                   : {}),
                 ...(dynamic != null ? { dynamic } : {}),
                 ...(part.title != null ? { title: part.title } : {}),
+                ...(part.name != null ? { name: part.name } : {}),
               });
               break;
             }
@@ -2378,6 +2379,7 @@ class DefaultStreamTextResult<
                   ...(dynamic != null ? { dynamic } : {}),
                   errorText: onError(part.error),
                   ...(part.title != null ? { title: part.title } : {}),
+                  ...(part.name != null ? { name: part.name } : {}),
                 });
               } else {
                 controller.enqueue({
@@ -2393,6 +2395,7 @@ class DefaultStreamTextResult<
                     : {}),
                   ...(dynamic != null ? { dynamic } : {}),
                   ...(part.title != null ? { title: part.title } : {}),
+                  ...(part.name != null ? { name: part.name } : {}),
                 });
               }
 

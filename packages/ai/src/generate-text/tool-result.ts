@@ -29,6 +29,7 @@ export type DynamicToolResult = {
   dynamic: true;
   preliminary?: boolean;
   title?: string;
+  name?: string;
 };
 
 export type TypedToolResult<TOOLS extends ToolSet> =

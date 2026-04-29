@@ -157,6 +157,11 @@ export type Tool<
   title?: string;
 
   /**
+   * An optional name for the tool provider or source, e.g. an MCP server name.
+   */
+  name?: string;
+
+  /**
    * Additional provider-specific metadata. They are passed through
    * to the provider from the AI SDK and enable provider-specific
    * functionality that can be fully encapsulated in the provider.
@@ -354,6 +359,11 @@ export function dynamicTool(tool: {
    * An optional title of the tool.
    */
   title?: string;
+
+  /**
+   * An optional name for the tool provider or source, e.g. an MCP server name.
+   */
+  name?: string;
 
   /**
    * Additional provider-specific metadata. They are passed through

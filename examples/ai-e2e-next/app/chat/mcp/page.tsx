@@ -64,6 +64,11 @@ export default function Chat() {
                             Tool ID: {toolName}
                           </div>
                         )}
+                        {part.type === 'dynamic-tool' && part.name && (
+                          <div className="text-xs text-gray-500">
+                            MCP server: {part.name}
+                          </div>
+                        )}
                       </div>
                     </div>
 

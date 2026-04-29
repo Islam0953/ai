@@ -44,6 +44,7 @@ export const uiMessageChunkSchema = lazySchema(() =>
         providerMetadata: providerMetadataSchema.optional(),
         dynamic: z.boolean().optional(),
         title: z.string().optional(),
+        name: z.string().optional(),
       }),
       z.strictObject({
         type: z.literal('tool-input-delta'),
@@ -59,6 +60,7 @@ export const uiMessageChunkSchema = lazySchema(() =>
         providerMetadata: providerMetadataSchema.optional(),
         dynamic: z.boolean().optional(),
         title: z.string().optional(),
+        name: z.string().optional(),
       }),
       z.strictObject({
         type: z.literal('tool-input-error'),
@@ -70,6 +72,7 @@ export const uiMessageChunkSchema = lazySchema(() =>
         dynamic: z.boolean().optional(),
         errorText: z.string(),
         title: z.string().optional(),
+        name: z.string().optional(),
       }),
       z.strictObject({
         type: z.literal('tool-approval-request'),
@@ -264,6 +267,7 @@ export type UIMessageChunk<
       providerMetadata?: ProviderMetadata;
       dynamic?: boolean;
       title?: string;
+      name?: string;
     }
   | {
       type: 'tool-input-error';
@@ -275,6 +279,7 @@ export type UIMessageChunk<
       dynamic?: boolean;
       errorText: string;
       title?: string;
+      name?: string;
     }
   | {
       type: 'tool-approval-request';
@@ -319,6 +324,7 @@ export type UIMessageChunk<
       providerMetadata?: ProviderMetadata;
       dynamic?: boolean;
       title?: string;
+      name?: string;
     }
   | {
       type: 'tool-input-delta';

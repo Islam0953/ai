@@ -1,4 +1,5 @@
 import {
+  InvalidPromptError,
   LanguageModelV3,
   LanguageModelV3CallOptions,
   LanguageModelV3FunctionTool,
@@ -768,6 +769,73 @@ describe('generateText', () => {
       expect(startEvent.maxOutputTokens).toBe(100);
       expect(startEvent.temperature).toBe(0.5);
       expect(startEvent.maxRetries).toBe(2);
+    });
+
+    it('should warn for system messages in messages by default', async () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      try {
+        const model = new MockLanguageModelV3({
+          doGenerate: async () => ({
+            content: [{ type: 'text', text: 'Hello!' }],
+            ...dummyResponseValues,
+          }),
+        });
+
+        await generateText({
+          model,
+          messages: [{ role: 'system', content: 'INSTRUCTIONS' }],
+        });
+
+        expect(model.doGenerateCalls[0].prompt).toEqual([
+          { role: 'system', content: 'INSTRUCTIONS' },
+        ]);
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          'AI SDK Warning: System messages in the prompt or messages fields ' +
+            'can be a security risk because they may enable prompt injection ' +
+            'attacks. Use the system option instead when possible. Set ' +
+            'allowSystemInMessages to true to suppress this warning, or ' +
+            'false to throw an error.',
+        );
+      } finally {
+        consoleWarnSpy.mockRestore();
+      }
+    });
+
+    it('should reject system messages in messages when allowSystemInMessages is false', async () => {
+      await expect(async () => {
+        await generateText({
+          model: new MockLanguageModelV3({
+            doGenerate: async () => ({
+              content: [{ type: 'text', text: 'Hello!' }],
+              ...dummyResponseValues,
+            }),
+          }),
+          allowSystemInMessages: false,
+          messages: [{ role: 'system', content: 'INSTRUCTIONS' }],
+        });
+      }).rejects.toThrow(InvalidPromptError);
+    });
+
+    it('should allow system messages in messages when allowSystemInMessages is true', async () => {
+      const model = new MockLanguageModelV3({
+        doGenerate: async () => ({
+          content: [{ type: 'text', text: 'Hello!' }],
+          ...dummyResponseValues,
+        }),
+      });
+
+      await generateText({
+        model,
+        allowSystemInMessages: true,
+        messages: [{ role: 'system', content: 'INSTRUCTIONS' }],
+      });
+
+      expect(model.doGenerateCalls[0].prompt).toEqual([
+        { role: 'system', content: 'INSTRUCTIONS' },
+      ]);
     });
 
     it('should be called before doGenerate', async () => {

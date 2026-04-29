@@ -10,13 +10,27 @@ import type {
 } from '@ai-sdk/provider';
 import { describe, expectTypeOf, it } from 'vitest';
 import { customProvider } from './custom-provider';
+import { MockEmbeddingModelV2 } from '../test/mock-embedding-model-v2';
+import { MockEmbeddingModelV3 } from '../test/mock-embedding-model-v3';
 import { MockEmbeddingModelV4 } from '../test/mock-embedding-model-v4';
+import { MockImageModelV2 } from '../test/mock-image-model-v2';
+import { MockImageModelV3 } from '../test/mock-image-model-v3';
 import { MockImageModelV4 } from '../test/mock-image-model-v4';
+import { MockLanguageModelV2 } from '../test/mock-language-model-v2';
+import { MockLanguageModelV3 } from '../test/mock-language-model-v3';
 import { MockLanguageModelV4 } from '../test/mock-language-model-v4';
 import { MockProviderV4 } from '../test/mock-provider-v4';
+import { MockProviderV2 } from '../test/mock-provider-v2';
+import { MockProviderV3 } from '../test/mock-provider-v3';
+import { MockRerankingModelV3 } from '../test/mock-reranking-model-v3';
 import { MockRerankingModelV4 } from '../test/mock-reranking-model-v4';
+import { MockSpeechModelV2 } from '../test/mock-speech-model-v2';
+import { MockSpeechModelV3 } from '../test/mock-speech-model-v3';
 import { MockSpeechModelV4 } from '../test/mock-speech-model-v4';
+import { MockTranscriptionModelV2 } from '../test/mock-transcription-model-v2';
+import { MockTranscriptionModelV3 } from '../test/mock-transcription-model-v3';
 import { MockTranscriptionModelV4 } from '../test/mock-transcription-model-v4';
+import { MockVideoModelV3 } from '../test/mock-video-model-v3';
 import { MockVideoModelV4 } from '../test/mock-video-model-v4';
 
 /**
@@ -150,6 +164,132 @@ describe('customProvider autocomplete / literal model identifiers', () => {
   });
 });
 
+describe('customProvider with older model versions', () => {
+  it('accepts v2 and v3 models while returning v4 models', () => {
+    const provider = customProvider({
+      languageModels: {
+        'language-v2': new MockLanguageModelV2(),
+        'language-v3': new MockLanguageModelV3(),
+      },
+      embeddingModels: {
+        'embedding-v2': new MockEmbeddingModelV2<string>(),
+        'embedding-v3': new MockEmbeddingModelV3(),
+      },
+      imageModels: {
+        'image-v2': new MockImageModelV2(),
+        'image-v3': new MockImageModelV3(),
+      },
+      transcriptionModels: {
+        'transcription-v2': new MockTranscriptionModelV2(),
+        'transcription-v3': new MockTranscriptionModelV3(),
+      },
+      speechModels: {
+        'speech-v2': new MockSpeechModelV2(),
+        'speech-v3': new MockSpeechModelV3(),
+      },
+      rerankingModels: {
+        'reranking-v3': new MockRerankingModelV3(),
+      },
+      videoModels: {
+        'video-v3': new MockVideoModelV3(),
+      },
+    });
+
+    type InferredLanguageIdentifier = Parameters<
+      (typeof provider)['languageModel']
+    >[0];
+    type InferredEmbeddingIdentifier = Parameters<
+      (typeof provider)['embeddingModel']
+    >[0];
+
+    expectTypeOf<InferredLanguageIdentifier>().toEqualTypeOf<
+      'language-v2' | 'language-v3'
+    >();
+    expectTypeOf<InferredEmbeddingIdentifier>().toEqualTypeOf<
+      'embedding-v2' | 'embedding-v3'
+    >();
+
+    expectTypeOf(
+      provider.languageModel('language-v2'),
+    ).toEqualTypeOf<LanguageModelV4>();
+    expectTypeOf(
+      provider.languageModel('language-v3'),
+    ).toEqualTypeOf<LanguageModelV4>();
+    expectTypeOf(
+      provider.embeddingModel('embedding-v2'),
+    ).toEqualTypeOf<EmbeddingModelV4>();
+    expectTypeOf(
+      provider.embeddingModel('embedding-v3'),
+    ).toEqualTypeOf<EmbeddingModelV4>();
+    expectTypeOf(provider.imageModel('image-v2')).toEqualTypeOf<ImageModelV4>();
+    expectTypeOf(provider.imageModel('image-v3')).toEqualTypeOf<ImageModelV4>();
+    expectTypeOf(
+      provider.transcriptionModel('transcription-v2'),
+    ).toEqualTypeOf<TranscriptionModelV4>();
+    expectTypeOf(
+      provider.transcriptionModel('transcription-v3'),
+    ).toEqualTypeOf<TranscriptionModelV4>();
+    expectTypeOf(
+      provider.speechModel('speech-v2'),
+    ).toEqualTypeOf<SpeechModelV4>();
+    expectTypeOf(
+      provider.speechModel('speech-v3'),
+    ).toEqualTypeOf<SpeechModelV4>();
+    expectTypeOf(
+      provider.rerankingModel('reranking-v3'),
+    ).toEqualTypeOf<RerankingModelV4>();
+    expectTypeOf(
+      provider.videoModel('video-v3'),
+    ).toEqualTypeOf<Experimental_VideoModelV4>();
+  });
+});
+
+describe('customProvider with string model ids', () => {
+  it('accepts string model ids while returning v4 models', () => {
+    const provider = customProvider({
+      languageModels: {
+        gateway: 'openai/gpt-5',
+      },
+      embeddingModels: {
+        embedding: 'embedding-model-id',
+      },
+      imageModels: {
+        image: 'image-model-id',
+      },
+      transcriptionModels: {
+        transcription: 'transcription-model-id',
+      },
+      speechModels: {
+        speech: 'speech-model-id',
+      },
+      rerankingModels: {
+        reranking: 'reranking-model-id',
+      },
+      videoModels: {
+        video: 'video-model-id',
+      },
+    });
+
+    expectTypeOf(
+      provider.languageModel('gateway'),
+    ).toEqualTypeOf<LanguageModelV4>();
+    expectTypeOf(
+      provider.embeddingModel('embedding'),
+    ).toEqualTypeOf<EmbeddingModelV4>();
+    expectTypeOf(provider.imageModel('image')).toEqualTypeOf<ImageModelV4>();
+    expectTypeOf(
+      provider.transcriptionModel('transcription'),
+    ).toEqualTypeOf<TranscriptionModelV4>();
+    expectTypeOf(provider.speechModel('speech')).toEqualTypeOf<SpeechModelV4>();
+    expectTypeOf(
+      provider.rerankingModel('reranking'),
+    ).toEqualTypeOf<RerankingModelV4>();
+    expectTypeOf(
+      provider.videoModel('video'),
+    ).toEqualTypeOf<Experimental_VideoModelV4>();
+  });
+});
+
 describe('customProvider negative typing', () => {
   const languageModel = new MockLanguageModelV4();
 
@@ -229,5 +369,28 @@ describe('customProvider with fallback provider typing', () => {
 
     // @ts-expect-error identifiers resolved only via fallback are not part of ExtractModelId
     const _fallbackOnlyIdentifier: LanguageIdentifiers = 'fallback-language';
+  });
+
+  it('accepts v2 and v3 fallback providers', () => {
+    const providerWithV2Fallback = customProvider({
+      fallbackProvider: new MockProviderV2({
+        languageModels: { 'fallback-language': new MockLanguageModelV2() },
+      }),
+    });
+
+    const providerWithV3Fallback = customProvider({
+      fallbackProvider: new MockProviderV3({
+        languageModels: { 'fallback-language': new MockLanguageModelV3() },
+      }),
+    });
+
+    expectTypeOf(providerWithV2Fallback).toMatchTypeOf<ProviderV4>();
+    expectTypeOf(providerWithV3Fallback).toMatchTypeOf<ProviderV4>();
+    expectTypeOf(
+      providerWithV2Fallback.languageModel('fallback-language'),
+    ).toEqualTypeOf<LanguageModelV4>();
+    expectTypeOf(
+      providerWithV3Fallback.languageModel('fallback-language'),
+    ).toEqualTypeOf<LanguageModelV4>();
   });
 });
